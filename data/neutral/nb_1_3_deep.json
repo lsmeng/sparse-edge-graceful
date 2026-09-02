@@ -1,0 +1,9 @@
+{
+ "arms": [
+  1,
+  3
+ ],
+ "params": 3,
+ "coef": 14,
+ "status": "INFEASIBLE"
+}

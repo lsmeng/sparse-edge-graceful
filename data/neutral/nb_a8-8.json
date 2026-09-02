@@ -1,0 +1,10 @@
+{
+ "arms": [
+  8,
+  8
+ ],
+ "ports": 0,
+ "params": 1,
+ "coef": 8,
+ "status": "INFEASIBLE"
+}

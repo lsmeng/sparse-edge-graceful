@@ -1,0 +1,1145 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[margin=1.05in]{geometry}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\usepackage{url}
+\urlstyle{same}
+\emergencystretch=1.2em
+
+\newif\iftodo\todotrue
+\newcommand{\todo}[1]{\iftodo{\color{red!80!black}\sffamily\bfseries [TODO: #1]}\fi}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\PO}{P\!=\!O}
+\DeclareMathOperator{\Placed}{Placed}
+
+\title{Edge-graceful labellings of odd-order trees with few vertices of degree two}
+\author{Lingsen Meng\\[2pt]
+  \small Department of Earth, Planetary, and Space Sciences,\\[-2pt]
+  \small University of California, Los Angeles, CA 90095, USA\\[-2pt]
+  \small \texttt{lsmeng@g.ucla.edu}}
+\date{Draft of 2 September 2026}
+
+\input{numbers}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A tree $T$ of odd order $n$ is edge-graceful if its edges can be labelled
+bijectively by the nonzero residues modulo $n$ so that the vertex sums are all
+the residues modulo $n$.  Lee conjectured in 1989 that every tree of odd order
+is edge-graceful.  The case of trees with at most one vertex of degree two
+follows from the zero-sum partition theorem of Kaplan, Lev and Roditty, and
+we recently settled the case of at most two such vertices.  We
+prove that there are absolute constants $C$ and $n_0$ such that every tree of
+odd order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
+$n>C(D+1)$.  The proof combines a finite table of local labelling identities,
+found by an exact constraint search and re-verified by an independent checker,
+with a bottom-up scheduling argument and with the linear-deficiency zero-sum
+matching of M\"uyesser and Pokrovskiy.  The linear deficiency is the
+improvement those authors record for abelian groups in their Section~7.4.  The
+printed form of their theorem gives the same conclusion with
+$n>C(D+1)(\log n)^{A}$, and in particular gives, for every fixed $k$, that
+every tree of odd order that is large enough and has at most $k$ vertices of
+degree two is edge-graceful.  The constants are not effective.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Let $T$ be a tree with $n$ vertices, $n$ odd.  An \emph{edge-graceful}
+labelling of $T$ is a bijection $\lambda\colon E(T)\to\Z_n\setminus\{0\}$
+such that the induced vertex sums $s(v)=\sum_{e\ni v}\lambda(e)$, taken modulo
+$n$, form a bijection $V(T)\to\Z_n$.  Lo~\cite{Lo1985} introduced the notion
+and Lee~\cite{Lee1989} conjectured that every tree of odd order is
+edge-graceful.  The parity condition is necessary, because the sum of all
+edge labels is $\binom{n}{2}$, which is $\equiv 0$ modulo $n$ only for odd
+$n$.  The conjecture is surveyed
+in Gallian's dynamic survey~\cite{GallianDS6}.  The strongest general result
+we are aware of is due to Kaplan, Lev and Roditty~\cite{KaplanLevRoditty2009},
+who proved that $\Z_n\setminus\{0\}$, $n$ odd, admits a zero-sum partition into
+parts of any prescribed sizes at least two, and deduced that every odd-order
+tree with at most one vertex of degree two is edge-graceful.  Their argument
+identifies the obstruction exactly, since a vertex of degree two would require
+a zero-sum block of size one, which is impossible.  In \cite{Meng2026two} we
+extended their theorem to trees with at most two vertices of degree two, by
+combining zero-sum partitions with perfect and hooked Langford sequences and
+a case analysis verified computationally for all odd $n\le 5001$.  The
+argument there is specific to the two degree-two vertices and does not
+extend to three.
+
+In this paper we show that the number of degree-two vertices, rather than
+their placement, is what limits the zero-sum approach, provided that it is
+small compared with the order of the tree.
+
+\begin{theorem}\label{thm:main}
+There are absolute constants $C$ and $n_0$ such that every tree $T$ of odd
+order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
+$n>C(D+1)$.
+\end{theorem}
+
+Equivalently, for every $k\ge 0$ every odd-order tree with at most $k$ vertices
+of degree two and $n>2Ck$ vertices is edge-graceful, the cases $k=0$ and
+$k\le 2$ being the theorems of \cite{KaplanLevRoditty2009} and
+\cite{Meng2026two}, respectively.  However, the constants come from an
+asymptotic matching theorem and are therefore not effective.
+Theorem~\ref{thm:main} also says nothing about trees in which the degree-two
+vertices have positive density, e.g.\ caterpillars with many subdivided
+edges, the regime of the full conjecture.
+
+The only external input to Theorem~\ref{thm:main} is a zero-sum matching
+theorem in $\Z_n$ that tolerates a linear number of deleted residues, and it
+is the linear tolerance, and not the matching itself, that is delicate.
+The printed statements of M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025}
+tolerate $n/(\log n)^{A}$ deletions.  However, their Section~7.4 records that
+for abelian groups the logarithms may be removed, since the only source of a
+logarithm in their proof is a bound on the length of a commutator product and
+that product is empty in an abelian group.  Theorem~\ref{thm:main} uses the
+latter reading, which the authors state and use themselves.  Everything else in
+our proof is finite or elementary, and using only the printed statements it
+gives the following.
+
+\begin{theorem}\label{thm:polylog}
+There are absolute constants $C$, $A$ and $n_0$ such that every tree $T$ of
+odd order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
+$n>C(D+1)(\log n)^{A}$.  In particular, for every $k\ge 0$ there is an $n_k$
+such that every tree of odd order $n\ge n_k$ with at most $k$ vertices of
+degree two is edge-graceful.
+\end{theorem}
+
+Thus the qualitative statement, that a bounded number of degree-two vertices
+is no obstruction once the tree is large, does not depend on the remark of
+Section~7.4 at all.  The remark is what turns the polylogarithmic threshold
+into a linear one.
+
+Our approach separates the problem into a local part and a global part.  Locally,
+each maximal path of degree-two vertices, together with the branch vertex that
+owns it, is labelled by an explicit family of integer forms whose vertex sums
+permute its own labels (we call this the $\PO$ property).  Such families are
+found by our exact search over all output permutations and constraint
+programming, and every family used in the proof is re-verified by a program
+that shares no code with the search.  Globally, the families are assembled
+bottom-up so that the multiset of special labels is closed under negation up
+to at most one zero-sum triple and has size and magnitude linear in $D$.  The
+remaining labels are then partitioned into zero-sum blocks of the prescribed
+sizes by the linear-deficiency form of the random Hall--Paige theorem of
+M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025}.  Therefore the local part is a
+finite computation (\NumCatFamilies{} certified families), whereas the
+global part is a scheduling lemma, whose regression is an executable
+scheduler that we tested on all trees with at most nine vertices and on
+thousands of random trees.
+
+The paper is organised as follows.  Section~\ref{sec:setup} reformulates
+edge-gracefulness as a permutation identity and fixes the vocabulary.
+Section~\ref{sec:decomp} decomposes the tree and proves the counting lemmas.
+Section~\ref{sec:cells} describes the local families and the finite
+certificate table.  Section~\ref{sec:realization} proves the sequential
+realization lemma.  Section~\ref{sec:dense} applies the dense completion and
+proves Theorem~\ref{thm:main}.  Section~\ref{sec:verification} describes the
+computations and the certificate format.
+
+\section{Set-up}\label{sec:setup}
+
+Throughout, $T$ is a tree of odd order $n$ rooted at a vertex $\rho$ of degree
+at least three (if $T$ is a path the explicit labelling $1,2,\dots,n-1$ along
+the path is edge-graceful, so this case is excluded).  For $v\ne\rho$ let
+$e_v$ denote the parent edge of $v$ and put $\lambda(e_\rho)=0$.  A vertex is
+\emph{stationary} if the labels of its child edges sum to zero, so that
+$s(v)=\lambda(e_v)$.  Let $W$ be the set of non-stationary vertices together
+with $\rho$ and let $S=\{\lambda(e_w):w\in W\setminus\{\rho\}\}$, the
+\emph{special support}.
+
+\begin{lemma}\label{lem:sigma}
+$\lambda$ is edge-graceful if and only if the multiset $\{s(w):w\in W\}$ equals
+$\{0\}\cup S$.
+\end{lemma}
+
+\begin{proof}
+For a stationary vertex $v\ne\rho$ the sum $s(v)$ equals the label of $e_v$,
+so the stationary vertices contribute exactly the labels of their parent edges.
+The remaining labels are $\{0\}\cup S$ and they must be produced by $W$.
+\end{proof}
+
+Every vertex of degree two is in $W$, because a single nonzero child label
+cannot sum to zero.  Therefore our construction chooses $W$ of size $O(D)$,
+arranges the identity of Lemma~\ref{lem:sigma} cell by cell, and leaves every
+other internal vertex a zero-sum block of size zero or at least two.  We work
+with integer labels of magnitude $O(D)$ and reduce modulo $n$ at the end.
+
+\paragraph{Core and arms.}
+Suppressing the degree-two vertices of $T$ gives the core $Q$, a tree whose
+vertices have degree one or at least three in $T$, and a core edge carries a
+length $\ell$, the number of suppressed vertices.  We process $Q$ bottom-up.
+A subdivided child edge of a core vertex $v$ is an \emph{arm} of $v$ when its
+lower endpoint is not an owner (defined below), and the \emph{head chain} of
+the lower endpoint otherwise.  A direct child edge whose lower endpoint is not
+an owner is a \emph{port}.
+
+\paragraph{Cells and $\PO$.}
+A \emph{cell} at a core vertex $v$ consists of the labels of $v$'s parent edge
+(or of its head chain), of its residual arms and of some recruited ports, and
+possibly of the edge to one or two active children.  Its \emph{physical
+multiset} $P$ is the multiset of these labels.  Its \emph{output multiset} $O$
+consists of the sum at $v$, the adjacent sums along each arm and chain, the
+terminal label of each arm, and the label of each port.  A cell is
+\emph{self-permuting}, written $\PO$, when the two multisets coincide, and
+for a root cell the constant $0$ is adjoined to $P$.  Substituting a $\PO$ cell for
+a stationary child edge preserves the identity of Lemma~\ref{lem:sigma}
+because the shared edge is counted once on either side.
+
+\section{Decomposition and counting}\label{sec:decomp}
+
+\subsection{Owner-free neutralization}
+
+\begin{lemma}[neutral units]\label{lem:units}
+Two arms whose lengths have the same parity and whose residues modulo six are
+not $\{1,3\}$, and the four-arm multisets with residues $(1,1,1,3)$ and
+$(1,3,3,3)$, admit labellings whose adjacent sums and terminals permute their
+own labels, whose first labels sum to zero, and whose support is closed under
+negation, and each has two free integer parameters.  Two arms of lengths one and
+three admit no such labelling.
+\end{lemma}
+
+The thirteen families for the residue representatives are found by our
+constraint search of Section~\ref{sec:cells} (a root row with pinned zero
+output) and re-verified by the independent checker.  They extend to all
+lengths in the residue classes by the six-edge insertion, which lengthens an
+arm by six while adding three inverse pairs, and the impossibility for lengths
+one and three is an exact enumeration.  We call these labelled arm sets
+\emph{neutral units}.  (Pairs whose residues are $\{1,3\}$ but whose lengths
+are not, e.g.\ $(1,9)$ or $(3,7)$, also admit such labellings by the same
+search.  We do not use them, since a pair of this type is carried instead in
+the residual, which has families of its own.)
+
+\begin{corollary}[six residual types]\label{cor:sixtypes}
+The arm multiset of every core vertex can be partitioned into neutral units
+and a \emph{residual} of one of six types, namely empty, one odd arm, one even
+arm, a pair with residues $\{1,3\}$, one odd and one even arm, or such a pair
+together with one even arm.
+\end{corollary}
+
+\begin{proof}
+Pair the even arms arbitrarily, leaving at most one even arm.  Among the odd
+arms, pair every arm of residue five with any other odd arm, then pair arms of
+residue one with each other and arms of residue three with each other.  What
+remains is at most one arm of residue one and at most one of residue three.
+Thus the odd part of the residual is empty, a single odd arm, or a pair with
+residues $\{1,3\}$, and the even part is empty or a single arm.
+\end{proof}
+
+\subsection{Owners and contexts}
+
+\begin{definition}\label{def:owner}
+A nonroot core vertex is an \emph{owner} if its residual is nonempty, or if
+exactly one active child remains after the cancellations described below and
+no port is available to absorb it.  A vertex with empty residual and no
+remaining active child is stationary, and its parent edge, if subdivided, is an
+arm of its parent.
+\end{definition}
+
+At a vertex with $k\ge 2$ active children (children which are owners) the
+heads are free parameters of the children's cells, so they are prescribed to
+sum to zero (a mirror pair for $k=2$, a free zero-sum triple for $k=3$, pairs
+and at most one triple otherwise), and none remains.  A single remaining active
+child with head $x$ is absorbed by a stationary vertex with $q$ ports by a
+helper port labelled $-x$ ($q=1$ or $q\ge 3$) or by two ports labelled $a$ and
+$-x-a$ ($q=2$).  Two exceptional child types cannot be absorbed in this way,
+because every $\PO$ family of the child contains the antipode of its own head:
+the residue-one letter and the $(1;\text{one port})$ bottom, and such children
+are joined into their parent's cell.
+
+The \emph{context} of an owner is the tuple $(h,R,p,c)$ where $h$ is the
+length of its head chain reduced modulo six, $R$ its residual arm multiset
+with lengths reduced modulo six, $p\in\{0,1,2,3\}$ the number of recruited
+ports (never leaving exactly one unrecruited), and $c$ the child type, one of
+\emph{none}, \emph{free}, the two joined types, or the two-input type used
+when two active heads are kept.  The root has context $(\mathrm{root},R,p,c)$.
+
+Reduction modulo six is justified by the following identity, which lengthens
+one arm of a cell by six and changes nothing else.
+
+\begin{lemma}[six-edge insertion]\label{lem:insertion}
+Let an arm of a cell carry the labels $a_0,\dots,a_\ell$, $a_0$ at the owner,
+so that it contributes the outputs $a_0+a_1,\dots,a_{\ell-1}+a_\ell$ and
+$a_\ell$.  Write $c=a_0$ and $d=a_1$ and insert the six labels
+\[
+  \tfrac{-2c-d}{3},\quad \tfrac{c-d}{3},\quad \tfrac{c+2d}{3},\quad
+  \tfrac{2c+d}{3},\quad \tfrac{-c+d}{3},\quad \tfrac{-c-2d}{3}
+\]
+between $a_0$ and $a_1$.  They form three pairs of opposite forms, and the
+seven outputs they create are exactly those six labels together with the
+output $c+d$ that the arm had before.  For a port, an arm of length zero whose
+only label is $c$ and whose output is $c$ itself, the same holds with the six
+labels
+\[
+  \tfrac{c}{3},\quad \tfrac{-2c}{3},\quad \tfrac{4c}{3},\quad
+  \tfrac{-c}{3},\quad \tfrac{2c}{3},\quad \tfrac{-4c}{3}
+\]
+and with $c$ in place of $c+d$.
+\end{lemma}
+
+\begin{proof}
+For the first list the outputs are, in order,
+$c+\frac{-2c-d}{3}=\frac{c-d}{3}$, $\frac{-2c-d}{3}+\frac{c-d}{3}=\frac{-c-2d}{3}$,
+$\frac{c-d}{3}+\frac{c+2d}{3}=\frac{2c+d}{3}$,
+$\frac{c+2d}{3}+\frac{2c+d}{3}=c+d$,
+$\frac{2c+d}{3}+\frac{-c+d}{3}=\frac{c+2d}{3}$,
+$\frac{-c+d}{3}+\frac{-c-2d}{3}=\frac{-2c-d}{3}$ and
+$\frac{-c-2d}{3}+d=\frac{-c+d}{3}$, which is the asserted multiset, and the
+three pairs are the first with the fourth, the second with the fifth and the
+third with the sixth.  The port list is checked the same way.
+\end{proof}
+
+Thus a family for a context is also a family for the context with any one
+arm six longer, and in particular a port may be replaced by an arm of length
+six.  The new labels are forms in the two labels the insertion sits between,
+so the identity is one statement about all cells at once.  The
+insertion may make two labels of the cell equal for special values of $c$ and
+$d$, which the search rules out by requiring the label forms to stay pairwise
+distinct.  A twelve-label endpoint preserving insertion does the same for head
+chains.
+
+A second identity removes a much larger part of the search.  Most of the
+contexts of the list differ from a narrower one only by a set of arms and
+ports that can be made to pay for itself, and such a set may be adjoined to
+any family at all.
+
+\begin{definition}\label{def:block}
+A \emph{block} is a multiset of arm lengths $\ell_1,\dots,\ell_k$ together
+with a number $m\ge0$ of ports, and it carries $N=m+\sum_i(\ell_i+1)$ labels.
+The block is \emph{neutral} if there are integers $c_1,\dots,c_N$ such that,
+when its labels are taken to be $c_1t,\dots,c_Nt$ in a single parameter $t$,
+\begin{enumerate}
+\item[(N1)] the labels it contributes to the owner, namely its $m$ port labels
+  and the first label of each of its arms, sum to zero;
+\item[(N2)] the multiset of its $N$ labels equals the multiset of the $N$
+  outputs at the vertices it introduces, that is the $m$ port leaves and, for
+  an arm $a_0,\dots,a_\ell$, the outputs $a_0+a_1,\dots,a_{\ell-1}+a_\ell$ and
+  $a_\ell$;
+\item[(N3)] the multiset $\{c_1,\dots,c_N\}$ is closed under negation; and
+\item[(N4)] the $c_i$ are nonzero and pairwise distinct.
+\end{enumerate}
+It is a \emph{token block} if it satisfies (N1), (N2) and (N4) and, instead of
+(N3), three of its labels sum to zero and span a plane while the remaining
+$N-3$ are closed under negation.  A token block therefore needs at least two
+parameters, and $N$ is odd for it and even for a neutral block.
+\end{definition}
+
+Which of the two a given set of arms and ports can be is decided by parity
+alone.  Two arms of lengths $a$ and $b$ carry $a+b+2$ labels, so a same-parity
+pair can only be a neutral block and a pair of opposite parity can only be a
+token block, which is the arithmetic behind the neutral units of
+Section~\ref{sec:decomp}: an $\{o,e\}$ residual is exactly the residual that
+forces a token.
+
+\begin{lemma}[neutral adjunction]\label{lem:adjunction}
+Let $B$ be a neutral block.  Then every family for a context $C$ is also a
+family for the context obtained by adjoining the arms and the ports of $B$ to
+the owner of $C$, with the same head, the same pinned input and the same
+token.  If $B$ is a token block the same holds provided $C$ has at most one
+token, and the enlarged family carries the triple of $B$ as its token when $C$
+has none and as its second token when $C$ has one.
+\end{lemma}
+
+\begin{proof}
+Give $B$ a parameter $t$ that the family for $C$ does not use.  Every label of
+$C$ is then zero in $t$ and, by (N4), no label of $B$ is, so the labels of the
+enlarged cell are nonzero, they are pairwise distinct across the two groups
+because they differ in the coordinate $t$, and they are pairwise distinct
+inside $B$ again by (N4).  By (N1) the owner keeps the output it had, and the
+only other outputs that change are those created inside $B$, so $P=O$ for the
+enlarged cell follows from $P=O$ for $C$ together with (N2).  Condition (N3)
+splits the new labels into pairs of opposite forms, which extends the
+signature partition by mirror pairs and leaves the token where it was.  For a
+token block the same partition is extended by the mirror pairs together with
+the new triple, which sums to zero and spans a plane as the signature demands,
+and which is disjoint from the token of $C$ because it lives in the fresh
+parameters.
+Finally the head chain, the pinned input, the token and the ports of $C$ are
+untouched, so the free-head condition, the input condition, the token rank
+and each of the variant conditions of Section~\ref{sec:cells} hold for the
+enlarged family exactly as they held before.
+\end{proof}
+
+The two blocks we use most often are neutral for a reason one can write down.
+
+\begin{lemma}\label{lem:neutralpairs}
+Two arms of the same length $\ell$ form a neutral block, and so do two ports.
+In addition, two arms of lengths $a<b\le8$ of the same parity form a neutral
+block for every such pair except $\{1,3\}$, which is not neutral; one port
+together with an arm of even length $\ell\in\{4,6,8\}$ is neutral; one port
+together with two arms of opposite parity is neutral; and two ports together
+with an arm of odd length $\ell\in\{5,7\}$ are neutral.  In addition, two arms
+of opposite parity $\{o,e\}$ form a token block for every pair with
+$o\in\{3,5\}$, $e\in\{2,4,6\}$ and for $\{1,6\}$ and $\{2,5\}$, although
+$\{1,2\}$ and $\{1,4\}$ do not.
+\end{lemma}
+
+\begin{proof}
+For two arms of length $\ell$ take $a_i=(-2)^it$ on one and $a_i=-(-2)^it$ on
+the other.  The outputs of the first are $a_i+a_{i+1}=-a_i$ for $i<\ell$
+together with $a_\ell$, and those of the second are their negatives, so the
+$2\ell+2$ outputs are exactly the $2\ell+2$ labels $\pm(-2)^it$,
+$0\le i\le\ell$.  Condition (N1) holds because the two first labels are $t$
+and $-t$, condition (N3) because the labels come in opposite pairs, and (N4)
+because the $2^i$ are distinct.  Two ports labelled $t$ and $-t$ satisfy the
+four conditions directly.  For the remaining blocks, and for the assertion
+that $\{1,3\}$ admits no neutral labelling, the four conditions are a finite
+integer feasibility question once a bound on the $c_i$ is fixed, and we
+settled it by an exhaustive search; the resulting labels are listed in
+Table~\ref{tab:blocks}, and each is re-verified from its labels alone, with no
+reference to how it was found.
+\end{proof}
+
+That $\{1,3\}$ is the one exception does not appear to be an accident of the
+search.  It stays infeasible when the block is allowed three parameters
+instead of one and coefficients up to $14$ in absolute value, so the six
+labels of a $\{1,3\}$ block cannot be made to pay for themselves however they
+are written, and the pair is in any case the one our construction singles out
+everywhere else as well.  A $\{1,3\}$ block can still be carried
+by a cell, as the catalogue shows; what fails is only the uniform statement
+that it may be adjoined to an arbitrary family.
+
+Lemma~\ref{lem:adjunction} is what keeps the catalogue within reach.  A
+context with a retained neutral unit, or with a pair of recruited ports, is
+almost always a narrower context with a block adjoined, and the wide contexts
+are exactly the ones a solver finds hard.  Of the \NumNeutralTargets{}
+contexts our searches had not reached, \NumNeutralBuilt{} are obtained in this
+way from a narrower context that already had a family, at no search cost at
+all, a further \NumNeutralVariantBuilt{} input-in-token variants are obtained
+the same way, since by Lemma~\ref{lem:adjunction} the adjunction does not move
+the pinned input out of the token, and the last \NumNeutralTokenBuilt{}
+contexts, all of them with an $\{o,e\}$ residual and no port, are obtained from
+a token block.  Together with the searches this leaves no context of
+Lemma~\ref{lem:contexts} without a family.  The construction is
+not trusted: the families it produces are written in the format the solver
+emits and are re-verified by the independent checker of
+Section~\ref{sec:verification} together with everything else.
+
+\begin{table}[t]
+\centering
+\caption{The neutral blocks of Lemma~\ref{lem:neutralpairs}.  The labels are
+read as multiples of a fresh parameter $t$, the ports first and then the arms
+in the order listed, each arm from the owner outwards.  The equal pairs are
+the closed form $\pm(-2)^i$; the others come from an exhaustive search and are
+re-verified from the labels alone.}
+\label{tab:blocks}
+\small
+\input{blocks_table}
+\end{table}
+
+\begin{lemma}[context completeness]\label{lem:contexts}
+Every owner receives exactly one context from a finite list, and every
+vertex of degree two lies in exactly one arm, head chain or neutral unit.
+Exactly \NumEmittable{} of the contexts of the list occur.
+\end{lemma}
+
+The case analysis is given in Appendix~\ref{app:contexts}.  Its regression,
+our executable scheduler, produces a context in the list for every owner of
+every tree with at most nine vertices ($4{,}782{,}969$ labelled trees) and of
+$3{,}500$ random trees, $500$ at each order $n\in\{15,21,31,51,101,201,401\}$.
+In addition, the decision at a vertex depends only on its head-chain
+length, its arm lengths, its number of ports and the types of its active
+children.  We therefore enumerated all $314{,}280$ abstract local states with up to
+three arms of lengths at most eight (and larger arm sets of short arms), up to
+three ports, up to two active children of each of the possible types and
+head chains of length at most six.  Each state was realised by a concrete tree
+fragment, and we recorded the context emitted at the vertex.  The
+\NumEmittable{} distinct contexts obtained are all in the list, and they are
+exactly the contexts for which families are required in
+Section~\ref{sec:cells}, whereas the remaining entries of the list are slack.
+
+\begin{lemma}[charge]\label{lem:charge}
+Let $q\le D$ be the number of subdivided core edges.  The number of owners is
+at most $2q$, the special support satisfies $|S|\le 12D+3$, and the values
+reserved for forced companions number at most $6q$.
+\end{lemma}
+
+\begin{proof}
+Every owner is incident with a subdivided core edge, and such an edge has two
+endpoints.  A subdivided edge of length $\ell$ carries $\ell+1$ labels, at
+most $D+q$ in total.  Recruited ports contribute at most three per owner,
+absorptions at most two per owner, and the final bridge triple three.
+\end{proof}
+
+\section{Local families}\label{sec:cells}
+
+\subsection{Symbolic families}
+
+A \emph{family} for a context is a list of labels given as integer linear
+forms, divided by a common denominator $L$, in parameters $y$ (the head),
+$x$ or $x_1,x_2$ (inputs), token coordinates and internal parameters, such
+that
+\begin{enumerate}
+\item[(E1)] $\PO$ holds identically in the parameters;
+\item[(E2)] the labels other than the head split into pairs of opposite forms
+  and at most two \emph{tokens}, triples of forms summing to zero (a second
+  token is needed only for two-input cells whose non-head label count is
+  even);
+\item[(E3)] the label forms are pairwise distinct and nonzero;
+\item[(E4)] the three coefficient vectors of each token span a plane, and a
+  \emph{carrier} of at most two parameters on which they already span a
+  plane is recorded;
+\item[(E5)] the head is an independent parameter (nonroot contexts);
+\item[(E6)] the only label depending on an input alone is the antipode of that
+  input, and no non-head label is a rational multiple of the head.
+\end{enumerate}
+We call a family \emph{forced-antipode} when some non-head label is
+identically minus the head.  Such a label necessarily lies in a token
+$\{-x,a,x-a\}$ of the child, since its mirror is the head and the head is
+excluded from the signature, and a parent can then absorb the head $x$
+neither by a helper port nor by a mirror sibling, because the antipode of the
+head is already used inside the child.  Two contexts of our catalogue carry
+only forced-antipode families, the $(1;\text{one port})$ bottom and the
+two-input cell with head chain of length two and residual $\{1\}$, and only
+the second of them occurs, the first being folded into its parent.  Every
+other context has a family that is not forced-antipode, so a single child
+context is responsible for the whole of what follows.
+
+A parent absorbs the head of a forced-antipode child through a token of its
+own that contains the shared edge, $\{x,b,-x-b\}$, so that the two tokens are
+negatives of each other once the child's carrier is matched, $a=-b$.  A
+stationary parent with at least two ports does this with its port block.  An
+owner uses an \emph{input-in-token} family of its context, found by the
+same search with the shared edge required to be a token member (and with a
+second, free token when the number of non-head labels is even).  A parent
+whose context carries no such family instead absorbs the child by joining its
+rows into its own cell, the joined child type A2 of
+Appendix~\ref{app:contexts}, and the joined cell then has a family that is
+not forced-antipode, so that it is an ordinary child of the next parent and
+the absorption stops after one step.  Although the two rules look
+interchangeable, the second is the one that is always available, and the
+first is what keeps the cells small.
+
+One parent context deserves a separate remark, since it shows that the
+joining rule cannot be dispensed with.  Let $v$ be an owner with head chain
+of length $\equiv 0$, one arm of length $1$, no ports and two kept inputs
+$x_1,x_2$, write $a_1,a_2$ for its arm labels and $h$ for its head, and read
+off the three outputs $h+a_1+x_1+x_2$, $a_1+a_2$ and $a_2$.  The leaf output
+is $a_2$, and $a_1+a_2=a_1$ would force $a_2=0$, so $a_1+a_2=h$ and therefore
+$h=-(x_1+x_2)$, which leaves $a_1=t$, $a_2=-(x_1+x_2)-t$ with $t$ free.  The
+four non-head labels admit no token, and pairing $t$ with $-(x_1+x_2)-t$, or
+$x_1$ with $x_2$, forces $h=0$.  Thus $t=-x_1$ or $t=-x_2$, and in
+either case the labels are $-x_1,-x_2,x_1,x_2$.  Thus this owner always
+carries the antipodes of both of its inputs, it has no input-in-token family,
+and a forced-antipode child under it must be joined.  In the joined cell the
+second child is pinned by one label whose output is that label itself, which
+is exactly the role of a port, so the joint is searched as the context with
+one more port and one active child.  Property (E6) is what makes adjacent cells compatible without any
+case analysis, since a parent forces at most the antipode of its input and a
+child never carries the antipode of its own head, so that no two forms of
+adjacent cells coincide identically.  However, for \NumNotCleanContexts{} of
+the \NumEmittableWithFamily{} contexts that occur our catalogue carries no
+family with (E6), and for these the finitely many adjacent pairs are checked
+individually by the gate of Section~\ref{sec:verification}.
+
+\subsection{The search and the checker}
+
+Families are found by our constraint model over the integer coefficients of all
+label forms: one Boolean per (output, label) pair encodes the permutation,
+each true Boolean imposes the equality of two coefficient vectors, the
+signature (mirror pairs, token, head, inputs, zero label) is encoded by further
+Booleans, and every coefficient vector is required to be nonzero and distinct
+from the others.  The model is solved with CP-SAT~\cite{ORTools}.  A solution
+is a symbolic family, not a numerical labelling, and it is accepted only after
+an independent program reconstructs the topology from the row specification,
+recomputes the outputs, and re-verifies (E1)--(E5) with exact rational
+arithmetic and at three random integer points.  Every family in the table
+passes, and in addition the six-edge mother and the twelve-label insertion are
+applied once to every arm and every head chain of every family and the result
+is re-verified.  Table~\ref{tab:catalogue} summarises the catalogue.
+
+\begin{table}[t]
+\centering
+\caption{The certificate table, by kind of context: the contexts that occur
+(Lemma~\ref{lem:contexts}), those for which the catalogue carries a family,
+the number of families, the contexts with a family satisfying (E6), and the
+contexts whose chosen family carries a token.}
+\label{tab:catalogue}
+\input{catalogue_table}
+\end{table}
+
+Four exact impossibilities shape the alphabet.  A single arm of length four
+with no ports has only one-parameter families (rays), so a residual even
+singleton retains one neutral unit.  A head chain of length one or two with
+ports only has no $\PO$ family at all, and a subdivided parent edge therefore
+does not by itself make a vertex an owner.  The residue-one letter on a direct parent
+edge has the unique family $(-x;\,-x-t,\,t;\,x)$, whose head is the antipode
+of its input and is therefore not a free parameter, and it is for this reason
+joined with its parent.  With a subdivided parent edge the same letter has
+ordinary families with a free head, e.g.\ $(y;\,-y-x,\,-x,\,y+x;\,x)$ for
+$h=1$, and it is then an owner of its own.  Finally, the two-input cell with
+head chain of length two and residual $\{1\}$ has no family without the
+antipode of its own head, over all denominators $L\le 12$, all numbers of
+internal parameters up to three, all coefficient bounds up to $24$ and all
+four token shapes, and this is what makes it the one forced-antipode context
+that occurs.  The classification of the direct-edge two-input
+row given above is of a different kind, since it is proved by hand and does
+not depend on the search at all.
+
+\section{Sequential realization}\label{sec:realization}
+
+\begin{lemma}[realization]\label{lem:realization}
+Let $M$ be the least common multiple of the catalogue denominators and of
+$24$.  There is an absolute constant $A$ such that, for every decomposed core
+with a family assigned to every owner as in Section~\ref{sec:cells}, parameter
+values in $M\Z\cap[-A(D+1),A(D+1)]$ can be chosen bottom-up so that all special
+labels are distinct and nonzero and the special support is closed under
+negation up to at most one zero-sum triple whose negatives are unused.
+\end{lemma}
+
+Our proof maintains the set of placed labels, the values reserved for the
+parent's forced companions, and at most two pending tokens whose carrier
+parameters are kept symbolic.  A token cell with nothing pending keeps its
+carrier symbolic and every other parameter numeric.  A token cell with
+a pending token, on the other hand, solves the two pairing equations for its
+carrier as affine functions of the live parameters and then fixes them in a box
+avoiding the recorded forbidden conditions, and all other cells choose their
+parameters one coordinate at a time.  Because the only symbolic labels belong to the pending
+cells, their active children and their parents, at most $O(1)$ forms are
+alive and the number of forbidden conditions stays $O(|S|)$, and thus
+Lemma~\ref{lem:charge} gives boxes of side $O(D+1)$.  The full argument is given in
+Appendix~\ref{app:realization}, together with the explicit value
+$A=\AConst$.  This value follows from the catalogue constants (width at
+most $\NumMaxWidth$, at most $\NumParams$ parameters, coefficients at most
+$\NumCoefBound$ over denominators dividing $12$) and Lemma~\ref{lem:charge},
+and we have made no attempt to optimise it.
+
+\section{Dense completion and the proof of Theorem~\ref{thm:main}}\label{sec:dense}
+
+After Lemma~\ref{lem:realization} the unused labels form the set
+$X=\Z_n\setminus(\{0\}\cup S)$, which is closed under negation up to the
+pending triple $T$.  The negatives $-T$ are placed in an odd ordinary block of
+size at least three, which exists by parity whenever a token is pending and no
+block has size one.  It remains to partition $X$ into zero-sum blocks of the
+prescribed sizes, all at least two, with $|Z_n\setminus X|\le 2A(D+1)+1$.
+
+\begin{lemma}[linear dense completion]\label{lem:dense}
+There are absolute constants $\eta>0$ and $n_1$ such that for every odd
+$n\ge n_1$, every symmetric $X\subseteq\Z_n\setminus\{0\}$ with
+$|\Z_n\setminus X|\le\eta n$, and every list of block sizes $r_w\ge 2$ summing
+to $|X|$, the set $X$ has a partition into zero-sum blocks of sizes $r_w$.
+\end{lemma}
+
+This is the symmetric completion of \cite[Section~3]{ProjectNotes}: inverse
+pairs fill the even parts, one zero-sum triple is assigned to each odd part,
+and the triples come from Lemma~6.24 of \cite{MuyesserPokrovskiy2025} (the
+case $k=3$) applied with $p=1$.  The number of odd parts is even, because
+$|X|$ is even and congruent to that number modulo two, so the triples may be
+taken in pairs $T$, $-T$ and the residue set left after removing them is again
+symmetric and is filled by inverse pairs.
+
+Two readings of \cite{MuyesserPokrovskiy2025} enter here, and they give the
+two thresholds of Section~\ref{sec:intro}.  The printed perturbation radius of
+their Theorems~4.3--4.7 is $p^{A}n/(\log n)^{A}$, which gives
+Lemma~\ref{lem:dense} with $\eta n$ replaced by $n/(\log n)^{A}$ and hence
+gives Theorem~\ref{thm:polylog}.  Their Section~7.4 records that
+$\log n$ may be replaced by $\log|G'|$ throughout the proof, the only source
+of logarithms being their short commutator-product theorem, and for an abelian
+group the commutator subgroup is trivial and the commutator product is empty.
+The authors record the consequence $g(n)=\Omega(n)$ for cyclic groups in their
+Problem~7.4.  Their own consequence requires reading their Theorem~5.11 with
+the commutator length bounded by $\max(1,\log_4|G'|)$.  This reading
+leaves a positive constant perturbation radius at every fixed reservoir
+density and gives Lemma~\ref{lem:dense} as stated.  This
+improvement is described by the authors as requiring essentially no
+modification of their proof, although it is not a printed theorem.  The
+constant $\eta$ is in either case inherited from their argument and is not
+effective.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Root $T$ at a branch vertex, decompose by Section~\ref{sec:decomp}, assign
+families by Section~\ref{sec:cells}, realize by Lemma~\ref{lem:realization}
+with $|S|\le 12D+3$ and magnitudes at most $A(D+1)$, place the pending triple,
+and complete by Lemma~\ref{lem:dense}, which applies when $2A(D+1)+1\le\eta n$.
+Every stationary vertex then has a zero-sum block, every special vertex has the
+prescribed sum, and Lemma~\ref{lem:sigma} gives the bijection.  Taking
+$C\ge 3A/\eta$ and $n_0\ge n_1$ completes the proof.  Theorem~\ref{thm:polylog}
+is the same argument with the printed perturbation radius of
+\cite{MuyesserPokrovskiy2025} in place of the linear one, so that the
+hypothesis $2A(D+1)+1\le\eta n$ becomes $2A(D+1)+1\le n/(\log n)^{A'}$.  The
+final assertion follows by taking $D\le k$ and $n$ large.
+\end{proof}
+
+\section{Computations and certificates}\label{sec:verification}
+
+Three programs enter the proof, and we describe them in the order in which
+their results are used.
+
+\paragraph{The symbolic search.}
+For a context the search builds the label forms of Section~\ref{sec:cells}
+with integer coefficients bounded by $24$ over a common denominator $L\le 12$,
+encodes the $\PO$ identity as a permutation of the output multiset onto the
+label multiset (one Boolean per pair, each true Boolean equating two
+coefficient vectors), encodes the signature (E2), the distinctness (E3), the
+token rank condition (E4) and the head freedom (E5) as further Boolean and
+linear constraints, and asks CP-SAT~\cite{ORTools} for a feasible assignment.
+The same model with the cleanliness conditions (E6) is tried first, and the
+alternatives (token of rank three, token of rank two, no dedicated token
+parameters, two tokens) are tried in that order.  Every feasible assignment
+is stored, and the menu of a context lists all of them in order of
+preference, families containing the antipode of their own head last.  For
+the contexts with inputs the model is run a second time with the shared edge
+required to be a token member and the antipodes of the inputs forbidden
+(and a third time, for two-input cells, with both inputs required to be
+token members).  The resulting \emph{variant} families are kept in separate
+tables and are the ones used when a child is forced-antipode.  Each context is tried under nine settings of (denominator, number of
+internal parameters, coefficient bound), namely $(1,1,3)$, $(2,1,3)$,
+$(3,1,3)$, $(1,2,4)$, $(2,2,4)$, $(3,2,4)$, $(4,2,4)$, $(6,2,6)$ and
+$(12,2,12)$, with the head multiplier free, and with a time limit between
+$150$ and $900$ seconds per context and setting on a $128$-core workstation.
+In all, \NumAttempted{} contexts with widths up to $29$ labels were attempted,
+in \NumSolverRuns{} runs of the solver, and \NumReceived{} of them received at
+least one family.
+The search is exact in the sense that an infeasible model is a proof of
+non-existence within the coefficient and denominator bounds, and it is in
+this sense that the impossibilities of Section~\ref{sec:cells} are stated.
+
+\paragraph{The independent checker.}
+The checker reads only the JSON record of a family, rebuilds the cell
+topology from the row specification (head chain, arms, ports, active and
+input children, root row), recomputes every output as an exact rational
+combination of the parameters, and verifies (E1) by matching the two
+multisets of coefficient vectors, (E2)--(E5) directly, and the numerical
+identity at three random integer points, and it shares no code with the search.
+All \NumCatFamilies{} families of the catalogue and all
+\NumVariantFamilies{} variant families pass, as do the families obtained
+from them by one six-edge insertion on every arm and by one twelve-label
+insertion on every head chain.  The command
+\begin{verbatim}
+python3 scripts/check_alphabet_families.py data/alphabet_families.json
+\end{verbatim}
+re-verifies the whole catalogue in about two minutes on a laptop and prints
+one line per context.
+
+\paragraph{The gate and the closure check.}
+Two adjacent cells can fail to be compatible in only one way.  A label of the
+parent that depends on its input alone is $qx$ for a rational $q$, a label of
+the child that depends on its own head alone is $q'y$, and if the two ratios
+agree once the shared edge is identified then the two labels are equal as
+forms and no choice of parameters separates them.  Our gate enumerates every
+ordered pair of contexts, tries every pair of families from the two menus, and
+reports the context pairs for which no combination avoids such a coincidence.
+Over the catalogue it reports \NumGateFail{} ordered pairs.  However, most
+ordered pairs of contexts cannot occur in a tree at all, and restricted to the
+\NumPairs{} ordered pairs that the enumeration of Lemma~\ref{lem:contexts}
+records it reports \NumGateFailRealizable{}, every one of which has the
+forced-antipode child of Section~\ref{sec:cells} as its child and is therefore
+absorbed by the rule of that section and not by the gate.  A second
+program checks the conditions that the absorption rule needs, namely that
+every context that occurs has a family, that every context with a free active
+child has an input-in-token family or a joint that is not forced-antipode,
+that the folded letter has such a joint, and that every two-input context
+either has a family with both inputs in tokens or has a port joint carrying
+the second pinned child in a token.  We note that our scheduler deliberately
+stops one step short of the absorption rule, since it emits the
+forced-antipode cell as an owner of its own and does not join it into its
+parent, because which of the two routes applies depends on the certificate
+table and not on the tree.  The context list therefore carries the joint of
+every free-child context and the port joint of every two-input context, and
+the second program is what verifies that the rule closes over them.  These
+conditions are a finite list and the program reports them one by one, so that
+the state of the verification is visible at any time.  All of them hold: every
+one of the \NumEmittable{} contexts that occur has a family, all
+\NumFreeChildContexts{} free-child contexts absorb a forced-antipode child,
+the folded letter and all $40$ two-input contexts do the same, and the gate
+leaves nothing outside the absorption rule.
+
+\paragraph{The scheduler and the constructor.}
+Our scheduler implements the rules of Appendix~\ref{app:contexts} and returns,
+for a rooted tree, the list of owners with their contexts.  It is the
+regression for Lemma~\ref{lem:contexts} and was run on all labelled trees with
+at most nine vertices and on $3{,}500$ random trees of orders between $15$
+and $401$.  Our constructor
+implements Lemma~\ref{lem:realization} on top of the scheduler and the
+catalogue, produces an integer labelling, reduces it modulo $n$, and checks
+the bijection of vertex sums directly.  Each run writes a certificate listing
+the owners, the chosen families, the parameter values and the final
+labelling, so that a labelling can be re-verified without the constructor.
+The constructor has two modes.  In its default mode it follows the
+decomposition but completes the ordinary blocks by a direct search, and in
+the sparse regime ($n\in\{51,101,201\}$ with $D\approx n/25$) it succeeded
+on $119$ of $120$ random trees.  In its \emph{proof-faithful} mode it
+follows Lemma~\ref{lem:realization} step by step (numeric coordinates, live
+carriers, deferred pairing, the reservation of forced companions) and
+reports every departure from the lemma as a named gap.  On the same $120$
+trees it succeeded on $105$.  Of the fifteen remaining runs, nine report a
+modular collision between two special labels, or a pending triple whose
+negatives are already used modulo $n$, and six report a failure of the
+completion step.  We note that these runs use the dense completion only
+through a direct matching of the leftover labels, since at these orders the
+asymptotic Lemma~\ref{lem:dense} does not apply, and their purpose is to
+confirm the bookkeeping of Lemma~\ref{lem:realization} and not the theorem
+itself.  A modular collision between two special labels is exactly the event
+that the hypothesis $n>C(D+1)$ excludes, and at $n=201$ with $D\approx 8$ the
+hypothesis is very far from holding.  The runs also give the bookkeeping
+quantities of Appendix~\ref{app:realization} directly: at most two parameters
+were ever live at once, at most sixteen labels were symbolic, at most two
+tokens were pending, and the largest label magnitude was about $22(D+1)$,
+against the bound $A=\AConst$ that we prove.
+
+\section{Discussion}\label{sec:discussion}
+
+Previous work on edge-graceful trees is of two kinds.  Explicit labellings
+are known for several families, for example paths, stars, spiders and brooms
+(see \cite{GallianDS6} for the list), and the zero-sum partition theorem of
+\cite{KaplanLevRoditty2009} covers every odd-order tree with at most one
+vertex of degree two.  Our earlier work \cite{Meng2026two} extended that
+theorem to two such vertices with explicit (and effective) constructions.
+Our result lies between the two: it covers all trees
+in which the vertices of degree two are a small fraction of the order, with
+no restriction on where they sit, at the price of an ineffective constant.
+
+The constant $C$ is not effective because Lemma~\ref{lem:dense} is not,
+whereas the constant $A$ of Lemma~\ref{lem:realization} is explicit
+($A=\AConst$).  An effective version of the zero-sum matching with
+linear deficiency would therefore make Theorem~\ref{thm:main} effective
+without any change to the construction.  However, the degree-two vertices
+remain a bottleneck in a stronger sense: the special support has size linear
+in $D$ because every degree-two vertex is non-stationary, so our argument
+cannot reach trees in which these vertices have positive density.  In
+particular it says nothing about caterpillars with many subdivided edges or
+about spiders with long legs, for which the explicit constructions in the
+literature remain the only tool.  Whether the density threshold can be
+raised, e.g.\ to $D=o(n)$ or to $D\le cn$ for a small absolute $c$, seems to us
+the natural next question.  The local families are indifferent to the density,
+so the obstacle is entirely in the completion step, where the leftover set
+would no longer be nearly the whole group.
+
+Two further remarks concern the computer-assisted part.  First, our
+catalogue is finite by design and every family in it is a rational identity
+in a few parameters, and an independent re-verification is for this reason
+possible at all.  The search is only a way of finding the identities, and the
+proof does not depend on the search having been exhaustive except in the four
+impossibility statements of Section~\ref{sec:cells}, each of them a
+finite enumeration, and one of the four structural facts we use, the
+classification of the direct-edge two-input row, is proved by hand.  Second, although our scheduler's regression covers all
+small trees, it is evidence for, not a proof of, Lemma~\ref{lem:contexts}.
+The proof is the case analysis of Appendix~\ref{app:contexts}, and the
+scheduler is our way of keeping that analysis honest.
+
+\paragraph{Use of AI.}
+Anthropic's Claude was used as a coding and analysis assistant throughout this
+project.  It implemented and executed the search, verification, scheduling and
+construction code, prepared documentation, surveyed literature, and assisted in
+preparing manuscript text.  The scientific content is the author's own, and the
+manuscript was written or rewritten, edited and approved by the author.  This
+paper contains no figures, and its two tables are generated directly by the
+analysis code from the certificate catalogue; no figure, schematic or
+illustration was produced by a generative image model.  All scientific
+questions, study design decisions and interpretations are the author's.  Every
+computational claim was re-run by the author from the scripts in the
+repository, and the independent checker was written without access to the
+verification code of the search.
+
+\section{Data and code availability}\label{sec:data}
+
+The search (\file{symbolic\_free\_token\_cpsat.py}), the batch driver, the
+independent checker (\file{check\_alphabet\_families.py}), the scheduler
+(\file{context\_scheduler.py}), the abstract enumeration
+(\file{enumerate\_emittable\_contexts.py}), the gate
+(\file{check\_lookahead\_gate.py}), the closure check
+(\file{closure\_check.py}), the constructor, the context
+list, the certificate catalogue (\file{alphabet\_families.json}) with its
+variant tables, and the certificates of the runs reported in
+Section~\ref{sec:verification} are available at \todo{repository URL}.
+
+\appendix
+\section{Context completeness}\label{app:contexts}
+
+We prove Lemma~\ref{lem:contexts} by describing the assignment step by step.
+The executable scheduler follows the same steps and is our regression for the
+case analysis.  Process the core bottom-up and let $v$ be a nonroot core
+vertex with parent core edge of length $h$, arm multiset $A$, $k$ active
+children (children which are owners) and $q$ ports.  Since $v$ has degree at
+least three in $T$ we have $|A|+k+q\ge 2$.
+
+\paragraph{Step 1 (arms).}
+Lemma~\ref{lem:units} partitions $A$ into neutral units and a residual $R$ of
+one of the six types.  The units are $\PO$ with zero head sum and with support
+closed under negation, so they do not enter the cell of $v$.  However, when a
+unit is needed at $v$ itself (Steps~3 and~4) one of them is retained and its
+arms are added to the residual.
+
+\paragraph{Step 2 (active children).}
+If $k\ge 2$ the heads of the active children are prescribed to sum to zero, as
+a mirror pair for $k=2$, a free zero-sum triple for $k=3$, and pairs together
+with at most one triple otherwise.  These heads are free parameters of the
+children's families by (E5), and a child of the joined types (whose head is
+forced) is paired with a sibling of free head, the sibling taking the negative
+of the forced head.  After this step at most one active child remains and its
+head is the input $x$ of $v$.  However, if cancelling all active children would
+leave a portless residual $\{1\}$ or $\{2\}$ with no unit to retain, and
+exactly two active children are present, both are kept uncancelled and $v$
+is a \emph{two-input} owner with inputs $x_1,x_2$.  With a subdivided parent
+edge such cells have ordinary families, e.g.\
+$(y,-y-x_1-x_2;\,-x_1-x_2,\,y+x_1+x_2;\,x_1,x_2)$ for $h=1$ and $R=\{1\}$ with
+token $\{x_1,x_2,-x_1-x_2\}$, some of them with two tokens.  With a direct
+parent edge the exact search shows that no family with a free head exists,
+and $v$ uses instead one of the two \emph{rigid} rows
+$(-x_1-x_2;\,-x_2,\,-x_1;\,x_1,x_2)$ for $R=\{1\}$ and
+$\bigl(-\tfrac32(x_1+x_2);\,-\tfrac12(x_1+x_2),\,-(x_1+x_2),\,\tfrac12(x_1+x_2);\,x_1,x_2\bigr)$
+for $R=\{2\}$, whose head is forced by the inputs and which are treated like
+the residue-two ray in Appendix~\ref{app:realization}.  In our random-tree
+regression this pattern occurs at roughly one to two percent of the vertices.
+
+\paragraph{Step 3 (empty residual).}
+Suppose $R=\emptyset$.  If no active child remains, $v$ is stationary and its
+ordinary block consists of its $q$ ports, which requires $q\ne 1$.  If $q=1$
+there is a neutral unit or a cancelled group because $|A|+k+q\ge 2$, and one
+neutral pair is undone, so that $R$ becomes that pair (a same-parity
+residual, handled in Step~4).  If one active child of free type remains and
+$q=1$ or $q\ge 3$, a helper port labelled $-x$ absorbs it.  If $q=2$, two ports
+labelled $a$ and $-x-a$ absorb it with a token of rank two.  If $q=0$ then
+$|A|\ge 1$, so a neutral pair is undone and $v$ goes to Step~4 with the pair as
+residual and the active child.  A remaining child of a joined type is never
+absorbed by a helper (for the residue-one letter the helper would be $+x$,
+which is the head of the grandchild).  Instead $v$ receives the context
+$(h,\emptyset,p,c)$ with $c$ the joined type.
+
+\paragraph{Step 3a (forced-antipode children).}
+The exact census shows exactly two contexts whose every family contains the
+antipode of its own head, the $(1;\text{one port})$ bottom and the two-input
+cell with head chain of length two and residual $\{1\}$.  The first is folded
+into its parent at Step~3 in every case, as the child type L11, so it never
+becomes an owner, and the second is therefore the only forced-antipode child
+that occurs.  Such a child $c$ is absorbed as follows.  If the parent is
+stationary with at least two ports, the port block containing the head of $c$
+absorbs it.  If the parent is an owner whose context has an input-in-token
+family, that family absorbs it.  Alternatively, and this is what happens for
+the contexts whose input-in-token search is infeasible, $c$ is joined into the
+parent's cell as the child type A2, and the joint family is re-verified by the
+checker as a whole.  The joined cell has a family that is not forced-antipode, so it
+is an ordinary child of the next parent and the chain stops after one step.
+
+A two-input owner can have two forced-antipode children, and it then joins one
+of them and keeps the other pinned.  In the joint the pinned child contributes
+one label whose output is that label itself, which is the role of a port, so
+the joint is searched as the same context with one more port and child type
+A2, and its family is required to carry the port in a token and to have no
+label identically minus the port.  This is why we always join, and do not absorb,
+when both are possible: a cell that is joined into its parent is then
+a two-input cell with no forced-antipode children of its own, so the two
+grandchildren that the joint pins are ordinary, and no cell ever needs more
+than one token for an absorption.
+
+The residue-one letter needs a word of its own, although it is not
+forced-antipode.  With a direct parent edge and no port its own context has no
+family with a free head, so it is folded into its parent as the child type L1.
+With a subdivided parent edge, or with a port, it is an owner of its own.  However, when its
+active child is forced-antipode the folding is not what we do: the
+forced-antipode child is joined into the letter instead, which gives the
+context $(h,\{1\},p,\mathrm{A2})$, and that context has a family that is not
+forced-antipode, so the letter is an ordinary owner and its parent sees an
+ordinary free child.  Therefore an L1 joint never carries a forced-antipode
+grandchild.  (The opposite-parity bottom $(1,2)$ was joined in an earlier
+version of the alphabet, although it has a family without the antipode of its
+head and is now an ordinary owner.)
+
+\paragraph{Step 4 (nonempty residual).}
+$v$ is an owner with context $(h\bmod 6,R',p,c)$ where $R'$ is $R$ after the
+following repairs: a portless residual $\{1\}$, $\{2\}$, $\{4\}$, $\{6\}$ or
+$\{8\}$ with no active child retains one neutral unit, and a lone odd arm with
+a head chain likewise retains one unit (its portless cell has only rays).  One
+unit exists in each case because $v$ has at least two children.  The number
+of recruited ports is $p=q$ when $q\le 2$, otherwise $p\in\{1,3\}$ with
+$q-p\ne 1$, so that the unrecruited ports form a block of size zero or at
+least two.  Every tuple produced in this way is in the list, itself
+generated by the same rules.
+
+\paragraph{Step 5 (root).}
+The root has no head and its context is $(\mathrm{root},R',p,c)$ with the
+same conventions, the root family containing the zero label.  Exact search
+shows that a lone residual arm at the root needs two recruited ports, or none
+for odd residue and one for even residue.  When the available ordinary
+children do not permit this, one neutral pair is retained, and when the root
+has a lone arm, no ports, no unit and $k\ge 2$ active children the exact root
+table decides between cancelling all active heads and keeping one or two
+active children.  A root whose only children are one residual arm and one
+active child cannot occur, because branch vertices have three children.
+
+Every owner is assigned exactly one context, every vertex of degree two lies
+in exactly one arm, head chain or unit, and therefore the cells and units are
+edge-disjoint and cover all subdivided edges.  \qed
+
+The steps above are also the specification of our scheduler,
+and the abstract enumeration described in Section~\ref{sec:decomp} is
+our check that the list of contexts generated from these steps is complete:
+the residual types, the port counts and the child types are finite, the
+head-chain and arm lengths enter only through their residues modulo six
+(with the raw lengths $1$ and $2$ distinguished), and every combination is
+exercised by at least one fragment.
+
+
+\section{Proof of the realization lemma}\label{app:realization}
+
+\subsection*{Families and the choice rule}
+
+Every family carries the properties (E1)--(E6) of Section~\ref{sec:cells}.
+For a token family let $K(F)$ denote its carrier, a set of at most two
+parameters on which the three token forms already span a plane.  A family is
+\emph{input-carried} when $K(F)$ contains an input.  For every owner we fix a
+family before any label is chosen, preferring families with (E6).  When the
+context of a parent has no family with (E6), the finitely many pairs (parent
+family, child family) are checked for identical forms directly.  With this
+choice no non-input label of a parent is identically equal, as a form in the
+shared head, to a label of its child: the parent's only input-only label is
+the antipode of its input, and the child has no label equal to the antipode
+of its own head.
+
+\subsection*{State}
+
+Owners are processed in post-order.  The state consists of the set $\Placed$
+of numeric special labels, the set of \emph{reserved} values (antipodes of
+heads that a parent will place later), and the set $\mathrm{Open}\subseteq\Placed$
+of placed labels whose antipode is not yet placed and is designated (the head
+of an active child, the three labels of a pending token).  It also carries at
+most one
+\emph{pending token} $T_A$ together with a \emph{live set} $\Lambda$ of at
+most three symbolic parameters (the carrier of the pending cell $A$, and the
+head of $A$'s active child when the carrier contains the input), and the
+\emph{symbolic labels} (labels that are affine forms in $\Lambda$: they belong
+to $A$, to $A$'s active child and to $A$'s parent, hence at most $3W$ of them,
+where $W$ is the largest family width).  Finally it carries the set $\Phi$ of
+recorded forbidden conditions, each a proper affine condition on $\Lambda$.
+
+A numeric value $v$ is \emph{admissible} for a label if $v\ne 0$, $v$ is not
+placed or reserved, and $-v$ is not placed or reserved, unless $-v$ is open and
+$v$ is its designated antipode (the forced $-x$ of an absorbing family, a
+helper, or a coordinate of $-T$ when a token is cancelled).
+
+The invariant is: (a) numeric labels are pairwise distinct and nonzero, and no
+two are antipodal except designated pairs; (b) at most one token is pending;
+(c) every symbolic label is a non-constant affine form in $\Lambda$, and no two
+symbolic labels are identical or antipodal as forms; (d) $\Phi$ contains every
+condition under which a symbolic label would collide with a placed value or
+with another symbolic label; (e) $|\Placed|+|\mathrm{Reserved}|\le|S|+\#\text{cells}$
+and $|\Phi|\le 3W(2|\Placed|+3W)$.
+
+\subsection*{Processing an owner}
+
+Let $v$ be the next owner with family $F$.  Its input is the head label of the
+remaining active child, numeric unless that child kept its head symbolic,
+which happens exactly when $F$ is input-carried (the active child of an
+input-carried owner always keeps its head symbolic and chooses its other
+parameters numerically) or when the child is the pending cell with its head in
+$\Lambda$.
+
+\emph{No token.}  Choose the head and the internal parameters numerically,
+one coordinate at a time, in $M\Z\cap[-B,B]$.  Every label is affine in the
+coordinate being chosen with nonzero slope (E3), so each admissibility
+requirement and each reservation excludes at most one value per label, and the
+reservation is $\{q y: q\in\Phi(F_{\mathrm{parent}})\}$.  The bound
+$B=M\bigl(2W(|\Placed|+|\mathrm{Reserved}|+1)+W^2+1\bigr)$ therefore suffices.  If the
+input is symbolic, the labels depending on it are symbolic forms, non-constant
+by (E3) and the choice rule, and every comparison with a numeric label or
+another symbolic form is recorded in $\Phi$.
+
+\emph{Token, nothing pending.}  Keep the carrier symbolic, $\Lambda:=K(F)$
+(together with the child's head when the carrier contains the input), choose
+all other parameters numerically as above, and declare the token pending.  If
+the head is in $\Lambda$ the parent of $v$ receives a symbolic input.  Its own
+head is numeric by (E5), so no further propagation occurs.  The rigid rows
+are the exception to (E5): the residue-two ray and the two direct-edge
+two-input rows of Appendix~\ref{app:contexts} have heads that are fixed forms
+in their inputs, so their parents receive a symbolic input whenever those
+inputs are symbolic.  A chain of residue-two rays propagates a symbolic head
+for at most three levels before the four-layer reset family restores a free
+head, and a two-input row is processed only after both of its children, so
+its head is numeric unless one child keeps its head symbolic, in which case
+the row passes that single live parameter on.
+
+\emph{Token, token pending.}  Choose a matching of the three coordinates and
+solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two
+unknowns, nonsingular because the token map has rank two on the carrier, and the
+solution expresses $K(F)$ as affine functions of $\Lambda$.  The composite map
+$\Lambda\to K(F)$ has rank two because the token map of $A$ has rank two on
+$\Lambda$, so every label of $v$ depending on $K(F)$ is a non-constant affine
+form in $\Lambda$.  Choose the remaining parameters of $v$ numerically, record
+the new conditions, and choose $\Lambda\in(M\Z)^{|\Lambda|}$ avoiding all
+conditions in $\Phi$.  Each condition is a proper affine subspace, so a lattice
+point exists in a box of side $M(|\Phi|+1)$.  All labels of $A$, of its child
+and parent, and of $v$ become numeric, $T_A$ and $T_v$ are designated
+antipodes of each other, and nothing is pending.
+
+\emph{Parent of the pending cell without a token.}  As in the first case with
+a symbolic input.  Two-input rows are treated identically with both inputs.
+
+\emph{Stationary vertices.}  A helper places $-x$ (numeric, or the symbolic
+form $-x$), a two-port absorption places a fresh numeric $a$ and $-x-a$, and
+neutral units are instantiated with fresh numeric parameters.
+
+\emph{Two-token cells.}  A cell with two tokens pairs its first token with
+the pending token, if any, exactly as above, and its second token becomes
+pending.  If nothing is pending both tokens become pending with their carriers
+live.  At most two tokens are therefore ever pending, and the live set has at
+most four carrier parameters.
+
+\emph{Forced-antipode children.}  The token $\{-x,a,x-a\}$ of a
+forced-antipode child stays pending with its carrier live until the parent is
+processed.  The parent's port block or input-in-token family supplies the
+token $\{x,b,-x-b\}$, and the single equation $a=-b$ is solved for the child's
+carrier (its token map has rank two on the carrier, so the equation is
+non-degenerate).  A second token of an input-in-token family is an ordinary
+free token and is treated as above.
+
+\emph{Root.}  The root family contains the zero label.  If one token is still
+pending, choose $\Lambda$ avoiding $\Phi$ as above and hand the negatives of
+the triple to an odd ordinary block of size at least three.  Such a block
+exists because the special support then has odd size, so the ordinary block
+sizes have odd sum, and no block has size one.  If two tokens $T,T'$ are
+pending, impose $T'=-T$: two independent equations in four live parameters,
+solvable because both token maps have rank two on their carriers and their
+constant parts are zero-sum, and the special support is then closed under
+negation.
+
+\subsection*{Verification of the invariant and of the bounds}
+
+(a) follows from admissibility; (b) from the two token cases; (c) from (E3)
+and the choice rule, since a symbolic label is one of at most $3W$ labels of
+three adjacent cells, each a non-constant form in the live coordinates, and
+two of them are identical or antipodal as forms only if a parent input-only
+label coincides with a child head-only label, which the choice rule excludes;
+(d) by construction; (e) because every owner adds at most $W$ placed labels
+and at most $|\Phi(F)|\le 3$ reservations.  Every box has side
+$O(|\Placed|+|\mathrm{Reserved}|+|\Phi|)=O(|S|)$, every label is a
+bounded-coefficient combination of at most seven parameters, and
+$|S|\le 12D+3$ by Lemma~\ref{lem:charge}, and all magnitudes are therefore at
+most $A(D+1)$ for an absolute $A$.  Explicitly, with $W=\NumMaxWidth$, $M=\NumLatticeM$ and
+$|\Placed|+|\mathrm{Reserved}|\le 18(D+1)$, the coordinate boxes have side at
+most $M\bigl(2W(18(D+1)+1)+W^2+1\bigr)=\NumCoordLin(D+1)+\NumCoordCon$,
+the pairing boxes have side at most
+$M\bigl(3W(36(D+1)+3W)+1\bigr)=\NumPairLin(D+1)+\NumPairCon$, and a
+label is a sum of at most $\NumParams$ terms with coefficients at most
+$\NumCoefBound$ (over a denominator that only decreases the magnitude), so
+every label has magnitude at most
+$\NumParams\cdot\NumCoefBound\cdot\bigl(\NumPairLin(D+1)+\NumPairCon\bigr)
+\le \AConst(D+1)$.  At the end every special label other than the
+pending triple has its antipode placed, so the special support is closed under
+negation up to that triple.  \qed
+
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

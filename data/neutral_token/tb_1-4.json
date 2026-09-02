@@ -1,0 +1,11 @@
+{
+ "arms": [
+  1,
+  4
+ ],
+ "ports": 0,
+ "params": 2,
+ "coef": 6,
+ "token": true,
+ "status": "INFEASIBLE"
+}

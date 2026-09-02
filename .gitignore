@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+data/alphabet_families.json
+data/alphabet_families_xtok.json
+data/alphabet_families_xall.json
+data/batches/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg

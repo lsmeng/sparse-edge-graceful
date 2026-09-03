@@ -1,17 +1,11 @@
-% Section draft: the elementary route to a linear threshold.
-% To be \input after the dense-completion section once the constant is settled.
-
 \section{An elementary route to the linear threshold}\label{sec:linearroute}
 
-Theorem~\ref{thm:main} rests on the abelian reading of
-\cite{MuyesserPokrovskiy2025} through Lemma~\ref{lem:dense}.  In this section
-we record how far our reduction removes that dependence by elementary means.  The
-outcome is that Lemma~\ref{lem:dense} reduces to a single statement about
-permutations of an interval, which we prove in the two extreme cases and in a
-family of composite cases, and which we have verified exactly for every order
-up to $30$.  We state it as a conjecture; a proof would make
-Theorem~\ref{thm:main} independent of \cite{MuyesserPokrovskiy2025} and would
-give an explicit value of $C$.
+Theorem~\ref{thm:linear} rests on the abelian reading of
+\cite{MuyesserPokrovskiy2025} through Lemma~\ref{lem:dense}.  Here we reduce
+Lemma~\ref{lem:dense} to a single statement about permutations of an interval,
+prove that statement at the two ends of its range and for a family of composite
+orders, and verify it exactly up to order $30$.  A proof in general would give
+Theorem~\ref{thm:linear} unconditionally, with an explicit $C$.
 
 \subsection{From the residual set to Heffter's difference problem}
 
@@ -119,10 +113,11 @@ If Conjecture~\ref{conj:fsp} holds then the clean tail $[M+1,K]$ has a
 maximum packing into difference triples for every $K\ge3M+1$ (the cases
 $K-M\not\equiv0\pmod3$ reduce to it by omitting the one or two smallest
 elements, and the finitely many cases $K\le3M+3$ are magic rectangles with one
-or two empty cells, verified for $M\le30$).  Together with the proved branch of
-Lemma~\ref{lem:dense} for $K\ge7M+3$, this gives Lemma~\ref{lem:dense} with
-$\eta=1/(14A+O(1))$, hence Theorem~\ref{thm:main} with an explicit constant
-$C$ and without any use of \cite{MuyesserPokrovskiy2025}.  The punctured
+or two empty cells, verified for $M\le30$).  Together with Simpson's theorem
+on Langford sequences, which covers $K\ge7M+3$ with no folding, this gives
+Lemma~\ref{lem:dense} with
+$\eta=1/(14A+O(1))$, hence Theorem~\ref{thm:linear} unconditionally, with an
+explicit $C$ and without any use of \cite{MuyesserPokrovskiy2025}.  The punctured
 cases $I\subsetneq[1,M]$ are the same object with the extra small elements
 as additional distances, and were found feasible for every random $I$ we
 tried; we have not reduced them to Conjecture~\ref{conj:fsp} in general.

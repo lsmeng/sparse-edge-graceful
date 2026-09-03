@@ -39,7 +39,7 @@
   \small Department of Earth, Planetary, and Space Sciences,\\[-2pt]
   \small University of California, Los Angeles, CA 90095, USA\\[-2pt]
   \small \texttt{lsmeng@g.ucla.edu}}
-\date{Draft of 2 September 2026}
+\date{Draft of 5 September 2026}
 
 \input{numbers}
 
@@ -52,18 +52,20 @@ bijectively by the nonzero residues modulo $n$ so that the vertex sums are all
 the residues modulo $n$.  Lee conjectured in 1989 that every tree of odd order
 is edge-graceful.  The case of trees with at most one vertex of degree two
 follows from the zero-sum partition theorem of Kaplan, Lev and Roditty, and
-we recently settled the case of at most two such vertices.  We
-prove that there are absolute constants $C$ and $n_0$ such that every tree of
-odd order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
-$n>C(D+1)$.  The proof combines a finite table of local labelling identities,
-found by an exact constraint search and re-verified by an independent checker,
-with a bottom-up scheduling argument and with the linear-deficiency zero-sum
-matching of M\"uyesser and Pokrovskiy.  The linear deficiency is the
-improvement those authors record for abelian groups in their Section~7.4.  The
-printed form of their theorem gives the same conclusion with
-$n>C(D+1)(\log n)^{A}$, and in particular gives, for every fixed $k$, that
-every tree of odd order that is large enough and has at most $k$ vertices of
-degree two is edge-graceful.  The constants are not effective.
+we recently settled the case of at most two such vertices.  We prove that
+there are absolute constants $C$, $A$ and $n_0$ such that every tree of odd
+order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
+$n>C(D+1)(\log n)^{A}$; in particular, for every fixed $k$, every large enough
+tree of odd order with at most $k$ vertices of degree two is edge-graceful.
+The proof combines a finite table of local labelling identities, found by an
+exact constraint search and re-verified by an independent checker, with a
+bottom-up scheduling argument and with the zero-sum matching theorem of
+M\"uyesser and Pokrovskiy.  Under the abelian improvement of that theorem
+which its authors record in their Section~7.4, the threshold becomes linear,
+$n>C(D+1)$.  The constants are not effective.  We also reduce the linear
+threshold to an elementary statement about permutations of an interval, which
+we prove in several cases and verify exactly up to order $30$, and which would
+make the constant explicit.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -94,33 +96,6 @@ their placement, is what limits the zero-sum approach, provided that it is
 small compared with the order of the tree.
 
 \begin{theorem}\label{thm:main}
-There are absolute constants $C$ and $n_0$ such that every tree $T$ of odd
-order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
-$n>C(D+1)$.
-\end{theorem}
-
-Equivalently, for every $k\ge 0$ every odd-order tree with at most $k$ vertices
-of degree two and $n>2Ck$ vertices is edge-graceful, the cases $k=0$ and
-$k\le 2$ being the theorems of \cite{KaplanLevRoditty2009} and
-\cite{Meng2026two}, respectively.  However, the constants come from an
-asymptotic matching theorem and are therefore not effective.
-Theorem~\ref{thm:main} also says nothing about trees in which the degree-two
-vertices have positive density, e.g.\ caterpillars with many subdivided
-edges, the regime of the full conjecture.
-
-The only external input to Theorem~\ref{thm:main} is a zero-sum matching
-theorem in $\Z_n$ that tolerates a linear number of deleted residues, and it
-is the linear tolerance, and not the matching itself, that is delicate.
-The printed statements of M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025}
-tolerate $n/(\log n)^{A}$ deletions.  However, their Section~7.4 records that
-for abelian groups the logarithms may be removed, since the only source of a
-logarithm in their proof is a bound on the length of a commutator product and
-that product is empty in an abelian group.  Theorem~\ref{thm:main} uses the
-latter reading, which the authors state and use themselves.  Everything else in
-our proof is finite or elementary, and using only the printed statements it
-gives the following.
-
-\begin{theorem}\label{thm:polylog}
 There are absolute constants $C$, $A$ and $n_0$ such that every tree $T$ of
 odd order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
 $n>C(D+1)(\log n)^{A}$.  In particular, for every $k\ge 0$ there is an $n_k$
@@ -128,10 +103,41 @@ such that every tree of odd order $n\ge n_k$ with at most $k$ vertices of
 degree two is edge-graceful.
 \end{theorem}
 
-Thus the qualitative statement, that a bounded number of degree-two vertices
-is no obstruction once the tree is large, does not depend on the remark of
-Section~7.4 at all.  The remark is what turns the polylogarithmic threshold
-into a linear one.
+The cases $k=0$ and $k\le2$ of the second statement are the theorems of
+\cite{KaplanLevRoditty2009} and \cite{Meng2026two}, respectively, with
+$n_k=1$ there.  The constants come from an asymptotic matching theorem and
+are not effective, and the theorem says nothing about trees in which the
+degree-two vertices have positive density, e.g.\ caterpillars with many
+subdivided edges, the regime of the full conjecture.
+
+The only external input is a zero-sum matching theorem in $\Z_n$ that
+tolerates a set of deleted residues, and it is the size of that set, not the
+matching itself, that determines the threshold.  The printed statements of
+M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025} tolerate
+$n/(\log n)^{A}$ deletions and give Theorem~\ref{thm:main}.  However, their
+Section~7.4 records that for abelian groups the logarithms may be removed,
+since the only source of a logarithm in their proof is a bound on the length
+of a commutator product and that product is empty in an abelian group; the
+authors state this improvement and use it themselves, although it is not a
+printed theorem.  Under that reading our argument gives a linear threshold.
+
+\begin{theorem}\label{thm:linear}
+Assume the abelian improvement of \cite[Section~7.4]{MuyesserPokrovskiy2025},
+namely that their zero-sum matching theorems hold in $\Z_n$ with a linear
+number of deleted residues.  Then there are absolute constants $C$ and $n_0$
+such that every tree $T$ of odd order $n\ge n_0$ with $D$ vertices of degree
+two is edge-graceful whenever $n>C(D+1)$; equivalently, for every $k\ge0$,
+every odd-order tree with at most $k$ vertices of degree two and more than
+$2Ck$ vertices is edge-graceful.
+\end{theorem}
+
+The qualitative statement, that a bounded number of degree-two vertices is no
+obstruction once the tree is large, therefore does not depend on the remark
+of Section~7.4 at all; the remark is what turns the polylogarithmic threshold
+into a linear one.  In Section~\ref{sec:linearroute} we reduce the linear
+threshold, with an explicit constant and without any use of
+\cite{MuyesserPokrovskiy2025}, to a conjecture on permutations of an interval
+that we prove in several cases and verify exactly up to order $30$.
 
 Our approach separates the problem into a local part and a global part.  Locally,
 each maximal path of degree-two vertices, together with the branch vertex that
@@ -143,8 +149,8 @@ that shares no code with the search.  Globally, the families are assembled
 bottom-up so that the multiset of special labels is closed under negation up
 to at most one zero-sum triple and has size and magnitude linear in $D$.  The
 remaining labels are then partitioned into zero-sum blocks of the prescribed
-sizes by the linear-deficiency form of the random Hall--Paige theorem of
-M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025}.  Therefore the local part is a
+sizes by the random Hall--Paige theorem of M\"uyesser and
+Pokrovskiy~\cite{MuyesserPokrovskiy2025}.  Therefore the local part is a
 finite computation (\NumCatFamilies{} certified families), whereas the
 global part is a scheduling lemma, whose regression is an executable
 scheduler that we tested on all trees with at most nine vertices and on
@@ -156,8 +162,10 @@ Section~\ref{sec:decomp} decomposes the tree and proves the counting lemmas.
 Section~\ref{sec:cells} describes the local families and the finite
 certificate table.  Section~\ref{sec:realization} proves the sequential
 realization lemma.  Section~\ref{sec:dense} applies the dense completion and
-proves Theorem~\ref{thm:main}.  Section~\ref{sec:verification} describes the
-computations and the certificate format.
+proves Theorems~\ref{thm:main} and~\ref{thm:linear}.
+Section~\ref{sec:linearroute} records the elementary route to the linear
+threshold.  Section~\ref{sec:verification} describes the computations and the
+certificate format.
 
 \section{Set-up}\label{sec:setup}
 
@@ -626,7 +634,7 @@ most $\NumMaxWidth$, at most $\NumParams$ parameters, coefficients at most
 $\NumCoefBound$ over denominators dividing $12$) and Lemma~\ref{lem:charge},
 and we have made no attempt to optimise it.
 
-\section{Dense completion and the proof of Theorem~\ref{thm:main}}\label{sec:dense}
+\section{Dense completion and the proofs of Theorems~\ref{thm:main} and~\ref{thm:linear}}\label{sec:dense}
 
 After Lemma~\ref{lem:realization} the unused labels form the set
 $X=\Z_n\setminus(\{0\}\cup S)$, which is closed under negation up to the
@@ -654,7 +662,7 @@ Two readings of \cite{MuyesserPokrovskiy2025} enter here, and they give the
 two thresholds of Section~\ref{sec:intro}.  The printed perturbation radius of
 their Theorems~4.3--4.7 is $p^{A}n/(\log n)^{A}$, which gives
 Lemma~\ref{lem:dense} with $\eta n$ replaced by $n/(\log n)^{A}$ and hence
-gives Theorem~\ref{thm:polylog}.  Their Section~7.4 records that
+gives Theorem~\ref{thm:main}.  Their Section~7.4 records that
 $\log n$ may be replaced by $\log|G'|$ throughout the proof, the only source
 of logarithms being their short commutator-product theorem, and for an abelian
 group the commutator subgroup is trivial and the commutator product is empty.
@@ -662,24 +670,25 @@ The authors record the consequence $g(n)=\Omega(n)$ for cyclic groups in their
 Problem~7.4.  Their own consequence requires reading their Theorem~5.11 with
 the commutator length bounded by $\max(1,\log_4|G'|)$.  This reading
 leaves a positive constant perturbation radius at every fixed reservoir
-density and gives Lemma~\ref{lem:dense} as stated.  This
-improvement is described by the authors as requiring essentially no
-modification of their proof, although it is not a printed theorem.  The
-constant $\eta$ is in either case inherited from their argument and is not
-effective.
+density and gives Lemma~\ref{lem:dense} as stated, which is the hypothesis of
+Theorem~\ref{thm:linear}.  This improvement is described by the authors as
+requiring essentially no modification of their proof, although it is not a
+printed theorem.  The constant $\eta$ is in either case inherited from their
+argument and is not effective.
 
-\begin{proof}[Proof of Theorem~\ref{thm:main}]
+\begin{proof}[Proof of Theorems~\ref{thm:main} and~\ref{thm:linear}]
 Root $T$ at a branch vertex, decompose by Section~\ref{sec:decomp}, assign
 families by Section~\ref{sec:cells}, realize by Lemma~\ref{lem:realization}
-with $|S|\le 12D+3$ and magnitudes at most $A(D+1)$, place the pending triple,
-and complete by Lemma~\ref{lem:dense}, which applies when $2A(D+1)+1\le\eta n$.
-Every stationary vertex then has a zero-sum block, every special vertex has the
-prescribed sum, and Lemma~\ref{lem:sigma} gives the bijection.  Taking
-$C\ge 3A/\eta$ and $n_0\ge n_1$ completes the proof.  Theorem~\ref{thm:polylog}
-is the same argument with the printed perturbation radius of
-\cite{MuyesserPokrovskiy2025} in place of the linear one, so that the
-hypothesis $2A(D+1)+1\le\eta n$ becomes $2A(D+1)+1\le n/(\log n)^{A'}$.  The
-final assertion follows by taking $D\le k$ and $n$ large.
+with $|S|\le 12D+3$ and magnitudes at most $A(D+1)$, and place the pending
+triple.  Under the hypothesis of Theorem~\ref{thm:linear}, Lemma~\ref{lem:dense}
+completes the labelling as soon as $2A(D+1)+1\le\eta n$; every stationary
+vertex then has a zero-sum block, every special vertex has the prescribed sum,
+and Lemma~\ref{lem:sigma} gives the bijection, so $C\ge 3A/\eta$ and
+$n_0\ge n_1$ prove Theorem~\ref{thm:linear}.  With the printed perturbation
+radius of \cite{MuyesserPokrovskiy2025} in place of the linear one the same
+argument applies when $2A(D+1)+1\le n/(\log n)^{A'}$, which proves
+Theorem~\ref{thm:main}; its final assertion follows by taking $D\le k$ and
+$n$ large.
 \end{proof}
 
 \input{linear_route}
@@ -821,8 +830,9 @@ no restriction on where they sit, at the price of an ineffective constant.
 The constant $C$ is not effective because Lemma~\ref{lem:dense} is not,
 whereas the constant $A$ of Lemma~\ref{lem:realization} is explicit
 ($A=\AConst$).  An effective version of the zero-sum matching with
-linear deficiency would therefore make Theorem~\ref{thm:main} effective
-without any change to the construction.  However, the degree-two vertices
+linear deficiency would therefore make Theorem~\ref{thm:linear} effective
+without any change to the construction, and Section~\ref{sec:linearroute}
+reduces this to Conjecture~\ref{conj:fsp}.  However, the degree-two vertices
 remain a bottleneck in a stronger sense: the special support has size linear
 in $D$ because every degree-two vertex is non-stationary, so our argument
 cannot reach trees in which these vertices have positive density.  In

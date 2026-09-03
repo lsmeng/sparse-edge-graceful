@@ -5,12 +5,14 @@ Code, certificates and manuscript for
 > **Edge-graceful trees with few vertices of degree two**
 > Lingsen Meng
 
+*Archival DOI:* to be minted on Zenodo at submission (see **Archival** below).
+
 A tree of odd order *n* is *edge-graceful* if its edges can be labelled
 1, …, n−1 so that the induced vertex sums are distinct modulo *n*.  The paper
-proves that there are absolute constants *C* and *n₀* such that every tree of
-odd order *n ≥ n₀* with *D* vertices of degree two is edge-graceful whenever
-*n > C(D+1)*, together with an unconditional variant with an extra
-`(log n)^A` factor.
+proves, unconditionally, that there are absolute constants *C*, *A* and *n₀*
+such that every tree of odd order *n ≥ n₀* with *D* vertices of degree two is
+edge-graceful whenever *n > C(D+1)(log n)^A*; under the abelian improvement
+of Müyesser and Pokrovskiy's matching theorem the threshold becomes linear, *n > C(D+1)*.
 
 ## What is here
 
@@ -65,6 +67,12 @@ emits and pass through exactly the same checker.
 Python 3.10 or later, and [OR-Tools](https://developers.google.com/optimization)
 for the search (`pip install ortools`).  The checker, the scheduler, the
 enumeration and the closure check need only the standard library.
+
+## Archival
+
+A citable snapshot is archived on Zenodo; the DOI will be added here and to the
+paper on release.  Metadata for the archive is in `.zenodo.json` and
+`CITATION.cff`.
 
 ## AI assistance
 

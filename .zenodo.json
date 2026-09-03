@@ -1,0 +1,23 @@
+{
+  "title": "sparse-edge-graceful: certificates, code and manuscript for edge-graceful trees with few vertices of degree two",
+  "upload_type": "software",
+  "description": "Code, certificate catalogue and manuscript for the theorem that every tree of odd order n with D vertices of degree two is edge-graceful once n exceeds an absolute constant times (D+1)(log n)^A, and, under the abelian improvement of Muyesser and Pokrovskiy's zero-sum matching theorem, once n exceeds an absolute constant times (D+1). Includes the exact constraint search, an independent checker that shares no code with it (5716/5716 families verified), the bottom-up scheduler and its regressions, the closure check, and the constructor. Code and data are under the MIT License; the paper/ directory is under CC BY 4.0.",
+  "creators": [
+    {
+      "name": "Meng, Lingsen",
+      "affiliation": "Department of Earth, Planetary, and Space Sciences, University of California, Los Angeles"
+    }
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "keywords": [
+    "edge-graceful labeling",
+    "graph labeling",
+    "trees",
+    "zero-sum partitions",
+    "Heffter difference problem",
+    "Langford sequences",
+    "computer-assisted proof",
+    "constraint programming"
+  ]
+}

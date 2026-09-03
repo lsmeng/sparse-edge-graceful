@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this code, the certificates or the result, please cite the paper below."
+type: software
+title: "sparse-edge-graceful: certificates, code and manuscript for edge-graceful trees with few vertices of degree two"
+authors:
+  - family-names: Meng
+    given-names: Lingsen
+    affiliation: "Department of Earth, Planetary, and Space Sciences, University of California, Los Angeles"
+    email: lsmeng@g.ucla.edu
+version: "1.0.0"
+date-released: "2026-09-05"
+repository-code: "https://github.com/lsmeng/sparse-edge-graceful"
+license: MIT
+keywords:
+  - edge-graceful labeling
+  - graph labeling
+  - trees
+  - zero-sum partitions
+  - Heffter difference problem
+  - computer-assisted proof
+preferred-citation:
+  type: unpublished
+  title: "Edge-graceful trees with few vertices of degree two"
+  authors:
+    - family-names: Meng
+      given-names: Lingsen
+  year: 2026
+  notes: "Draft of 5 September 2026. paper/sparse_edge_graceful.pdf in this repository."

@@ -5,7 +5,7 @@ Code, certificates and manuscript for
 > **Edge-graceful trees with few vertices of degree two**
 > Lingsen Meng
 
-*Archival DOI:* to be minted on Zenodo at submission (see **Archival** below).
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22287387.svg)](https://doi.org/10.5281/zenodo.22287387)
 
 A tree of odd order *n* is *edge-graceful* if its edges can be labelled
 1, …, n−1 so that the induced vertex sums are distinct modulo *n*.  The paper
@@ -70,9 +70,10 @@ enumeration and the closure check need only the standard library.
 
 ## Archival
 
-A citable snapshot is archived on Zenodo; the DOI will be added here and to the
-paper on release.  Metadata for the archive is in `.zenodo.json` and
-`CITATION.cff`.
+A citable snapshot is archived on Zenodo.  The concept DOI
+[10.5281/zenodo.22287387](https://doi.org/10.5281/zenodo.22287387) always
+resolves to the latest version; version 1.0.0 is
+[10.5281/zenodo.22287388](https://doi.org/10.5281/zenodo.22287388).
 
 ## AI assistance
 

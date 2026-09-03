@@ -11,6 +11,14 @@ authors:
 version: "1.0.0"
 date-released: "2026-09-05"
 repository-code: "https://github.com/lsmeng/sparse-edge-graceful"
+doi: "10.5281/zenodo.22287387"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22287387"
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: "10.5281/zenodo.22287388"
+    description: "Version 1.0.0"
 license: MIT
 keywords:
   - edge-graceful labeling

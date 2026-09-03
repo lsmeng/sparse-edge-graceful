@@ -110,7 +110,15 @@ def main():
         M = M * d // _m.gcd(M, d)
     M = M * 24 // _m.gcd(M, 24)
     npar = max(len(f["parameters"]) for k in cat for f in menu(k))
-    KMAX = 24
+    # the largest |coefficient| anywhere in the catalogue.  The solver caps
+    # its own coefficients at 24, but the families built by the two
+    # construction identities are not subject to that cap (the equal-pair
+    # blocks reach 2^6 = 64), and it is the catalogue-wide value that the
+    # realization lemma needs
+    KMAX = max(abs(x) for k in cat for f in menu(k)
+               for v in (f.get("family") or f)["coefficients_by_label"].values()
+               for x in v)
+    KMAX = max(KMAX, 24)
     # boxes of the realization lemma, in the notation of Appendix B
     coord_lin, coord_con = 36 * W * M, M * (2 * W + W * W + 1)
     pair_lin, pair_con = 108 * W * M, M * (9 * W * W + 1)

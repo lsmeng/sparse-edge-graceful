@@ -688,7 +688,11 @@ their results are used.
 
 \paragraph{The symbolic search.}
 For a context the search builds the label forms of Section~\ref{sec:cells}
-with integer coefficients bounded by $24$ over a common denominator $L\le 12$,
+with integer coefficients bounded by $24$ over a common denominator $L\le 12$
+(the families built by the two identities of Section~\ref{sec:decomp} are not
+subject to this cap, and the largest coefficient anywhere in the catalogue,
+$\NumCoefBound$, is attained by the equal-pair blocks; it is this
+catalogue-wide value that enters Lemma~\ref{lem:realization}),
 encodes the $\PO$ identity as a permutation of the output multiset onto the
 label multiset (one Boolean per pair, each true Boolean equating two
 coefficient vectors), encodes the signature (E2), the distinctness (E3), the
@@ -839,10 +843,10 @@ The proof is the case analysis of Appendix~\ref{app:contexts}, and the
 scheduler is our way of keeping that analysis honest.
 
 \paragraph{Use of AI.}
-Anthropic's Claude and OpenAI's ChatGPT were used as coding and analysis
-assistants throughout this project.  They implemented and executed the
-processing, reasoning, and statistical code, prepared documentation, surveyed
-literature, and assisted in preparing manuscript text.
+Anthropic's Claude, OpenAI's ChatGPT and Google's Gemini were used as coding
+and analysis assistants throughout this project.  They implemented and executed
+the processing, reasoning, and statistical code, prepared documentation,
+surveyed literature, and assisted in preparing manuscript text.
 
 \section{Data and code availability}\label{sec:data}
 

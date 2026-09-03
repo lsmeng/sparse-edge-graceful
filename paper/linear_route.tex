@@ -1,0 +1,128 @@
+% Section draft: the elementary route to a linear threshold.
+% To be \input after the dense-completion section once the constant is settled.
+
+\section{An elementary route to the linear threshold}\label{sec:linearroute}
+
+Theorem~\ref{thm:main} rests on the abelian reading of
+\cite{MuyesserPokrovskiy2025} through Lemma~\ref{lem:dense}.  In this section
+we record how far our reduction removes that dependence by elementary means.  The
+outcome is that Lemma~\ref{lem:dense} reduces to a single statement about
+permutations of an interval, which we prove in the two extreme cases and in a
+family of composite cases, and which we have verified exactly for every order
+up to $30$.  We state it as a conjecture; a proof would make
+Theorem~\ref{thm:main} independent of \cite{MuyesserPokrovskiy2025} and would
+give an explicit value of $C$.
+
+\subsection{From the residual set to Heffter's difference problem}
+
+After Lemma~\ref{lem:realization} the special support is $\pm I$ with
+$I\subseteq[1,M]$ and $M=A(D+1)$, and the residual set is
+$X=\pm([1,K]\setminus I)$ in $\Z_n$, $n=2K+1$.  In the branch of
+Lemma~\ref{lem:dense} that needs the completion theorem, $X$ has to be
+partitioned into signed zero-sum triples $\{\pm a,\pm b,\pm c\}$.  Writing a
+triple by its three magnitudes $a<b<c$ in $[1,K]$, the two possibilities are
+$a+b=c$ and $a+b+c=n$; the first is a pair $\{b,c\}$ at distance $a$ and the
+second is the pair $\{b,-c\}$ at cyclic distance $a$ in $\Z_n$.  For
+$I=\emptyset$ this is Heffter's first difference problem when $n\equiv1\pmod
+6$, solved for every $n$ by Peltesohn~\cite{Peltesohn}, and the general case
+asks for the same partition of $[1,K]\setminus I$, that is, for Heffter's
+problem with the small differences $I$ forbidden.  The hardest case in our experiments is
+$I=[1,M]$, and it is the one we analyse.
+
+\subsection{Folded sum permutations}
+
+Let $K-M=3t$.  In every solution our searches found, the $t$ smallest elements
+$M+1,\dots,M+t$ can be taken as the distances $a$, and the remaining $2t$
+elements split into a lower half $M+t+1,\dots,M+2t$ and an upper half
+$M+2t+1,\dots,K$ with each pair $\{b,c\}$ taking $b$ from the lower and $c$
+from the upper half.  Writing $a=M+1+i$, $b=M+t+1+j$, $c=M+2t+1+k$ with
+$i,j,k\in[0,t-1]$ and $s=M+1-t$, the two triple types become
+\[
+  c-b=a\iff k=i+j+s,\qquad b+c=n-a\iff k=(2t-1)-(i+j+s).
+\]
+So a solution is a permutation $\pi$ of $[0,t-1]$, $j=\pi(i)$, such that the
+numbers $u_i=i+\pi(i)+s$ lie in $[0,2t-1]$ and their folds
+$\min(u_i,\,2t-1-u_i)$ form a permutation of $[0,t-1]$.  We call such a $\pi$
+a \emph{folded sum permutation} of order $t$ and shift $s$, and write
+$\mathrm{FSP}(t,s)$.  Equivalently, with $\tau_i=i+\pi(i)$, the $\tau_i$ are
+distinct, lie in the window $W=[-s,2t-1-s]$, and no two of them sum to the
+reflection constant $c=2t-1-2s$ of $W$; that is, the sum set of $\pi$ is a
+transversal of the reflection of $W$.  Since $\sum_i\tau_i=t(t-1)$ for every
+permutation, the mean of the transversal exceeds the centre of $W$ by
+$s-\tfrac12$.
+
+The range $3M+1\le K\le 7M+3$ of Lemma~\ref{lem:dense} corresponds to
+$(1-t)/2\le s\le(t+1)/2$, and beyond $K\ge7M+3$ Simpson's theorem on Langford
+sequences applies with no folding at all.
+
+\begin{conjecture}\label{conj:fsp}
+For every $t\ge5$ and every integer $s$ with $(1-t)/2\le s\le(t+1)/2$ there is
+a folded sum permutation of order $t$ and shift $s$.
+\end{conjecture}
+
+The window is sharp: outside it no $\mathrm{FSP}(t,s)$ exists, because the
+$s$ largest values of $W$ (for $s\ge1$) have no reflection partner in the
+range of the $\tau_i$ and must all be attained, which is impossible once
+$s>(t+1)/2$.  Our constraint programs verify the conjecture exactly, for every $3\le t\le30$ except $t=4$, where $s=-1$ and $s=2$
+fail; unlike Simpson's theorem there are no congruence exceptions inside the
+window, the folding removes them.
+
+\subsection{What is proved}
+
+\begin{proposition}\label{prop:fspcases}
+Conjecture~\ref{conj:fsp} holds in the following cases.
+\begin{enumerate}
+\item $s\in\{0,1\}$: the identity is an $\mathrm{FSP}(t,s)$.
+\item $t$ odd and $s\in\{(1-t)/2,(t+1)/2\}$: the rotation
+  $\pi(i)=i+(t-1)/2 \bmod t$ is an $\mathrm{FSP}(t,s)$ at both endpoints.
+\item (Composition.)  If $a$ is odd and $\sigma$ is an
+  $\mathrm{FSP}(b,s')$, then
+  \[
+    \pi(au+w)=a\,\sigma(u)+\bigl((w+\tfrac{a-1}{2})\bmod a\bigr),\qquad
+    u\in[0,b-1],\ w\in[0,a-1],
+  \]
+  is an $\mathrm{FSP}(ab,s)$ with $s=a(s'-1)+(a+1)/2$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The sums $2i$ are distinct and even, the constant $c$ is odd, and
+$0\le 2i\le 2t-2\le 2t-1-s$ exactly when $s\le1$; the lower bound $2i\ge-s$
+needs $s\ge0$.
+
+(2) For the rotation the sums $i+\pi(i)$ are $2i+(t-1)/2$ for
+$i<(t+1)/2$ and $2i-(t+1)/2$ for $i\ge(t+1)/2$, which together form the
+interval $[(t-1)/2,(3t-3)/2]$.  At $s=(1-t)/2$ this interval is the lower half
+of $W$, at $s=(t+1)/2$ it is the upper half, and a half of $W$ contains no
+reflected pair.
+
+(3) On each block the inner rotation has sums $w+\rho(w)$ forming the interval
+$I=[(a-1)/2,(3a-3)/2]$, which is carried to itself by $x\mapsto 2a-2-x$.  The
+sums of $\pi$ are $a(u+\sigma(u))+I$.  Put $s=(a+1)/2+aq$.  The condition
+$a(u+\sigma(u))+I\subseteq[-s,2ab-1-s]$ is $u+\sigma(u)\in[-(q+1),2b-q-2]$,
+the window of $\mathrm{FSP}(b,q+1)$; and the reflection constant
+$c=2ab-1-2s=a(2b-2q-1)-2$ sends $a\,y+x$ to $a(2b-2q-3-y)+(2a-2-x)$, so it
+reflects $I$ onto itself and the block index $y$ by the constant
+$2b-1-2(q+1)$ of $\mathrm{FSP}(b,q+1)$.  Therefore the sum set of $\pi$ is a
+transversal exactly when the sum set of $\sigma$ is, and $s'=q+1$.
+\end{proof}
+
+Case (2) has two readings: at the lower endpoint it is a hooked Langford
+sequence of defect $(t+1)/2$, at the upper endpoint the columns
+$(i,\pi(i),c-i-\pi(i))$ form a $3\times t$ magic rectangle.  Case (3) covers
+the residues $s\equiv(a+1)/2\pmod a$ for every odd divisor $a$ of $t$; it does
+not reach prime $t$, and we have not found an additive counterpart.
+
+\subsection{Consequences}
+
+If Conjecture~\ref{conj:fsp} holds then the clean tail $[M+1,K]$ has a
+maximum packing into difference triples for every $K\ge3M+1$ (the cases
+$K-M\not\equiv0\pmod3$ reduce to it by omitting the one or two smallest
+elements, and the finitely many cases $K\le3M+3$ are magic rectangles with one
+or two empty cells, verified for $M\le30$).  Together with the proved branch of
+Lemma~\ref{lem:dense} for $K\ge7M+3$, this gives Lemma~\ref{lem:dense} with
+$\eta=1/(14A+O(1))$, hence Theorem~\ref{thm:main} with an explicit constant
+$C$ and without any use of \cite{MuyesserPokrovskiy2025}.  The punctured
+cases $I\subsetneq[1,M]$ are the same object with the extra small elements
+as additional distances, and were found feasible for every random $I$ we
+tried; we have not reduced them to Conjecture~\ref{conj:fsp} in general.

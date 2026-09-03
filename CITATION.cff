@@ -7,6 +7,7 @@ authors:
     given-names: Lingsen
     affiliation: "Department of Earth, Planetary, and Space Sciences, University of California, Los Angeles"
     email: lsmeng@g.ucla.edu
+    orcid: "https://orcid.org/0000-0003-2428-0548"
 version: "1.0.0"
 date-released: "2026-09-05"
 repository-code: "https://github.com/lsmeng/sparse-edge-graceful"
@@ -24,5 +25,6 @@ preferred-citation:
   authors:
     - family-names: Meng
       given-names: Lingsen
+      orcid: "https://orcid.org/0000-0003-2428-0548"
   year: 2026
   notes: "Draft of 5 September 2026. paper/sparse_edge_graceful.pdf in this repository."

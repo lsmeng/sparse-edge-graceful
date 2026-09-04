@@ -186,8 +186,10 @@ class Topology:
                 raise ValueError(
                     f"row {k} is not the final row and must declare 'active' "
                     "so that it carries the next row's head")
-            if row["input"] and not last:
-                raise ValueError("only the final row may carry an input head")
+            if row["input"] and not last and row["active"] - row["input"] != 1:
+                raise ValueError(
+                    "a non-final row may carry an input head only alongside the "
+                    "next row's head, i.e. with active exactly one more than input")
             chain = [] if self.head_index[k] is None else [self.head_index[k]]
             for i in range(1, row["head"] + 1):
                 chain.append(self._label(
@@ -203,16 +205,30 @@ class Topology:
             nact, ninp = row["active"], row["input"]
             children, kept = [], []
             if not last:
-                if nact != 1:
+                # One of this row's active children is the next row's head; any
+                # others are pinned inputs of this row.  A stack of two-input
+                # rows needs this, and it is the only way to express one: the
+                # macro that resets such a chain has two active children at
+                # every level, one of which continues the chain.
+                if nact - ninp != 1:
                     raise ValueError(
-                        f"row {k} is not the final row and must have exactly "
-                        "one active child (the next row's head)")
+                        f"row {k} is not the final row and must carry exactly "
+                        "one active child more than its inputs (the next row's "
+                        "head)")
                 idx = self._label(
                     "head", f"g{k+1}",
                     f"row {k+1} head (active child of row {k})",
                     row=k + 1, pos=0)
                 self.head_index.append(idx)
                 children.append(idx)
+                for a in range(ninp):
+                    nm = f"s{k}" if ninp == 1 else f"s{k}_{a+1}"
+                    jdx = self._label("input", nm,
+                                      f"input head {nm} (parameter, row {k})",
+                                      row=k, input_rank=a)
+                    self.input_indices.append(jdx)
+                    children.append(jdx)
+                    kept.append(jdx)
             else:
                 pnames = input_param_names(ninp)
                 for a in range(nact):

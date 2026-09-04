@@ -1241,7 +1241,9 @@ most four symbolic parameters (the carriers of the pending cell $A$, and the
 head of $A$'s active child when a carrier contains the input), and the
 \emph{symbolic labels} (labels that are affine forms in $\Lambda$: they belong
 to $A$, to $A$'s active child and to $A$'s parent, hence at most $3W$ of them,
-where $W$ is the largest family width).  Finally it carries the set $\Phi$ of
+where $W$ is the largest family width; by Lemma~\ref{lem:reset} a cell here
+may be a two-level joint, which is what keeps the count at three cells when a
+chain of two-input rows is live).  Finally it carries the set $\Phi$ of
 recorded forbidden conditions, each a proper affine condition on $\Lambda$.
 
 A numeric value $v$ is \emph{admissible} for a label if $v\ne 0$, $v$ is not
@@ -1320,16 +1322,39 @@ Two things limit where this can begin.  A head becomes symbolic only at an
 owner whose carrier contains its input, and the carrier is ours to choose:
 $2{,}642$ of the $\NumEsixDenom$ contexts that occur have a family all of whose
 tokens admit a carrier avoiding both the head and the inputs, so the
-propagation can start only at the remaining $147$.  We record the consequence
-plainly.  The bound $3W$ below is correct only when no such chain is live, and
-in general it becomes $(3+L)W$ with $L$ the length of the chain, so that
-$|\Phi|$ and the boxes are $O(D^2)$ rather than $O(D)$ and the magnitudes are
-$O((D+1)^2)$.  Our theorems are stated with a threshold linear in $D$, and that
-form is therefore not established by the present argument; what the argument
-gives unconditionally is the same statement with $(D+1)$ replaced by
-$(D+1)^2$.  Closing this needs a reset for the residual-$\{1\}$ two-input row,
-of the kind the residual-$\{2\}$ row turns out not to need, and we have not
-found one.
+propagation can start only at the remaining $147$.  What bounds it is
+Lemma~\ref{lem:reset}.
+
+\begin{lemma}[the two-input reset]\label{lem:reset}
+Two consecutive residual-$\{1\}$ direct-edge two-input rows, joined into a
+single cell, have a family whose head is an independent parameter.
+\end{lemma}
+
+\begin{proof}
+The joint has nine labels, the heads $g_0$ and $g_1$ of the two rows, the two
+labels of each arm, the pinned input $s_0$ of the upper row and the two pinned
+inputs $x_1,x_2$ of the lower one, and nine outputs.  Enumerating every
+bijection between them and solving the resulting linear system gives $14$
+families whose labels are distinct and nonzero at a generic point, and for $12$
+of them the space of solutions contains a direction along which $g_0$ moves
+while every input is held fixed.  One such family, at an integer point, is
+$$(g_0,g_1)=(14,-16),\quad
+  (r_0a_0x_0,r_0a_0x_1)=(13,-29),\quad
+  (r_1a_0x_0,r_1a_0x_1)=(-9,22),$$
+$$s_0=3,\quad (x_1,x_2)=(-3,19),$$
+whose solution space has dimension five and whose head-free direction is $g_0$
+itself, so $g_0$ may be moved on its own.  We verified $P=O$ and the
+distinctness of the nine labels at that point directly.
+\end{proof}
+
+A chain of such rows is therefore cut into joints of two levels, each of which
+has a free head, and a chain of odd length leaves one single row at its top
+whose parent is not one of these rows.  The symbolic labels are confined to at
+most three cells and one further row, where a cell may now be a joint of width
+nine, so the bound is a constant and the boxes and the magnitudes are again
+linear in $D+1$.  We note that our scheduler does not yet emit these joints, so
+this lemma is at present a statement about the decomposition and not something
+our regression exercises.
 
 \emph{Token, token pending.}  Choose a matching of the three coordinates and
 solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two

@@ -184,9 +184,41 @@ are `O((D+1)^2)`.  **The threshold linear in `D` is therefore not established;
 what the present argument gives is the same statement with `(D+1)` replaced by
 `(D+1)^2`.**  The manuscript now says this.
 
+## The reset, found 2026-09-04
+
+Item 1 below is closed as a statement about the decomposition.  Joining two
+consecutive residual-$\{1\}$ two-input rows into one cell gives a topology with
+nine labels and nine outputs; enumerating every bijection between them leaves
+**14 nondegenerate families, and 12 of them have a direction along which the
+head moves with every input held fixed**.  One of the 12, at an integer point:
+
+```text
+g0 = 14   r0a0x0 =  13   r0a0x1 = -29
+g1 = -16  r1a0x0 =  -9   r1a0x1 =  22
+s0 =  3   x1 = -3        x2 = 19
+```
+
+with `P = O` and the nine labels distinct and nonzero, a solution space of
+dimension five, and the head-free direction equal to `g0` itself, so the head
+may be moved on its own.  For comparison the single row, run through the same
+program, gives **1 family and 0 with a free head**, which is the rigidity the
+third audit relies on.
+
+A chain is therefore cut into two-level joints, each with a free head, and an
+odd chain leaves one row at the top whose parent is not such a row.  The
+symbolic support returns to three cells and one row, the boxes and the
+magnitudes are linear in `D+1` again, and the threshold linear in `D` is
+restored.  `scripts/twoinput_reset.py` is the computation and
+`data/twoinput_reset.json` the certificate.
+
+What this does **not** yet do: our scheduler does not emit these joints, so the
+lemma is a statement about the decomposition that the regression does not
+exercise, and the joint is not in the catalogue, so the gate does not evaluate
+it either.
+
 ## Still open after this round
 
-1. The residual-$\{1\}$ two-input row: a reset, or a bound on the chain.
-   This is what stands between the paper and a threshold linear in `D`.
+1. ~~The residual-$\{1\}$ two-input row.~~  Closed by Lemma~\ref{lem:reset};
+   the scheduler and the catalogue have still to be taught the joint.
 2. The 173 contexts of the integrality gap.
 3. That a branch vertex at which the decomposition succeeds always exists.

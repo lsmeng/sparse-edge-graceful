@@ -1,0 +1,53 @@
+{
+ "levels": 2,
+ "labels": [
+  "g0",
+  "r0a0x0",
+  "r0a0x1",
+  "g1",
+  "s0",
+  "r1a0x0",
+  "r1a0x1",
+  "x1",
+  "x2"
+ ],
+ "kinds": [
+  "head",
+  "arm",
+  "arm",
+  "head",
+  "input",
+  "arm",
+  "arm",
+  "input",
+  "input"
+ ],
+ "nullspace_dimension": 5,
+ "bijection": {
+  "owner0": "g0",
+  "r0a0e0": "g1",
+  "r0a0term": "r0a0x1",
+  "s0out": "s0",
+  "owner1": "r1a0x0",
+  "r1a0e0": "r0a0x0",
+  "r1a0term": "r1a0x1",
+  "x1out": "x1",
+  "x2out": "x2"
+ },
+ "integer_point": {
+  "g0": "14",
+  "r0a0x0": "13",
+  "r0a0x1": "-29",
+  "g1": "-16",
+  "s0": "3",
+  "r1a0x0": "-9",
+  "r1a0x1": "22",
+  "x1": "-3",
+  "x2": "19"
+ },
+ "head_free_direction": {
+  "g0": "1"
+ },
+ "P_equals_O": true,
+ "distinct_and_nonzero": true
+}

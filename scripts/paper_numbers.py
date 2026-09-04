@@ -18,7 +18,8 @@ from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from run_alphabet_batch import key  # noqa: E402
+from run_alphabet_batch import key
+from audit_e4_e6 import audit as _audit  # noqa: E402
 
 DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
 
@@ -58,17 +59,30 @@ def main():
         return e.get("menu") or [e]
 
     rows = []
-    tot = [0] * 5
+    tot = [0] * 6
     for name, pred in GROUPS:
         ks = [key(c) for c in emit if pred(c)]
         # h0_2_p0_act is the rigid residue-two row, a constructor template
         # rather than a catalogue family, so it counts as covered
         wf = [k for k in ks if k in cat or k in RIGID]
         nf = sum(len(menu(k)) for k in wf if k in cat)
-        cl = sum(1 for k in wf if k in cat and any(f.get("clean") for f in menu(k)))
+        # (E6) has two clauses: no label depending on an input alone other than
+        # that input's antipode, and no non-head label a rational multiple of
+        # the head.  The assembler records the second as ``clean`` and the
+        # first as ``forced_only_antipode``, and the latter is computed
+        # against one input index only, so neither flag nor their conjunction
+        # is (E6).  We therefore test (E6) literally, by audit_e4_e6.audit.
+        cl = sum(1 for k in wf if k in cat and any(
+            not _audit(f.get("family") or f)[1]
+            for f in menu(k)
+            if isinstance(f.get("family") or f, dict)
+            and "coefficients_by_label" in (f.get("family") or f)))
         tk = sum(1 for k in wf if k in cat and any(f.get("token") for f in menu(k)))
+        # the rigid row is a constructor template and not a symbolic family, so
+        # it is covered for C1 but cannot be counted for or against (E6)
+        wfc = [k for k in wf if k in cat]
         rows.append((name, len(ks), len(wf), nf, cl, tk))
-        for i, v in enumerate((len(ks), len(wf), nf, cl, tk)):
+        for i, v in enumerate((len(ks), len(wf), nf, cl, tk, len(wfc))):
             tot[i] += v
     tbl = [r"\begin{tabular}{lrrrrr}", r"\toprule",
            r"context kind & contexts & with a family & families & (E6) & token \\",
@@ -76,7 +90,7 @@ def main():
     for name, x1, x2, x3, x4, x5 in rows:
         tbl.append(f"{name} & {group(x1)} & {group(x2)} & {group(x3)} & {group(x4)} & {group(x5)} \\\\")
     tbl += [r"\midrule",
-            "total & " + " & ".join(group(v) for v in tot) + r" \\",
+            "total & " + " & ".join(group(v) for v in tot[:5]) + r" \\",
             r"\bottomrule", r"\end{tabular}"]
     open(os.path.join(a.paper, "catalogue_table.tex"), "w").write("\n".join(tbl) + "\n")
 
@@ -212,8 +226,9 @@ def main():
         "NumCatContexts": len(cat),
         "NumCatFamilies": allfam,
         "NumEmittableFamilies": tot[2],
-        "NumCleanContexts": tot[3],
-        "NumNotCleanContexts": tot[1] - tot[3],
+        "NumEsixContexts": tot[3],
+        "NumEsixDenom": tot[5],
+        "NumNotEsixContexts": tot[5] - tot[3],
         "NumTokenContexts": tot[4],
         "NumAttempted": attempted,
         "NumSolverRuns": solver_runs,

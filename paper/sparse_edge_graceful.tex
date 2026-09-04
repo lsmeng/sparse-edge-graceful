@@ -576,10 +576,17 @@ is exactly the role of a port, so the joint is searched as the context with
 one more port and one active child.  Property (E6) is what makes adjacent cells compatible without any
 case analysis, since a parent forces at most the antipode of its input and a
 child never carries the antipode of its own head, so that no two forms of
-adjacent cells coincide identically.  However, for \NumNotCleanContexts{} of
-the \NumEmittableWithFamily{} contexts that occur our catalogue carries no
-family with (E6), and for these the finitely many adjacent pairs are checked
-individually by the gate of Section~\ref{sec:verification}.
+adjacent cells coincide identically.  Property (E6) has two clauses and both
+are needed for that argument, the first for the parent and the second for the
+child.  We test them together and literally, over every family of every menu
+and, for a two-input row, against both of its inputs; a separate program does
+this, since our checker verifies (E1)--(E5) only.  By that test, for
+\NumNotEsixContexts{} of the \NumEsixDenom{} contexts that occur and carry a
+family our catalogue has no family with (E6), and for these the finitely many
+adjacent pairs are checked individually by the gate of
+Section~\ref{sec:verification}.  We note that the gate does not rely on this
+count, since it enumerates every ordered pair of contexts and not only the
+pairs that (E6) leaves open.
 
 \subsection{The search and the checker}
 
@@ -602,7 +609,9 @@ is re-verified.  Table~\ref{tab:catalogue} summarises the catalogue.
 \caption{The certificate table, by kind of context: the contexts that occur
 (Lemma~\ref{lem:contexts}), those for which the catalogue carries a family,
 the number of families, the contexts with a family satisfying (E6), and the
-contexts whose chosen family carries a token.}
+contexts whose chosen family carries a token.  The residue-two rigid row is a
+constructor template and not a symbolic family, so it is counted as covered in
+the second column and in none of the others.}
 \label{tab:catalogue}
 \input{catalogue_table}
 \end{table}
@@ -981,7 +990,9 @@ independent checker (\file{check\_alphabet\_families.py}), the scheduler
 (\file{context\_scheduler.py}), the abstract enumeration
 (\file{enumerate\_emittable\_contexts.py}), the gate
 (\file{check\_lookahead\_gate.py}), the closure check
-(\file{closure\_check.py}), the constructor, the context
+(\file{closure\_check.py}), the literal test of (E4) and (E6)
+(\file{audit\_e4\_e6.py}, \file{e6\_coverage.py}), the non-constancy check of
+the carrier elimination (\file{carrier\_nonconstancy.py}), the constructor, the context
 list, the certificate catalogue (\file{alphabet\_families.json}) with its
 variant tables, and the certificates of the runs reported in
 Section~\ref{sec:verification} are available at

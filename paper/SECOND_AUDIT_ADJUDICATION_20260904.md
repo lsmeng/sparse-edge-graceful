@@ -113,3 +113,80 @@ the same root cause: the cells where (E5) fails or is given up.
 Items 1 to 3 are proof obligations; item 4 is a code defect that costs us the
 advertised regression.  The audit's verdict stands: as written, this manuscript
 does not prove either theorem.
+
+---
+
+# Addendum: adjudication of the third audit (round 2, against 0a49f2f)
+
+That audit was run against the state before the day's repairs, so its M2 (the
+dense-completion perturbation radius), M3 (the pending triple and the symmetry
+hypothesis) and M4(a) (the blanket (E1)--(E6) premise) were already fixed when
+it arrived.  Of what remains:
+
+| # | finding | verdict |
+|---|---|---|
+| S1 | the gate never evaluates pairs whose parent is the residue-two ray | **blind spot real, conclusion wrong** |
+| S2 | the `3W` bound is false and the quantitative chain degrades to `O(D^2)` | **right**, and now stated in the paper |
+| M1 | the ray template and the reset family have no independent certificate | **right**; the reset family claim is deleted, the ray is now carried as a template family and checked |
+| M4(b) | `|Phi(F)| <= 3` is false | **right**, max is 10, best-of-menu is 6 |
+| M4(c) | `reserved <= 6q` has no derivation | **right**, it is now `12q` with the derivation written |
+| m1 | reproducibility gaps | **right**, the missing inputs are published |
+
+## S1: the blind spot is real, the collision is not
+
+The gate enumerates catalogue contexts; the ray is a constructor template and
+is not one; the enumeration records exactly seven realizable pairs in which the
+ray is the parent; none was ever evaluated.  That much is correct and is now
+closed by a new closure condition C7.
+
+The audit's collision, however, was computed against the single rigid row
+`(-3x/2; -x/2, -x, x/2; x)`, every label of which is a multiple of the input.
+That row is a specialisation.  The family the constructor uses has two
+parameters,
+
+```text
+(-s-2t;  -t,  -s-t,  s;  2t),      x = 2t,
+```
+
+so the head is `-s-x` with `s` free and the only label depending on the input
+alone is `-x/2`.  Against that family the seven pairs come out as: five
+children pass outright (`h0_3_p1_bot`, `h1_1_p0_act2`, `h2_3_p1_bot` have no
+head-only label at all; `h2_1_p0_act2` has normalised ratio `-1`, which is not
+`-1/2`), `h0_1-2_p0_bot` passes through its head-multiplier-one menu entry, and
+`h0_1_p0_act2` and `h0_2_p0_act2` are the direct-edge two-input rows, whose
+labels depend on two inputs and cannot be identically a multiple of the
+parent's single input.  C7 reports 7 admissible, 0 open, and C1--C7 pass.
+
+## S2: right, and sharper than stated
+
+Two of the audit's premises can be improved and one cannot.
+
+*The residue-two ray is not rigid* (see the main adjudication): (E5) holds
+there and no head propagates through it.
+
+*Of the two direct-edge two-input rows, only one is rigid.*  Enumerating every
+bijection between labels and outputs for the residual-$\{2\}$ topology leaves a
+family with a direction along which the head moves with both inputs held fixed,
+so (E5) holds there as well.  For the residual-$\{1\}$ topology the same
+enumeration leaves exactly one nondegenerate family and its head is `-x1-x2`.
+
+*That one row is genuinely unbounded.*  It has no token, so it neither resolves
+a pending token nor stops at one, and the scheduler does produce chains of them
+of length `Theta(D)` on a comb.  A head becomes symbolic only at an owner whose
+carrier contains its input, and 2,642 of the 2,789 contexts that occur have a
+family whose tokens all admit a carrier avoiding both head and inputs, so the
+propagation can start only at the remaining 147; but that is a narrowing, not a
+bound.
+
+The consequence is what the audit says.  The symbolic support is `(3+L)W` with
+`L` the chain length, `|Phi|` and the boxes are `O(D^2)`, and the magnitudes
+are `O((D+1)^2)`.  **The threshold linear in `D` is therefore not established;
+what the present argument gives is the same statement with `(D+1)` replaced by
+`(D+1)^2`.**  The manuscript now says this.
+
+## Still open after this round
+
+1. The residual-$\{1\}$ two-input row: a reset, or a bound on the chain.
+   This is what stands between the paper and a threshold linear in `D`.
+2. The 173 contexts of the integrality gap.
+3. That a branch vertex at which the decomposition succeeds always exists.

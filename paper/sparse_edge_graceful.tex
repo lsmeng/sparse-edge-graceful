@@ -1303,13 +1303,33 @@ so the input is $x=2t$ and the head is $-s-x$ with $s$ still free once $x$ is
 pinned, the row of Appendix~\ref{app:contexts} being the case $s=x/2$.  We note
 that this family is not in our catalogue because its zero-sum triple contains
 the head and the input and so does not meet the signature of
-Section~\ref{sec:cells}; our constructor carries it separately.  The two
-direct-edge two-input rows are a genuine exception, since their heads are
-determined by their two inputs, and a chain of them does propagate a symbolic
-head upward.  We have not bounded the length of such a chain, so the bound
-$3W$ below should be read as $3W$ plus $W$ for each level of that chain; in our
-regression the chains have length zero, and we record the bound as the second
-place where our proof is incomplete.
+Section~\ref{sec:cells}; our constructor carries it separately.  Of the two
+direct-edge two-input rows only the first is a genuine exception.  For the row
+with residual $\{2\}$ the space of $P'=O$ families again has a direction along
+which the head moves with both inputs held fixed, so (E5) holds there too.  For
+the row with residual $\{1\}$ it does not: an exhaustive enumeration of the
+bijections between the five labels and the five outputs of that topology leaves
+exactly one nondegenerate family, and its head is $-x_1-x_2$.  That row has no
+token, so it neither resolves a pending token nor stops at one, and a chain of
+such rows carries a symbolic head upward for as many levels as the chain is
+long.  Our scheduler does produce arbitrarily long such chains, on a comb whose
+every core vertex has two active children and one arm of length one, so the
+length is $\Theta(D)$ in the worst case and not $O(1)$.
+
+Two things limit where this can begin.  A head becomes symbolic only at an
+owner whose carrier contains its input, and the carrier is ours to choose:
+$2{,}642$ of the $\NumEsixDenom$ contexts that occur have a family all of whose
+tokens admit a carrier avoiding both the head and the inputs, so the
+propagation can start only at the remaining $147$.  We record the consequence
+plainly.  The bound $3W$ below is correct only when no such chain is live, and
+in general it becomes $(3+L)W$ with $L$ the length of the chain, so that
+$|\Phi|$ and the boxes are $O(D^2)$ rather than $O(D)$ and the magnitudes are
+$O((D+1)^2)$.  Our theorems are stated with a threshold linear in $D$, and that
+form is therefore not established by the present argument; what the argument
+gives unconditionally is the same statement with $(D+1)$ replaced by
+$(D+1)^2$.  Closing this needs a reset for the residual-$\{1\}$ two-input row,
+of the kind the residual-$\{2\}$ row turns out not to need, and we have not
+found one.
 
 \emph{Token, token pending.}  Choose a matching of the three coordinates and
 solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two

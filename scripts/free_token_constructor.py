@@ -3279,7 +3279,17 @@ _CARRIERS: Optional[Dict[str, Optional[list]]] = None
 
 
 def load_carriers(path: str = CARRIERS_PATH) -> Dict[str, Optional[list]]:
-    """``context key -> token carrier parameter names`` (proof draft E4)."""
+    """``context key -> token carrier parameter names`` (proof draft E4).
+
+    Kept only for diagnostics.  The constructor no longer reads it, because the
+    file's schema and this reader disagreed for a while without either failing
+    loudly: the file now maps a context to a list of records
+    ``[{"menu": i, "token_indices": {"carrier": [...]}}]`` while this function
+    was documented as returning parameter names, so iterating the value gave
+    dictionaries, no carrier was ever found, and every token was silently
+    downgraded.  :func:`carrier_indices_of` computes the carrier from the
+    family itself instead, which cannot go out of sync.
+    """
     global _CARRIERS
     if _CARRIERS is None:
         try:
@@ -3288,6 +3298,40 @@ def load_carriers(path: str = CARRIERS_PATH) -> Dict[str, Optional[list]]:
         except Exception:
             _CARRIERS = {}
     return _CARRIERS
+
+
+def carrier_indices_of(fam, token_names: Mapping, free_only: Sequence[int] = ()) -> List[int]:
+    """(E4) a carrier for this token, computed from the family.
+
+    The three token forms sum to zero, so on a fixed pair of parameters their
+    three 2x2 minors agree up to sign and each candidate pair has one
+    well-defined determinant.  Among the pairs on which the token has rank two
+    we prefer, in order: a unimodular pair, then a pair avoiding the head, then
+    the least absolute determinant.  The first preference matters because a
+    unimodular carrier needs no division when the pairing equations are solved;
+    the second because the head is what a cell passes to its parent.
+    """
+    params = list(getattr(fam, "parameters", []))
+    if len(params) < 2 or not token_names:
+        return []
+    try:
+        rows = [fam.by_name[token_names[r]].coeffs for r in "ab"]
+    except Exception:
+        return []
+    allowed = set(free_only) if free_only else set(range(len(params)))
+    iy = params.index("y") if "y" in params else None
+    best = None
+    for i in range(len(params)):
+        for j in range(i + 1, len(params)):
+            if i not in allowed or j not in allowed:
+                continue
+            det = rows[0][i] * rows[1][j] - rows[0][j] * rows[1][i]
+            if det == 0:
+                continue
+            rank = (abs(det) != 1, iy is not None and iy in (i, j), abs(det))
+            if best is None or rank < best[0]:
+                best = (rank, [i, j])
+    return best[1] if best else []
 
 
 #: residue-two rigid row as a family-free integer template, in the order
@@ -4394,9 +4438,8 @@ class FaithfulRealiser:
         tokens = [t for t in (token_names, token2_names) if t]
         if family_is_fa(fam):
             self.counters["forced_antipode_family_used"] += 1
-        carrier = load_carriers().get(key) or []
-        carrier_idx = [fam.parameters.index(pn) for pn in carrier
-                       if pn in fam.parameters and values[fam.parameters.index(pn)] is None]
+        undetermined = [i for i in range(len(fam.parameters)) if values[i] is None]
+        carrier_idx = carrier_indices_of(fam, token_names, undetermined) if token_names else []
         free_idx = [i for i in range(d) if values[i] is None]
         if token_names and not self.carrier_has_rank_two(fam, token_names,
                                                          carrier_idx):

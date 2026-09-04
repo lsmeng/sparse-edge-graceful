@@ -61,7 +61,8 @@ The proof combines a finite table of local labelling identities, found by an
 exact constraint search and re-verified by an independent checker, with a
 bottom-up scheduling argument and with the zero-sum matching theorem of
 M\"uyesser and Pokrovskiy.  Under the abelian improvement of that theorem
-which its authors record in their Section~7.4, the threshold becomes linear,
+which its authors record in their concluding Section~7, the threshold becomes
+linear,
 $n>C(D+1)$.  The constants are not effective.  We also reduce the linear
 threshold to an elementary statement about permutations of an interval, which
 we prove in several cases and verify exactly up to order $30$, and which would
@@ -115,14 +116,16 @@ tolerates a set of deleted residues, and it is the size of that set, not the
 matching itself, that determines the threshold.  The printed statements of
 M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025} tolerate
 $n/(\log n)^{A}$ deletions and give Theorem~\ref{thm:main}.  However, their
-Section~7.4 records that for abelian groups the logarithms may be removed,
+Section~7, under \emph{Bounds in the main theorem}, records that for abelian
+groups the logarithms may be removed,
 since the only source of a logarithm in their proof is a bound on the length
 of a commutator product and that product is empty in an abelian group; the
 authors state this improvement and use it themselves, although it is not a
 printed theorem.  Under that reading our argument gives a linear threshold.
 
 \begin{theorem}\label{thm:linear}
-Assume the abelian improvement of \cite[Section~7.4]{MuyesserPokrovskiy2025},
+Assume the abelian improvement recorded in
+\cite[Section~7, \emph{Bounds in the main theorem}]{MuyesserPokrovskiy2025},
 namely that their zero-sum matching theorems hold in $\Z_n$ with a linear
 number of deleted residues.  Then there are absolute constants $C$ and $n_0$
 such that every tree $T$ of odd order $n\ge n_0$ with $D$ vertices of degree
@@ -133,7 +136,7 @@ $2Ck$ vertices is edge-graceful.
 
 The qualitative statement, that a bounded number of degree-two vertices is no
 obstruction once the tree is large, therefore does not depend on the remark
-of Section~7.4 at all; the remark is what turns the polylogarithmic threshold
+of that remark at all; the remark is what turns the polylogarithmic threshold
 into a linear one.  In Section~\ref{sec:linearroute} we reduce the linear
 threshold, with an explicit constant and without any use of
 \cite{MuyesserPokrovskiy2025}, to a conjecture on permutations of an interval
@@ -415,17 +418,17 @@ because the $2^i$ are distinct.  Two ports labelled $t$ and $-t$ satisfy the
 four conditions directly.  For the remaining blocks, and for the assertion
 that $\{1,3\}$ admits no neutral labelling, the four conditions are a finite
 integer feasibility question once a bound on the $c_i$ is fixed, and we
-settled it by an exhaustive search; the resulting labels are listed in
+settled it by an exhaustive search over integer labels with coefficients at
+most $8$ in absolute value; the resulting labels are listed in
 Table~\ref{tab:blocks}, and each is re-verified from its labels alone, with no
 reference to how it was found.
 \end{proof}
 
 That $\{1,3\}$ is the one exception does not appear to be an accident of the
 search.  It stays infeasible when the block is allowed three parameters
-instead of one and coefficients up to $14$ in absolute value, so the six
-labels of a $\{1,3\}$ block cannot be made to pay for themselves however they
-are written, and the pair is in any case the one our construction singles out
-everywhere else as well.  A $\{1,3\}$ block can still be carried
+instead of one and coefficients up to $14$ in absolute value.  We have not
+proved that no labelling whatsoever works, and we do not claim it; the pair is
+in any case the one our construction singles out everywhere else as well.  A $\{1,3\}$ block can still be carried
 by a cell, as the catalogue shows; what fails is only the uniform statement
 that it may be adjoined to an arbitrary family.
 
@@ -469,7 +472,7 @@ every tree with at most nine vertices ($4{,}782{,}969$ labelled trees) and of
 $3{,}500$ random trees, $500$ at each order $n\in\{15,21,31,51,101,201,401\}$.
 In addition, the decision at a vertex depends only on its head-chain
 length, its arm lengths, its number of ports and the types of its active
-children.  We therefore enumerated all $314{,}280$ abstract local states with up to
+children.  We therefore enumerated all $\NumStates$ abstract local states with up to
 three arms of lengths at most eight (and larger arm sets of short arms), up to
 three ports, up to two active children of each of the possible types and
 head chains of length at most six.  Each state was realised by a concrete tree
@@ -662,7 +665,8 @@ Two readings of \cite{MuyesserPokrovskiy2025} enter here, and they give the
 two thresholds of Section~\ref{sec:intro}.  The printed perturbation radius of
 their Theorems~4.3--4.7 is $p^{A}n/(\log n)^{A}$, which gives
 Lemma~\ref{lem:dense} with $\eta n$ replaced by $n/(\log n)^{A}$ and hence
-gives Theorem~\ref{thm:main}.  Their Section~7.4 records that
+gives Theorem~\ref{thm:main}.  Their Section~7, under \emph{Bounds in the main
+theorem}, records that
 $\log n$ may be replaced by $\log|G'|$ throughout the proof, the only source
 of logarithms being their short commutator-product theorem, and for an abelian
 group the commutator subgroup is trivial and the commutator product is empty.

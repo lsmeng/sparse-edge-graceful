@@ -95,11 +95,19 @@ parent's `-1/2`.  Three symbolic escapes were searched and all three fail:
    to 36, with and without a token, and under `--forbid-antipode-x`,
    `--forced-only-antipode`, `--no-head-only`: only the one forced set
    `{-1, -1/2, 1/2}` ever occurs;
-2. a child family with no head-only label (`--no-head-only`) or without the
-   head antipode (`--forbid-antipode-y`): INFEASIBLE in every setting;
+2. a child family with no head-only label (`--no-head-only`), or one carrying
+   no label equal to `-y` (`--forbid-antipode-y`): INFEASIBLE in all nine of
+   the standard settings.  Outside them `--forbid-antipode-y` does become
+   feasible, at head multiplier 5 with denominator 4 and coefficient bound 24,
+   but that family carries `-5/2` in head units, so its normalised ratio is
+   `-1/2` and it collides with the parent all the same;
 3. a child family at head multiplier `h >= 3`: feasible, but the solver then
    places the antipode of the *new* head (`head_only = -3` at `h = 3`), so the
    normalised ratio is `-1` again and the collision returns.
+
+So no child family found in any setting avoids the collision, and the two that
+lie outside the standard settings would in any case enlarge the coefficient
+bound `KMAX` and with it the constant `A`, which the join does not.
 
 The fix is the fourth route, and it is the device the absorption rule already
 uses.  **The gate is a sufficient condition, not a necessary one.**  A pair it

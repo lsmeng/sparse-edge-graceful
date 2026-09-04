@@ -595,6 +595,24 @@ def prufer_decode(seq: Sequence[int], n: int) -> List[Tuple[int, int]]:
     return edges
 
 
+def _reroot(n: int, adj: Sequence[Sequence[int]], r: int) -> Tuple[List[int], List[List[int]]]:
+    """Parent/children arrays of the same tree rooted at ``r``, labels kept."""
+    parent = [-1] * n
+    children: List[List[int]] = [[] for _ in range(n)]
+    seen = [False] * n
+    seen[r] = True
+    stack = [r]
+    while stack:
+        u = stack.pop()
+        for w in adj[u]:
+            if not seen[w]:
+                seen[w] = True
+                parent[w] = u
+                children[u].append(w)
+                stack.append(w)
+    return parent, children
+
+
 def root_from_edges(n: int, edges: Sequence[Tuple[int, int]]) -> Tuple[Optional[int], List[int], List[List[int]]]:
     """Build adjacency, detect the path case, choose a root of degree >= 3
     (smallest index), and BFS to a rooted parent/children representation.
@@ -765,7 +783,16 @@ class Scheduler:
         kept_active: List[Tuple[int, int, dict]] = []  # active items actually kept (1 or 2), with role tags
         kept_roles: List[str] = []
 
-        r_trigger = self._act2_trigger(is_root, h_raw, residual_raw, q, groups)
+        # The trigger exists in order to SPEND active children on a residual
+        # that arms and ports alone cannot cover, so with no active children to
+        # spend it must not fire.  Without this guard the root branch below
+        # reaches _reduce_odd_k_to_one with an empty list: its comment argues
+        # "T-degree(root) = 1 + k_orig, so k_orig >= 2", which ignores the
+        # ports, and a root with one residual arm and one port has T-degree 2
+        # from those alone.  Found on the 11-vertex tree
+        # [0,0,1,2,2,3,4,0,2,4,3] (2026-09-04).
+        r_trigger = (self._act2_trigger(is_root, h_raw, residual_raw, q, groups)
+                     if k_orig >= 2 else None)
         if r_trigger is not None and is_root and len(r_trigger) == 1:
             # Coordinator, 2026-09-02: root's lone residual arm with q==0,
             # no neutral unit, and k_orig TRUE active children -- by
@@ -1468,7 +1495,7 @@ class RunStats:
         }
 
 
-def schedule(parent_array: Sequence[int]) -> dict:
+def schedule(parent_array: Sequence[int], root: Optional[int] = None) -> dict:
     """Machine-readable per-vertex schedule for the constructor.  See the
     module docstring ("schedule() output schema") for the full field-by-
     field description; summary here:
@@ -1478,7 +1505,9 @@ def schedule(parent_array: Sequence[int]) -> dict:
          "rows": {vertex: <family row>, ...},
          "uncovered": [...], "l1_pair_events": [...]}
 
-    parent_array[0] is ignored (vertex 0 is the root, as in --parent)."""
+    parent_array[0] is ignored (vertex 0 is the root, as in --parent).  The
+    CORE root is chosen among the branch vertices by this function; pass
+    ``root`` to pin it."""
     n, parent, children = tree_from_parent(parent_array)
     edges = [(v, parent[v]) for v in range(1, n)]
     deg = [0] * n
@@ -1488,10 +1517,32 @@ def schedule(parent_array: Sequence[int]) -> dict:
     if n >= 1 and max(deg, default=0) < 3:
         return {"n": n, "is_path": True, "root": None, "core_vertices": [],
                 "owners": [], "rows": {}, "uncovered": [], "l1_pair_events": []}
-    core = Core(n, parent, children, 0)
+    # Which branch vertex the core is rooted at is a free choice of the
+    # decomposition, and it matters: a root can be left with a residual that
+    # arms and ports alone cannot cover and with no active child to spend on
+    # it, and is then reported UNCOVERED.  On 2,000 random trees of orders 11
+    # to 51 this happened for 189 of them at the arbitrary root, and every one
+    # of the 189 was covered at some other branch vertex.  We therefore try the
+    # branch vertices in order and keep the first choice that covers every
+    # owner, falling back to the first choice if none does.
+    adj: List[List[int]] = [[] for _ in range(n)]
+    for a, b in edges:
+        adj[a].append(b)
+        adj[b].append(a)
+    branch = [v for v in range(n) if len(adj[v]) >= 3]
     carriers = load_alphabet_carriers()
-    sched = Scheduler(core, carriers=carriers)
-    owners = sched.run()
+    best = None
+    for r in ([root] if root is not None else branch):
+        par_r, ch_r = _reroot(n, adj, r)
+        core = Core(n, par_r, ch_r, r)
+        sched = Scheduler(core, carriers=carriers)
+        owners = sched.run()
+        if best is None:
+            best = (core, sched, owners)
+        if not sched.uncovered:
+            best = (core, sched, owners)
+            break
+    core, sched, owners = best
     return {
         "n": n,
         "is_path": False,
@@ -1506,10 +1557,26 @@ def schedule(parent_array: Sequence[int]) -> dict:
 
 
 def run_one_tree(n: int, parent: List[int], children: List[List[int]], root: int, stats: RunStats,
-                  print_tree: bool = False):
-    core = Core(n, parent, children, root)
-    sched = Scheduler(core, track_rows=False)  # CLI reporting never reads .rows
-    owners = sched.run()
+                  print_tree: bool = False, adj: Optional[Sequence[Sequence[int]]] = None):
+    """Schedule one tree.  Which branch vertex the core is rooted at is a free
+    choice of the decomposition and it matters, so when ``adj`` is supplied we
+    try the branch vertices in order and keep the first that covers every
+    owner, exactly as :func:`schedule` does."""
+    best = None
+    cands = [root]
+    if adj is not None:
+        cands = [v for v in range(n) if len(adj[v]) >= 3] or [root]
+    for r in cands:
+        par_r, ch_r = (parent, children) if (adj is None or r == root) else _reroot(n, adj, r)
+        core = Core(n, par_r, ch_r, r)
+        sched = Scheduler(core, track_rows=False)  # CLI reporting never reads .rows
+        owners = sched.run()
+        if best is None:
+            best = (root if adj is None else r, owners, sched)
+        if not sched.uncovered:
+            best = (r, owners, sched)
+            break
+    root, owners, sched = best
     stats.add_tree(owners, sched)
     if print_tree:
         print(f"  root={root} owners=" + ", ".join(f"({v}:{context_key(c)})" for v, c in sorted(owners)))
@@ -1537,17 +1604,28 @@ def run_random_mode(n: int, count: int, seed: int, stats: RunStats, print_tree: 
         if root is None:
             stats.add_path()
             continue
-        run_one_tree(n, parent, children, root, stats, print_tree=print_tree)
+        adj: List[List[int]] = [[] for _ in range(n)]
+        for a, b in edges:
+            adj[a].append(b)
+            adj[b].append(a)
+        run_one_tree(n, parent, children, root, stats, print_tree=print_tree, adj=adj)
 
 
-def run_all_mode(n: int, stats: RunStats, print_tree: bool = False):
-    for seq in all_prufer_sequences(n):
+def run_all_mode(n: int, stats: RunStats, print_tree: bool = False,
+                  shard: int = 0, shards: int = 1):
+    for i, seq in enumerate(all_prufer_sequences(n)):
+        if shards > 1 and i % shards != shard:
+            continue
         edges = prufer_decode(list(seq), n)
         root, parent, children = root_from_edges(n, edges)
         if root is None:
             stats.add_path()
             continue
-        run_one_tree(n, parent, children, root, stats, print_tree=print_tree)
+        adj: List[List[int]] = [[] for _ in range(n)]
+        for a, b in edges:
+            adj[a].append(b)
+            adj[b].append(a)
+        run_one_tree(n, parent, children, root, stats, print_tree=print_tree, adj=adj)
 
 
 def main():
@@ -1556,7 +1634,9 @@ def main():
     ap.add_argument("--random", type=int, metavar="N", help="N vertices, random Prufer trees")
     ap.add_argument("--count", type=int, default=1, help="number of random trees (with --random)")
     ap.add_argument("--seed", type=int, default=0, help="RNG seed (with --random)")
-    ap.add_argument("--all", type=int, metavar="N", help="exhaustive Prufer enumeration, N <= 9")
+    ap.add_argument("--all", type=int, metavar="N", help="exhaustive Prufer enumeration")
+    ap.add_argument("--shard", type=int, default=0, help="with --all: this shard index")
+    ap.add_argument("--shards", type=int, default=1, help="with --all: number of shards")
     ap.add_argument("--print-trees", action="store_true", help="print the per-tree owner list even in bulk modes")
     ap.add_argument("--alphabet", default=ALPHABET_PATH, help="path to alphabet_contexts.json")
     args = ap.parse_args()
@@ -1573,9 +1653,10 @@ def main():
     elif args.random is not None:
         run_random_mode(args.random, args.count, args.seed, stats, print_tree=args.print_trees)
     elif args.all is not None:
-        if args.all > 9:
-            ap.error("--all only supports N <= 9 (Prufer enumeration)")
-        run_all_mode(args.all, stats, print_tree=args.print_trees)
+        if args.all > 12:
+            ap.error("--all only supports N <= 12 (Prufer enumeration)")
+        run_all_mode(args.all, stats, print_tree=args.print_trees,
+                     shard=args.shard, shards=args.shards)
 
     print(json.dumps(stats.report(alphabet_keys), indent=2))
 

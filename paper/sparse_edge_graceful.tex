@@ -469,7 +469,18 @@ Exactly \NumEmittable{} of the contexts of the list occur.
 The case analysis is given in Appendix~\ref{app:contexts}.  Its regression,
 our executable scheduler, produces a context in the list for every owner of
 every tree with at most nine vertices ($4{,}782{,}969$ labelled trees) and of
-$3{,}500$ random trees, $500$ at each order $n\in\{15,21,31,51,101,201,401\}$.
+$169{,}000$ uniform random labelled trees, $20{,}000$ at each odd order
+$n\in\{11,13,15,17,19,21,31,51\}$ and $3{,}000$ at each of
+$n\in\{101,201,401\}$.  No owner of any of them is left without a context and
+no context outside the list is produced.  Which branch vertex the core is
+rooted at is a free choice of the decomposition, and it is one that matters:
+a root can be left with a residual that its arms and ports cannot cover and
+with no active child to spend on it.  Our scheduler therefore tries the branch
+vertices in turn and keeps the first for which every owner receives a context.
+On $2{,}000$ random trees of orders $11$ to $51$ the first branch vertex failed
+for $189$ of them and every one of the $189$ was covered at another branch
+vertex; we have not proved that a good branch vertex always exists, and we
+record that as the one place where our regression outruns our proof.
 In addition, the decision at a vertex depends only on its head-chain
 length, its arm lengths, its number of ports and the types of its active
 children.  We therefore enumerated all $\NumStates$ abstract local states with up to
@@ -920,8 +931,9 @@ leaves nothing outside the absorption rule and the single join above.
 Our scheduler implements the rules of Appendix~\ref{app:contexts} and returns,
 for a rooted tree, the list of owners with their contexts.  It is the
 regression for Lemma~\ref{lem:contexts} and was run on all labelled trees with
-at most nine vertices and on $3{,}500$ random trees of orders between $15$
-and $401$.  Our constructor
+at most nine vertices and on $169{,}000$ random trees of odd orders between
+$11$ and $401$.  It also chooses the branch vertex at which the core is
+rooted, as described after Lemma~\ref{lem:contexts}.  Our constructor
 implements Lemma~\ref{lem:realization} on top of the scheduler and the
 catalogue, produces an integer labelling, reduces it modulo $n$, and checks
 the bijection of vertex sums directly.  Each run writes a certificate listing
@@ -1034,16 +1046,47 @@ unit is needed at $v$ itself (Steps~3 and~4) one of them is retained and its
 arms are added to the residual.
 
 \paragraph{Step 2 (active children).}
-If $k\ge 2$ the heads of the active children are prescribed to sum to zero, as
-a mirror pair for $k=2$, a free zero-sum triple for $k=3$, and pairs together
-with at most one triple otherwise.  These heads are free parameters of the
-children's families by (E5), and a child of the joined types (whose head is
-forced) is paired with a sibling of free head, the sibling taking the negative
-of the forced head.  After this step at most one active child remains and its
-head is the input $x$ of $v$.  However, if cancelling all active children would
-leave a portless residual $\{1\}$ or $\{2\}$ with no unit to retain, and
-exactly two active children are present, both are kept uncancelled and $v$
-is a \emph{two-input} owner with inputs $x_1,x_2$.  With a subdivided parent
+Cancelling a set of $j\ge 2$ active children means prescribing their heads to
+sum to zero: for $j$ even we use $j/2$ mirror pairs, and for $j$ odd one free
+zero-sum triple together with $(j-3)/2$ pairs.  These heads are free parameters
+of the children's families by (E5), with one exception, and a child of the
+joined types, whose head is forced, is paired with a sibling of free head, the
+sibling taking the negative of the forced head.  The exception is a pair of two
+children that both have forced heads, which our scheduler does produce.  It is
+also arrangeable, one level further down: a child whose head is forced in this
+way has context $(0,\{1\},0,\mathrm{free})$, its own active child is of free
+type, and the head of that grandchild is a free parameter by (E5), so setting
+the grandchild's head makes the two forced heads negatives of one another.  We
+note that this uses (E5) at the grandchild and not at the child, and that it
+does not recurse further, since the grandchild is of free type and is therefore
+not one of the rigid rows.
+
+Whether all of the active children can be cancelled depends on what Steps~3
+and~4 can then do with the residual.  If cancelling all of them leaves $v$
+covered, we cancel all of them, and $v$ has at most one active child left,
+whose head is the input $x$.  Otherwise $v$ must spend active children on the
+residual, and the rule is by the parity of their number $k$.  For $k$ even we
+keep two and cancel $k-2$, so that $v$ is a \emph{two-input} owner with inputs
+$x_1,x_2$; for $k$ odd we keep one and cancel $k-1$.  In both cases the number
+cancelled is at least two whenever it is positive, so the cancellation above
+applies.  At the root with a lone residual arm there is one deviation: $k=2$
+keeps both, because keeping one would leave a single child to cancel, and every
+$k\ge 3$ keeps one.
+
+The configurations in which the residual cannot be covered without active
+children, so that this rule is used, are the following, and they are the exact
+condition our scheduler tests.  Off the root, $v$ has no ports, its residual is
+a single arm, and no neutral unit was retained; then the residues modulo six
+that need an active child are $1,2,4,6$ when the head chain has length $0$
+modulo six and all of $1,\dots,6$ otherwise.  At the root with a lone residual
+arm of residue $r$ and $q$ ports, the recruited port count of Step~5 has no
+feasible value exactly when $q=0$ and $r\in\{2,4\}$, or $q=1$ and
+$r\in\{1,3,5\}$; for $q\ge2$ there is always one.  At the root there is one
+further case, the opposite-parity residual $\{1,2\}$ with no ports.  We note
+that the earlier draft of this step named only the portless residuals $\{1\}$
+and $\{2\}$ and only $k=2$; that was too narrow, and a referee exhibited a
+tree of order $19$ on which our scheduler keeps two active children at a
+residual of residue four.  With a subdivided parent
 edge such cells have ordinary families, e.g.\
 $(y,-y-x_1-x_2;\,-x_1-x_2,\,y+x_1+x_2;\,x_1,x_2)$ for $h=1$ and $R=\{1\}$ with
 token $\{x_1,x_2,-x_1-x_2\}$, some of them with two tokens.  With a direct

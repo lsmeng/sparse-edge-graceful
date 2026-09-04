@@ -1284,15 +1284,25 @@ another symbolic form is recorded in $\Phi$.
 (together with the child's head when the carrier contains the input), choose
 all other parameters numerically as above, and declare the token pending.  If
 the head is in $\Lambda$ the parent of $v$ receives a symbolic input.  Its own
-head is numeric by (E5), so no further propagation occurs.  The rigid rows
-are the exception to (E5): the residue-two ray and the two direct-edge
-two-input rows of Appendix~\ref{app:contexts} have heads that are fixed forms
-in their inputs, so their parents receive a symbolic input whenever those
-inputs are symbolic.  A chain of residue-two rays propagates a symbolic head
-for at most three levels before the four-layer reset family restores a free
-head, and a two-input row is processed only after both of its children, so
-its head is numeric unless one child keeps its head symbolic, in which case
-the row passes that single live parameter on.
+head is numeric by (E5), so no further propagation occurs, and this is what
+confines the symbolic labels to three cells.  The rows we call rigid need a
+word here, because their heads are written in Appendix~\ref{app:contexts} as
+fixed forms in their inputs.  For the residue-two ray this is a matter of
+presentation only, and (E5) does hold.  Solving $P'=O$ for that topology gives
+a two-dimensional space, not the single row of Appendix~\ref{app:contexts}:
+with parameters $s$ and $t$ the labels are
+$$(-s-2t;\;-t,\;-s-t,\;s;\;2t),$$
+so the input is $x=2t$ and the head is $-s-x$ with $s$ still free once $x$ is
+pinned, the row of Appendix~\ref{app:contexts} being the case $s=x/2$.  We note
+that this family is not in our catalogue because its zero-sum triple contains
+the head and the input and so does not meet the signature of
+Section~\ref{sec:cells}; our constructor carries it separately.  The two
+direct-edge two-input rows are a genuine exception, since their heads are
+determined by their two inputs, and a chain of them does propagate a symbolic
+head upward.  We have not bounded the length of such a chain, so the bound
+$3W$ below should be read as $3W$ plus $W$ for each level of that chain; in our
+regression the chains have length zero, and we record the bound as the second
+place where our proof is incomplete.
 
 \emph{Token, token pending.}  Choose a matching of the three coordinates and
 solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two

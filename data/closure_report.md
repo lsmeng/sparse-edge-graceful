@@ -8,5 +8,6 @@
 * C5 L11 joints: 565 contexts, no input, nothing required  [PASS]
 * C6 restricted to the 11927 realizable (child, parent) pairs recorded by the enumeration
 * C6 menu gate: 1973 failing ordered pairs, 71 with both contexts emittable, 70 of those have the child h2_1_p0_act2 (handled by rule 8d), 1 handled by joining (root_2_p0_J12), 0 remain  [PASS]
+* C7 template parents: 7 realizable pairs whose parent is a constructor template, 7 admissible, 0 open  [PASS]
 
 **ALL CONDITIONS PASS**

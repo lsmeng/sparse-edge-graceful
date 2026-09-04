@@ -141,3 +141,26 @@ every departure from it as a named gap.  Its purpose is to confirm the
 bookkeeping, not the theorem: at these orders the asymptotic dense completion
 does not apply, and a modular collision between two special labels is exactly
 the event that the hypothesis `n > C(D+1)` excludes.
+
+## Unpacking the catalogue before running anything (2026-09-04)
+
+The three large tables are committed gzipped, because GitHub rejects the
+uncompressed `alphabet_families.json`.  Every script reads the uncompressed
+name, so unpack them first:
+
+```bash
+gunzip -k data/alphabet_families.json.gz \
+          data/alphabet_families_xtok.json.gz \
+          data/alphabet_families_xall.json.gz
+tar -xzf data/batches.tar.gz -C data/
+```
+
+`scripts/paper_numbers.py` additionally reads `data/emittable_report.md` for
+the abstract-state count; that file is now committed.  The cap-two baseline of
+the abstract enumeration is committed as `data/emittable_k2_baseline.json` and
+`data/emittable_pairs_k2_baseline.json`, so that the statement "raising the cap
+from two to three adds six contexts" can be checked against
+`data/emittable_k3.json`: the six are the `root_2_*` and `root_4_*` keys, and
+the cap-two run contributes 126 keys that the cap-three plan does not reach,
+which is why `data/alphabet_contexts_emittable.json` is the union of the three
+runs and is larger than any one of them.

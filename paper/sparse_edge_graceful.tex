@@ -511,14 +511,21 @@ case analysis itself.
 \begin{lemma}[charge]\label{lem:charge}
 Let $q\le D$ be the number of subdivided core edges.  The number of owners is
 at most $2q$, the special support satisfies $|S|\le 12D+3$, and the values
-reserved for forced companions number at most $6q$.
+reserved for forced companions number at most $2\NumPhiMax q$.
 \end{lemma}
 
 \begin{proof}
 Every owner is incident with a subdivided core edge, and such an edge has two
 endpoints.  A subdivided edge of length $\ell$ carries $\ell+1$ labels, at
 most $D+q$ in total.  Recruited ports contribute at most three per owner,
-absorptions at most two per owner, and the final bridge triple three.
+absorptions at most two per owner, and the final bridge triple three.  An owner
+reserves one value for each ratio in $\Phi(F)$ of the family it is given, and
+the choice rule takes a family of the menu with fewest such ratios, so the
+number reserved is at most $\NumPhiMax$ per owner and at most
+$2\NumPhiMax q$ in total.  The bound $\NumPhiMax$ is the largest, over the
+contexts that occur, of the smallest number of forced ratios in that context's
+menu, and it is computed from the catalogue; individual families carry as many
+as ten.
 \end{proof}
 
 \section{Local families}\label{sec:cells}
@@ -1419,17 +1426,20 @@ three adjacent cells, each a non-constant form in the live coordinates, and
 two of them are identical or antipodal as forms only if a parent input-only
 label coincides with a child head-only label, which the choice rule excludes;
 (d) by construction; (e) because every owner adds at most $W$ placed labels
-and at most $|\Phi(F)|\le 3$ reservations.  Every box has side
+and at most $|\Phi(F)|\le\NumPhiMax$ reservations, the bound
+$\NumPhiMax$ being computed from the catalogue as in
+Lemma~\ref{lem:charge}.  Every box has side
 $O(|\Placed|+|\mathrm{Reserved}|+|\Phi|)=O(|S|)$, every label is a
 bounded-coefficient combination of at most seven parameters, and
 $|S|\le 12D+3$ by Lemma~\ref{lem:charge}, and all magnitudes are therefore at
 most $A(D+1)$ for an absolute $A$.  Explicitly, with $W=\NumMaxWidth$,
-$M=\NumLatticeM$ and $|\Placed|+|\mathrm{Reserved}|\le 18(D+1)$, the coordinate
-boxes have side at
-most $M\bigl(2W(18(D+1)+1)+W^2+1\bigr)=\NumCoordLin(D+1)+\NumCoordCon$.  The
+$M=\NumLatticeM$ and
+$|\Placed|+|\mathrm{Reserved}|\le(12+2+2\NumPhiMax)(D+1)=\NumPlacedCoef(D+1)$
+by Lemma~\ref{lem:charge}, the coordinate boxes have side at
+most $M\bigl(2W(\NumPlacedCoef(D+1)+1)+W^2+1\bigr)=\NumCoordLin(D+1)+\NumCoordCon$.  The
 pairing boxes use the refined lattice $M'=\NumLatticeMEff$ of the elimination
 step and have side at most
-$M'\bigl(3W(36(D+1)+3W)+1\bigr)=\NumPairLin(D+1)+\NumPairCon$.  A
+$M'\bigl(3W(2\NumPlacedCoef(D+1)+3W)+1\bigr)=\NumPairLin(D+1)+\NumPairCon$.  A
 label is a sum of at most $\NumParams$ terms whose coefficients are at most
 $\NumCoefBound$ before an elimination and at most $\NumCoefBoundEff$ after
 one (over a denominator that only decreases the magnitude), so

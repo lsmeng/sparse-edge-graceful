@@ -30,6 +30,7 @@ import json
 import os
 import sys
 from collections import Counter
+from fractions import Fraction as Q
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -183,6 +184,48 @@ def main():
         # same as passing it: say so, and do not exit successfully
         c6_skipped = True
         out.append("* C6 menu gate: NOT CHECKED -- rerun with --gate GATE.json")
+    # C7.  A context that is a constructor template rather than a catalogue
+    # family is invisible to the gate, since the gate enumerates catalogue
+    # contexts only.  The residue-two ray is the one such context, and the
+    # enumeration records realizable pairs in which it is the PARENT, so those
+    # pairs are evaluated here instead.  The ray's family is the
+    # two-parameter one, (-s-2t; -t, -s-t, s; 2t) with input x = 2t, whose only
+    # label depending on the input alone is -x/2; the single rigid row printed
+    # in Appendix A is its s = x/2 specialisation and has a larger forced set,
+    # so evaluating the rigid row here would be the wrong test.
+    tmpl = load("template_families.json")
+    if tmpl and realizable is not None:
+        from check_lookahead_gate import collect as _collect, frac as _frac
+        _st = Counter()
+        _, kids = _collect(cat, True, _st)
+        bad7 = []
+        checked7 = 0
+        for pk, entry in tmpl.items():
+            pf = {Q(f["ratio"]) for f in entry["menu"][0]["forced_forms"]
+                  if f.get("kind") != "input"}
+            for c, p_ in sorted(realizable):
+                if p_ != pk or c not in E:
+                    continue
+                checked7 += 1
+                fams = kids.get(c) or []
+                if not fams:
+                    # the child's head is not a multiple of a single head
+                    # parameter; these are the direct-edge two-input rows,
+                    # whose labels depend on two inputs and cannot be
+                    # identically equal to a multiple of the parent's input
+                    continue
+                if not any(not (set(f["head_only"]) & pf) for f in fams):
+                    bad7.append((c, p_))
+        ok = ok and not bad7
+        out.append(f"* C7 template parents: {checked7} realizable pairs whose parent is a "
+                   f"constructor template, {checked7 - len(bad7)} admissible, "
+                   f"{len(bad7)} open  [{'PASS' if not bad7 else 'OPEN'}]")
+        for c, p_ in bad7:
+            out.append(f"    - child {c} under template parent {p_}")
+    else:
+        out.append("* C7 template parents: NOT CHECKED -- data/template_families.json absent")
+        c6_skipped = True
+
     out.append("")
     if not ok:
         verdict = "CLOSURE INCOMPLETE"

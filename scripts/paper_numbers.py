@@ -58,6 +58,7 @@ def main():
         e = cat[k]
         return e.get("menu") or [e]
 
+    wf_all = [key(c) for c in emit if key(c) in cat]
     rows = []
     tot = [0] * 6
     for name, pred in GROUPS:
@@ -153,8 +154,24 @@ def main():
                 DMAX, GMAX = max(DMAX, d), max(GMAX, g)
     MEFF = M * DMAX
     KEFF = 2 * GMAX * KMAX
-    coord_lin, coord_con = 36 * W * M, M * (2 * W + W * W + 1)
-    pair_lin, pair_con = 108 * W * MEFF, MEFF * (9 * W * W + 1)
+    # |Phi(F)|, the number of values an owner reserves for its parent's forced
+    # companions.  The manuscript used to assert 3; the true bound is the
+    # largest, over the contexts that occur, of the smallest number of forced
+    # ratios available in that context's menu, since the choice rule may take
+    # the best family of the menu.
+    PHI = 0
+    for k in wf_all:
+        e = cat.get(k)
+        if not e:
+            continue
+        ns = [len(f.get("forced_ratios") or []) for f in menu(k)]
+        if ns:
+            PHI = max(PHI, min(ns))
+    # |Placed| + |Reserved| <= |S| + cells + reservations
+    #                       <= (12D+3) + 2q + 2q*PHI  <= (12 + 2 + 2*PHI)(D+1)
+    PLC = 12 + 2 + 2 * PHI
+    coord_lin, coord_con = 2 * W * PLC * M, M * (2 * W + W * W + 1)
+    pair_lin, pair_con = 3 * W * 2 * PLC * MEFF, MEFF * (9 * W * W + 1)
     amax = npar * KEFF * (pair_lin + pair_con)          # D + 1 >= 1
     Aexp = len(str(amax)) - 1
     Alead = -(-amax // 10 ** Aexp)                      # round up
@@ -207,6 +224,8 @@ def main():
         "NumLatticeM": M,
         "NumParams": npar,
         "NumCoefBound": KMAX,
+        "NumPhiMax": PHI,
+        "NumPlacedCoef": PLC,
         "NumDetMax": DMAX,
         "NumAdjMax": GMAX,
         "NumCoefBoundEff": KEFF,

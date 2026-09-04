@@ -479,8 +479,12 @@ child to spend on it, which is the configuration
 $(h,\{1\},1,\mathrm{none})$ at the root; a branch vertex has a third core child
 and cannot be in that position.  On $2{,}000$ random trees of orders $11$ to
 $51$, rooting at a vertex of degree two left an owner without a context for
-$196$ of them, and rooting at a branch vertex left one for none of them, at any
-branch vertex.
+$196$ of them.  Rooting at a branch vertex never did: over $3{,}000$ random
+trees of orders $11$ to $51$ we ran the decomposition from \emph{every} branch
+vertex in turn, $23{,}000$ roots in all, and every one of them gave every owner
+a context.  The choice among branch vertices is therefore free, as
+Lemma~\ref{lem:contexts} states it, and not something the decomposition has to
+search over.
 In addition, the decision at a vertex depends only on its head-chain
 length, its arm lengths, its number of ports and the types of its active
 children.  We therefore enumerated all $\NumStates$ abstract local states with up to

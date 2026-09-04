@@ -650,8 +650,12 @@ Lemma~\ref{lem:charge} gives boxes of side $O(D+1)$.  The full argument is given
 Appendix~\ref{app:realization}, together with the explicit value
 $A=\AConst$.  This value follows from the catalogue constants (width at
 most $\NumMaxWidth$, at most $\NumParams$ parameters, coefficients at most
-$\NumCoefBound$ over denominators dividing $12$) and Lemma~\ref{lem:charge},
-and we have made no attempt to optimise it.
+$\NumCoefBound$ over denominators dividing $12$, determinants at most
+$\NumDetMax$ over the carriers we choose) and Lemma~\ref{lem:charge}.  Solving
+the pairing equations divides by the determinant of the carrier, which
+enlarges the lattice to $\NumLatticeMEff\Z$ and the coefficients to
+$\NumCoefBoundEff$ once, and it is these enlarged constants that $A$ is built
+from.  We have made no attempt to optimise it.
 
 \section{Dense completion and the proofs of Theorems~\ref{thm:main} and~\ref{thm:linear}}\label{sec:dense}
 
@@ -669,32 +673,104 @@ $|\Z_n\setminus X|\le\eta n$, and every list of block sizes $r_w\ge 2$ summing
 to $|X|$, the set $X$ has a partition into zero-sum blocks of sizes $r_w$.
 \end{lemma}
 
-This is the symmetric completion of \cite[Section~3]{ProjectNotes}: inverse
-pairs fill the even parts, one zero-sum triple is assigned to each odd part,
-and the triples come from Lemma~6.24 of \cite{MuyesserPokrovskiy2025} (the
-case $k=3$) applied with $p=1$.  The number of odd parts is even, because
-$|X|$ is even and congruent to that number modulo two, so the triples may be
-taken in pairs $T$, $-T$ and the residue set left after removing them is again
-symmetric and is filled by inverse pairs.
+\begin{proof}[Proof of Lemma~\ref{lem:dense}]
+Write $n=2K+1$.  Since $n$ is odd and $X$ is symmetric with $0\notin X$, the set
+$X$ is a disjoint union of inverse pairs $\{j,-j\}$; let $J\subseteq[1,K]$ be
+the set of magnitudes occurring, so that $|X|=2|J|$ and
+$|\Z_n\setminus X|=1+2(K-|J|)$.  In particular $|X|$ is even, so the number
+$o$ of odd block sizes is even.  Let $m_2$ be the number of blocks of size two
+and put $N=\sum_{r_w\ge3}r_w$, so that $|X|=N+2m_2$.  We fix
+$\eta\le1/20$ and argue by cases according to the size of $N$.
 
-Two readings of \cite{MuyesserPokrovskiy2025} enter here, and they give the
-two thresholds of Section~\ref{sec:intro}.  The printed perturbation radius of
-their Theorems~4.3--4.7 is $p^{A}n/(\log n)^{A}$, which gives
-Lemma~\ref{lem:dense} with $\eta n$ replaced by $n/(\log n)^{A}$ and hence
-gives Theorem~\ref{thm:main}.  Their Section~7, under \emph{Bounds in the main
-theorem}, records that
-$\log n$ may be replaced by $\log|G'|$ throughout the proof, the only source
-of logarithms being their short commutator-product theorem, and for an abelian
-group the commutator subgroup is trivial and the commutator product is empty.
-The authors record the consequence $g(n)=\Omega(n)$ for cyclic groups in their
-Problem~7.4.  Their own consequence requires reading their Theorem~5.11 with
-the commutator length bounded by $\max(1,\log_4|G'|)$.  This reading
-leaves a positive constant perturbation radius at every fixed reservoir
-density and gives Lemma~\ref{lem:dense} as stated, which is the hypothesis of
+\emph{Case 1: $N\le n/100$.}  In this case we use no external input.  A
+\emph{twin} is a pair of magnitudes $a<b$ in $J$ with $a+b\in J$; it yields the
+two zero-sum triples $\{a,b,-(a+b)\}$ and $\{-a,-b,a+b\}$, which are disjoint
+and whose union $\pm\{a,b,a+b\}$ is symmetric.  We choose $o/2$ twins with
+pairwise disjoint magnitude sets, greedily.  At the start of step $s$ the
+forbidden magnitudes are those outside $J$, of which there are at most
+$\eta n/2$, together with the $3(s-1)\le 3o/2\le N/2\le n/200$ already used.
+Hence at most $(\eta+1/100)K+2$ magnitudes are forbidden.  On the other hand
+the number of triples $\{a,b,a+b\}\subseteq[1,K]$ with $a<b$ is
+$\sum_{c=3}^{K}\lfloor(c-1)/2\rfloor\ge K^2/5$ for $K$ large, whereas a single
+magnitude lies in at most $2K+K/2+3$ of them.  Since
+$(\eta+1/100)\cdot(5/2)<1/5$ for $\eta\le1/20$, a permissible twin survives at
+every step once $n$ is large, although the margin is not optimised.  Now pair
+the odd blocks arbitrarily, give the two triples of the $s$-th twin to the two
+blocks of the $s$-th pair, and distribute the remaining magnitudes as inverse
+pairs, $p(r_w)=\lfloor r_w/2\rfloor-[r_w\text{ odd}]$ of them to the block
+$w$.  The count is exact, because
+$\sum_w p(r_w)=(|X|-3o)/2=|J|-3o/2$ is precisely the number of magnitudes left
+over.  Every block then has its prescribed size and sum zero.
+
+\emph{Case 2: $N>n/100$.}  Here we run the argument of
+\cite[Lemma~6.27]{MuyesserPokrovskiy2025} in $\Z_n$, which has no involutions,
+and with the missing pairs held out.  Put $p=N/(2|J|)$, so
+$1/100\le p\le1$ because $2|J|=|X|\le n$.  Enumerate all $K$ inverse pairs of
+$\Z_n$ and let $Y$ be a $p$-random set of indices; by
+\cite[Lemma~6.26]{MuyesserPokrovskiy2025} applied to the partition of $\Z_n$
+into these pairs together with $\{0\}$, the union of the selected pairs splits
+as $Q\sqcup R\sqcup S$ with $Q,R$ disjoint $p/2$-random subsets of $\Z_n$ and
+$S\subseteq\{0\}$.  Let $Y_J$ be the set of selected indices whose magnitude
+lies in $J$; it is $p$-random on $|J|$ indices with integral mean
+$p|J|=|J|-m_2$, so its median equals its mean and, with probability at least
+one half, $|Y_J|\le|J|-m_2$, while Chernoff's bound gives
+$|Y_J|\ge|J|-m_2-\sqrt{n}\log n$ with high probability.  Fix an outcome in
+which both hold and in which $Q$ and $R$ satisfy the conclusions of
+\cite[Lemmas~6.23 and~6.25]{MuyesserPokrovskiy2025}.  Reserve $m_2$ of the
+$|J|-|Y_J|$ unselected available pairs for the blocks of size two, let $J^{*}$
+be the union of the at most $\sqrt n\log n$ remaining unselected available
+pairs, and put $Z=J^{*}\cup\bigcup_{i\in Y_J}\{i,-i\}$, a union of inverse
+pairs with $|Z|=2|J|-2m_2=N$ and $\sum Z=0$.
+
+Reduce the multiset $\{r_w:r_w\ge3\}$ to a multiset $M'\subseteq\{3,4,5\}$ as
+in the first paragraph of the proof of
+\cite[Lemma~6.25]{MuyesserPokrovskiy2025}, recombining at the end, and split
+$M'=M^{Q}\sqcup M^{R}$ by halving the multiplicity of each of $3,4,5$.  Let
+$\varepsilon=(p/2)^{10^{10}}/(6\log(n)^{10^{24}})$, which lies in the range
+permitted by \cite[Lemma~6.23]{MuyesserPokrovskiy2025} once $n$ is large.  Both
+$Q\setminus Z$ and $R\setminus Z$ are contained in $\{0\}\cup(\Z_n\setminus X)$
+and hence have size at most $|\Z_n\setminus X|$, and
+$\bigl|\sum M^{Q}-pn/2\bigr|\le|\Z_n\setminus X|+O(\sqrt n\log n)$; so if
+$|\Z_n\setminus X|\le\varepsilon n/2$ then
+\cite[Lemma~6.23]{MuyesserPokrovskiy2025}, applied with $R=Q$, $Z$ as above,
+$m=\sum M^{Q}$ and $g=0$, returns $Q'\subseteq Z$ with $|Q'|=\sum M^{Q}$,
+$\sum Q'=0$ and $|Q'\triangle Q|\le6\varepsilon n$.  Put $R'=Z\setminus Q'$;
+then $|R'|=\sum M^{R}$, and $\sum R'=\sum Z-\sum Q'=0$, and
+$|R'\triangle R|\le6\varepsilon n+|\Z_n\setminus X|+|J^{*}|$.  Therefore
+\cite[Lemma~6.25]{MuyesserPokrovskiy2025} applies to $Q'$ with the reference
+set $Q$ and the multiset $M^{Q}$, and to $R'$ with $R$ and $M^{R}$, and returns
+zero-sum partitions of $Q'$ and of $R'$ of the prescribed sizes.  Together with
+the $m_2$ reserved inverse pairs these fill every block, since
+$Z\sqcup(\text{reserved pairs})=X$.  When $m_2=0$ one has
+$p=1$, $Y_J$ is all of $J$ and $J^{*}$ is empty, and the argument degenerates
+to a direct application of \cite[Lemma~6.25]{MuyesserPokrovskiy2025} to $X$.
+Thus $X$ has the required partition
+whenever $|\Z_n\setminus X|\le\varepsilon n/2$, and $\varepsilon$ depends only
+on $p\ge1/100$ and on $n$ through the logarithm.
+\end{proof}
+
+Two readings of \cite{MuyesserPokrovskiy2025} enter through the parameter
+$\varepsilon$ of the last proof, and they give the two thresholds of
+Section~\ref{sec:intro}.  The printed perturbation radius of their
+Theorems~4.3--4.7, and hence of their Lemmas~6.23 and~6.25, is
+$p^{A}n/(\log n)^{A}$; since the proof above uses those lemmas only with
+$p\ge1/200$, this gives Lemma~\ref{lem:dense} with $\eta n$ replaced by
+$n/(\log n)^{A}$, and hence Theorem~\ref{thm:main}.  Their Section~7, under
+\emph{Bounds in the main theorem}, records that $\log n$ may be replaced by
+$\log|G'|$ throughout the proof, the only source of logarithms being their
+short commutator-product theorem, and for an abelian group the commutator
+subgroup is trivial and the commutator product is empty; the authors record
+the consequence $g(n)=\Omega(n)$ for cyclic groups in their Problem~7.4.  One
+should read their commutator length as bounded by $\max(1,\log_4|G'|)$ rather
+than divide by $\log1$.  Their Lemmas~6.23 and~6.25 are deduced from
+Theorems~4.4--4.6 with no further logarithmic loss, the auxiliary error terms
+being of order $\sqrt n\log n$, so at every fixed reservoir density this
+reading leaves a positive constant perturbation radius and gives
+Lemma~\ref{lem:dense} as stated, which is the hypothesis of
 Theorem~\ref{thm:linear}.  This improvement is described by the authors as
-requiring essentially no modification of their proof, although it is not a
-printed theorem.  The constant $\eta$ is in either case inherited from their
-argument and is not effective.
+requiring essentially no modification of their proof, although neither it nor
+its consequence for their Section~6.3 is a printed theorem.  The constant
+$\eta$ is in either case inherited from their argument and is not effective.
 
 \begin{proof}[Proof of Theorems~\ref{thm:main} and~\ref{thm:linear}]
 Root $T$ at a branch vertex, decompose by Section~\ref{sec:decomp}, assign
@@ -1046,7 +1122,16 @@ exercised by at least one fragment.
 
 Every family carries the properties (E1)--(E6) of Section~\ref{sec:cells}.
 For a token family let $K(F)$ denote its carrier, a set of at most two
-parameters on which the three token forms already span a plane.  A family is
+parameters on which the three token forms already span a plane.  Property
+(E4) asserts that some such pair exists but does not name it, so the carrier
+is ours to choose, and the choice matters for the constants below.  On a fixed
+pair of columns the three $2\times 2$ minors of the token coincide up to sign,
+because the three forms sum to zero, so each candidate carrier has one
+well-defined $|\det|$; we always choose a carrier of least $|\det|$.  Over the
+catalogue this minimum is $1$ for $69\%$ of the tokens and never exceeds
+$\NumDetMax$, and the largest value of $|r_\ell\,\mathrm{adj}(M)|$ over all
+labels at the chosen carrier, where $M$ is the $2\times 2$ carrier block and
+$r_\ell$ the carrier row of a label $\ell$, is $\NumAdjMax$.  A family is
 \emph{input-carried} when $K(F)$ contains an input.  For every owner we fix a
 family before any label is chosen, preferring families with (E6).  When the
 context of a parent has no family with (E6), the finitely many pairs (parent
@@ -1063,10 +1148,11 @@ of numeric special labels, the set of \emph{reserved} values (antipodes of
 heads that a parent will place later), and the set $\mathrm{Open}\subseteq\Placed$
 of placed labels whose antipode is not yet placed and is designated (the head
 of an active child, the three labels of a pending token).  It also carries at
-most one
-\emph{pending token} $T_A$ together with a \emph{live set} $\Lambda$ of at
-most three symbolic parameters (the carrier of the pending cell $A$, and the
-head of $A$'s active child when the carrier contains the input), and the
+most two
+\emph{pending tokens} $T_A$, which then belong to one and the same cell $A$,
+together with a \emph{live set} $\Lambda$ of at
+most four symbolic parameters (the carriers of the pending cell $A$, and the
+head of $A$'s active child when a carrier contains the input), and the
 \emph{symbolic labels} (labels that are affine forms in $\Lambda$: they belong
 to $A$, to $A$'s active child and to $A$'s parent, hence at most $3W$ of them,
 where $W$ is the largest family width).  Finally it carries the set $\Phi$ of
@@ -1078,7 +1164,9 @@ $v$ is its designated antipode (the forced $-x$ of an absorbing family, a
 helper, or a coordinate of $-T$ when a token is cancelled).
 
 The invariant is: (a) numeric labels are pairwise distinct and nonzero, and no
-two are antipodal except designated pairs; (b) at most one token is pending;
+two are antipodal except designated pairs; (b) at most two tokens are pending,
+and both belong to the same cell, so the symbolic labels are still confined to
+that cell, its active child and its parent;
 (c) every symbolic label is a non-constant affine form in $\Lambda$, and no two
 symbolic labels are identical or antipodal as forms; (d) $\Phi$ contains every
 condition under which a symbolic label would collide with a placed value or
@@ -1121,13 +1209,31 @@ the row passes that single live parameter on.
 \emph{Token, token pending.}  Choose a matching of the three coordinates and
 solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two
 unknowns, nonsingular because the token map has rank two on the carrier, and the
-solution expresses $K(F)$ as affine functions of $\Lambda$.  The composite map
-$\Lambda\to K(F)$ has rank two because the token map of $A$ has rank two on
-$\Lambda$, so every label of $v$ depending on $K(F)$ is a non-constant affine
-form in $\Lambda$.  Choose the remaining parameters of $v$ numerically, record
-the new conditions, and choose $\Lambda\in(M\Z)^{|\Lambda|}$ avoiding all
+solution expresses $K(F)$ as affine functions of $\Lambda$.  Writing the two
+equations as $MK=N\Lambda+c$ with $M$ the carrier block of the token map of
+$v$ and $N$ that of $T_A$ on $\Lambda$, the solution is
+$K=\mathrm{adj}(M)(N\Lambda+c)/\det M$.  Two things have to be said about it,
+neither of which is automatic.  First, dividing by $\det M$ can leave the
+lattice, so at this step we choose $\Lambda\in(dM\Z)^{|\Lambda|}$ with
+$d=|\det M|$ rather than in $(M\Z)^{|\Lambda|}$; then $N\Lambda+c$ is divisible
+by $d$ and $K$ is again integral and in $M\Z$.  Since $d\le\NumDetMax$, the
+refined lattice is contained in $M'\Z$ with $M'=M\cdot\NumDetMax=\NumLatticeMEff$,
+and the only cost is that the box grows by the factor $d$.  Second, a label
+$\ell$ of $v$ with carrier row $r_\ell$ becomes
+$\ell=-(r_\ell\,\mathrm{adj}(M))N\Lambda/d+\mathrm{const}$, so its coefficients
+in $\Lambda$ are bounded by $2\cdot\NumAdjMax\cdot\NumCoefBound=\NumCoefBoundEff$
+and not by $\NumCoefBound$; and it is a \emph{non-constant} affine form in
+$\Lambda$, which needs $r_\ell\,\mathrm{adj}(M)N\ne 0$ rather than merely
+(E3).  We verified this last condition directly, over every ordered pair of a
+resolving family and a pending coefficient matrix that the catalogue allows
+and over all matchings of the token coordinates; no label of any family
+becomes constant.  Choose the remaining parameters of $v$ numerically, record
+the new conditions, and choose $\Lambda$ in that lattice avoiding all
 conditions in $\Phi$.  Each condition is a proper affine subspace, so a lattice
-point exists in a box of side $M(|\Phi|+1)$.  All labels of $A$, of its child
+point exists in a box of side $M'(|\Phi|+1)$.  We note that the enlargement
+does not compound: at the end of this step nothing is pending, so the next
+pending token starts again from catalogue coefficients bounded by
+$\NumCoefBound$, and the factor is paid once and not once per owner.  All labels of $A$, of its child
 and parent, and of $v$ become numeric, $T_A$ and $T_v$ are designated
 antipodes of each other, and nothing is pending.
 
@@ -1141,8 +1247,11 @@ neutral units are instantiated with fresh numeric parameters.
 \emph{Two-token cells.}  A cell with two tokens pairs its first token with
 the pending token, if any, exactly as above, and its second token becomes
 pending.  If nothing is pending both tokens become pending with their carriers
-live.  At most two tokens are therefore ever pending, and the live set has at
-most four carrier parameters.
+live.  At most two tokens are therefore ever pending, they always belong to a
+single cell, and the live set has at most four carrier parameters.  The bound
+$3W$ on the number of symbolic labels, and with it the bound on $|\Phi|$, is
+unaffected, since it counts the cells that carry symbolic labels and not the
+parameters.
 
 \emph{Forced-antipode children.}  The token $\{-x,a,x-a\}$ of a
 forced-antipode child stays pending with its carrier live until the parent is
@@ -1174,16 +1283,22 @@ and at most $|\Phi(F)|\le 3$ reservations.  Every box has side
 $O(|\Placed|+|\mathrm{Reserved}|+|\Phi|)=O(|S|)$, every label is a
 bounded-coefficient combination of at most seven parameters, and
 $|S|\le 12D+3$ by Lemma~\ref{lem:charge}, and all magnitudes are therefore at
-most $A(D+1)$ for an absolute $A$.  Explicitly, with $W=\NumMaxWidth$, $M=\NumLatticeM$ and
-$|\Placed|+|\mathrm{Reserved}|\le 18(D+1)$, the coordinate boxes have side at
-most $M\bigl(2W(18(D+1)+1)+W^2+1\bigr)=\NumCoordLin(D+1)+\NumCoordCon$,
-the pairing boxes have side at most
-$M\bigl(3W(36(D+1)+3W)+1\bigr)=\NumPairLin(D+1)+\NumPairCon$, and a
-label is a sum of at most $\NumParams$ terms with coefficients at most
-$\NumCoefBound$ (over a denominator that only decreases the magnitude), so
+most $A(D+1)$ for an absolute $A$.  Explicitly, with $W=\NumMaxWidth$,
+$M=\NumLatticeM$ and $|\Placed|+|\mathrm{Reserved}|\le 18(D+1)$, the coordinate
+boxes have side at
+most $M\bigl(2W(18(D+1)+1)+W^2+1\bigr)=\NumCoordLin(D+1)+\NumCoordCon$.  The
+pairing boxes use the refined lattice $M'=\NumLatticeMEff$ of the elimination
+step and have side at most
+$M'\bigl(3W(36(D+1)+3W)+1\bigr)=\NumPairLin(D+1)+\NumPairCon$.  A
+label is a sum of at most $\NumParams$ terms whose coefficients are at most
+$\NumCoefBound$ before an elimination and at most $\NumCoefBoundEff$ after
+one (over a denominator that only decreases the magnitude), so
 every label has magnitude at most
-$\NumParams\cdot\NumCoefBound\cdot\bigl(\NumPairLin(D+1)+\NumPairCon\bigr)
-\le \AConst(D+1)$.  At the end every special label other than the
+$\NumParams\cdot\NumCoefBoundEff\cdot\bigl(\NumPairLin(D+1)+\NumPairCon\bigr)
+\le \AConst(D+1)$.  This constant is four orders of magnitude
+larger than the one a naive reading of the carrier elimination would give, and
+only the threshold, and not the statement of either theorem, depends on
+it.  At the end every special label other than the
 pending triple has its antipode placed, so the special support is closed under
 negation up to that triple.  \qed
 

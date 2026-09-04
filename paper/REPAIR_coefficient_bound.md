@@ -127,8 +127,11 @@ performed; see "What remains" below.
 coefficient bound      KMAX = 64             K'  = 2*216*64      = 27648
 lattice                M    = 24             M'  = 24*144        = 3456
 pairing box            75168(D+1)+181680     10824192(D+1)+26161920
-A                      1.15e8  -> 2e8        7.158e12 -> 1e13
+A                      1.15e8  -> 2e8        7.158e12 -> 8e12
 ```
+
+(`paper_numbers.py` rounds `A` up to one significant figure, so the manuscript
+prints `8 * 10^12`.)
 
 `A` grows by four orders of magnitude and remains an absolute constant.  Since
 the theorems only require `n > C(D+1)` with `C` proportional to `A`, nothing
@@ -146,20 +149,39 @@ now derived rather than assumed.
   generated from the families themselves and every entry has `det != 0` by
   construction, hence rank two on the recorded carrier.
 
-## What remains before Appendix B is sound
+## Status, 2026-09-03 (all four items discharged)
 
-1. Write (i)-(iii) into Appendix B, and state the carrier choice rule ("choose
-   a carrier of minimal `|det|`") in the choice rule of the appendix, since the
-   constant now depends on it.
-2. Discharge (iv): check over the catalogue that `r_ℓ adj(M) N ≠ 0` for every
-   label that depends on the carrier, or record the finitely many exceptions.
-   This is a pair check over (family, pending family) and is the one part of
-   this repair not yet computed.
-3. Repair the separate contradiction in the state invariant: the appendix
-   declares "at most one pending token ... at most three symbolic parameters"
-   and later allows two pending tokens and four carrier parameters.  The
-   executable realiser stores two.  The invariant should be stated with two and
-   four throughout, and the `|Φ|` and box bounds re-derived accordingly, which
-   changes `3W` to `4W` in the counting.
-4. Regenerate `numbers.tex` so that `G`, `Dmax`, `K'` and `M'` are computed from
-   the catalogue rather than written in by hand.
+1. **Written into Appendix B.**  The carrier choice rule ("choose a carrier of
+   least `|det|`") is stated in "Families and the choice rule"; the refined
+   lattice `(dMZ)`, the bound `K'` and the non-compounding argument are in
+   "Token, token pending"; the final counting uses `M'` and `K'`.
+2. **Item (iv) discharged.**  `scripts/carrier_nonconstancy.py` checks
+   `r_l adj(M) N != 0` over every ordered pair of a resolving family and a
+   pending coefficient matrix the catalogue allows, at the minimising carrier
+   and over all matchings of the token coordinates:
+
+   ```text
+   7,963 tokens with a minimising carrier
+   777 distinct pending matrices N
+   157,183,992 (label, pending matrix, matching) triples checked
+   constant after elimination: 0
+   ```
+
+   No label of any family becomes constant, so the non-constancy claim holds
+   with no exceptions to record.  The enumeration of `N` is deliberately
+   coarse: it ranges over every matrix the catalogue contains rather than only
+   those that can actually pair with a given resolving family, so it
+   over-approximates and the conclusion is conservative.
+3. **The invariant contradiction repaired.**  The state and invariant (b) now
+   read "at most two pending tokens, belonging to one and the same cell" and
+   "a live set of at most four symbolic parameters" throughout.  The `3W`
+   bound on the symbolic labels, and with it the bound on `|Phi|`, is
+   unchanged, because it counts the cells that carry symbolic labels (the
+   pending cell, its active child and its parent) and not the parameters; the
+   earlier note that this would become `4W` was wrong.
+4. **`numbers.tex` regenerated from the catalogue.**  `paper_numbers.py` now
+   computes `NumDetMax`, `NumAdjMax`, `NumCoefBoundEff` and `NumLatticeMEff`
+   from `alphabet_families.json` by the same routine as
+   `carrier_determinants.py`, and derives `A` from them.  The current values
+   are `Dmax = 144`, `G = 216`, `K' = 27,648`, `M' = 3,456` and
+   `A = 8 * 10^12`.

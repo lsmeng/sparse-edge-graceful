@@ -120,9 +120,28 @@ def main():
                for x in v)
     KMAX = max(KMAX, 24)
     # boxes of the realization lemma, in the notation of Appendix B
+    # Carrier elimination (Appendix B, "Token, token pending").  The carrier is
+    # chosen of least |det|; DMAX is the largest such minimum over the
+    # catalogue and GMAX the largest |r . adj(M)| at the chosen carrier.  The
+    # resolution step therefore works in the refined lattice M' = M * DMAX and
+    # a label's coefficients after an elimination are bounded by 2 * GMAX *
+    # KMAX rather than by KMAX.
+    from carrier_determinants import token_vectors as _tv, analyse as _an
+    DMAX, GMAX = 1, 0
+    for k in cat:
+        for f in menu(k):
+            fam = f.get("family") or f
+            if not isinstance(fam, dict) or "coefficients_by_label" not in fam:
+                continue
+            for _tag, d, g, _cols in _an(fam):
+                if d is None:
+                    continue
+                DMAX, GMAX = max(DMAX, d), max(GMAX, g)
+    MEFF = M * DMAX
+    KEFF = 2 * GMAX * KMAX
     coord_lin, coord_con = 36 * W * M, M * (2 * W + W * W + 1)
-    pair_lin, pair_con = 108 * W * M, M * (9 * W * W + 1)
-    amax = npar * KMAX * (pair_lin + pair_con)          # D + 1 >= 1
+    pair_lin, pair_con = 108 * W * MEFF, MEFF * (9 * W * W + 1)
+    amax = npar * KEFF * (pair_lin + pair_con)          # D + 1 >= 1
     Aexp = len(str(amax)) - 1
     Alead = -(-amax // 10 ** Aexp)                      # round up
 
@@ -174,6 +193,10 @@ def main():
         "NumLatticeM": M,
         "NumParams": npar,
         "NumCoefBound": KMAX,
+        "NumDetMax": DMAX,
+        "NumAdjMax": GMAX,
+        "NumCoefBoundEff": KEFF,
+        "NumLatticeMEff": MEFF,
         "NumCoordLin": coord_lin,
         "NumCoordCon": coord_con,
         "NumPairLin": pair_lin,

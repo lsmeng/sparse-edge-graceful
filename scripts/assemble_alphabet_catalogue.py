@@ -125,6 +125,24 @@ def ordered_labels(labels):
     return [lb for _, _, lb in out]
 
 
+def matrix_rank_local(rows):
+    """Exact rank over the rationals, used for the (E4) plane test."""
+    m = [[Q(x) for x in r] for r in rows]
+    rk = 0
+    for c in range(len(m[0]) if m else 0):
+        piv = next((r for r in range(rk, len(m)) if m[r][c]), None)
+        if piv is None:
+            continue
+        m[rk], m[piv] = m[piv], m[rk]
+        pv = m[rk][c]
+        for r in range(len(m)):
+            if r != rk and m[r][c]:
+                f = m[r][c] / pv
+                m[r] = [a - f * b for a, b in zip(m[r], m[rk])]
+        rk += 1
+    return rk
+
+
 def rank_value(raw, token):
     """Numeric preference weight of a family's token rank."""
     if not token:
@@ -376,6 +394,30 @@ def main(argv=None):
             stats[f"malformed:{exc}"] += 1
             print(f"warning: {key}: malformed family ({exc}); skipped",
                   file=sys.stderr)
+            continue
+        # (E4) as stated in the manuscript: the three coefficient vectors of a
+        # token must span a plane.  A triple whose own vectors are parallel is
+        # rejected here rather than carried into the catalogue; the recorded
+        # token_rank folds in the exposed head row and cannot see this.
+        bad_plane = None
+        for tag in ("token_indices", "token2_indices"):
+            ti = fam.get(tag)
+            if not isinstance(ti, dict):
+                continue
+            try:
+                rows = [derived["vec"][ti[r]] for r in ("a", "b", "c")] \
+                    if "vec" in derived else \
+                    [fam["coefficients_by_label"][fam["labels"][ti[r]]["name"]]
+                     for r in ("a", "b", "c")]
+            except Exception:
+                continue
+            if matrix_rank_local(rows) != 2:
+                bad_plane = tag
+                break
+        if bad_plane is not None:
+            stats["records_token_not_a_plane"] += 1
+            print(f"warning: {key}: {bad_plane} triple does not span a plane "
+                  f"((E4)); skipped", file=sys.stderr)
             continue
         derived["_file_order"] = fo
         derived["_line_order"] = lo

@@ -92,6 +92,7 @@ CHECK_ORDER = (
     "3_token_zero_sum",
     "3_signature_partition",
     "4_token_rank",
+    "4b_token_spans_plane",
     "5_head_free",
     "5_input_exact",
     "6_numeric_sanity",
@@ -682,6 +683,20 @@ def run_checks(rebuilt, trials, rng):
                         f"(no strict requirement, token_rank={token_rank_recorded!r})")
     checks["4_token_rank"] = (rank_ok, rank_detail)
 
+    # ---- check 4b: (E4) as stated in the manuscript -----------------------
+    # "the three coefficient vectors of each token span a plane".  This is the
+    # rank of the triple ALONE; the check above folds in the exposed head row
+    # and therefore cannot see a token whose own three vectors are parallel.
+    plane_ok, plane_detail = True, ""
+    for tag, idx_list in (("token", tok_idx_list), ("token2", tok2_idx_list)):
+        if not idx_list:
+            continue
+        r_alone = matrix_rank([rebuilt.vec[t] for t in idx_list])
+        if r_alone != 2:
+            plane_ok = False
+            plane_detail += (f"{tag} triple alone has rank {r_alone}, (E4) requires 2; ")
+    checks["4b_token_spans_plane"] = (plane_ok, plane_detail.strip())
+
     # ---- check 5: head free / input exact ---------------------------------
     if not rebuilt.is_root:
         if "y" not in params:
@@ -762,7 +777,26 @@ def load_catalogue(path):
         kind = None
         if isinstance(entry, dict):
             kind = entry.get("kind") or (entry.get("ctx") or {}).get("kind")
-        if not isinstance(entry, dict) or not isinstance(entry.get("family"), dict):
+        if not isinstance(entry, dict):
+            items.append(dict(label=key, fam=None, kind=kind,
+                              skip="entry is not an object"))
+            continue
+        # every alternative in the menu is part of the certified catalogue, so
+        # every one of them is checked, not only the preferred family
+        menu = entry.get("menu")
+        if isinstance(menu, list) and menu:
+            for i, alt in enumerate(menu, 1):
+                fam = alt.get("family") if isinstance(alt, dict) else None
+                if not isinstance(fam, dict):
+                    fam = alt if isinstance(alt, dict) and "coefficients_by_label" in alt else None
+                lbl = key if len(menu) == 1 else f"{key} [menu {i}]"
+                if not isinstance(fam, dict):
+                    items.append(dict(label=lbl, fam=None, kind=kind,
+                                      skip="menu entry missing a family"))
+                else:
+                    items.append(dict(label=lbl, fam=fam, kind=kind, skip=None))
+            continue
+        if not isinstance(entry.get("family"), dict):
             items.append(dict(label=key, fam=None, kind=kind,
                               skip="entry missing a 'family' object"))
             continue

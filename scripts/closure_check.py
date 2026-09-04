@@ -140,6 +140,7 @@ def main():
 
     out.append(f"* C5 L11 joints: {sum(1 for k in E if k.endswith('_L11'))} contexts, "
                "no input, nothing required  [PASS]")
+    c6_skipped = False
     if a.gate:
         g = json.load(open(a.gate))
         fp = g["menu_gate"]["failing_pairs"]
@@ -161,12 +162,21 @@ def main():
             out.append(f"    - child {c} under parent {p}")
         json.dump(nonfa, open(os.path.join(DATA, "gate_failing_nonfa.json"), "w"))
     else:
-        out.append("* C6 menu gate: not checked (pass --gate)")
+        # C6 is one of the closure conditions, so not evaluating it is not the
+        # same as passing it: say so, and do not exit successfully
+        c6_skipped = True
+        out.append("* C6 menu gate: NOT CHECKED -- rerun with --gate GATE.json")
     out.append("")
-    out.append(f"**{'ALL CONDITIONS PASS' if ok else 'CLOSURE INCOMPLETE'}**")
+    if not ok:
+        verdict = "CLOSURE INCOMPLETE"
+    elif c6_skipped:
+        verdict = "C1-C5 PASS, C6 NOT CHECKED -- closure not established"
+    else:
+        verdict = "ALL CONDITIONS PASS"
+    out.append(f"**{verdict}**")
     open(a.out, "w").write("\n".join(out) + "\n")
     print("\n".join(out))
-    return 0 if ok else 1
+    return 0 if (ok and not c6_skipped) else 1
 
 
 if __name__ == "__main__":

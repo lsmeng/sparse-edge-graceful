@@ -32,6 +32,17 @@ gunzip -k data/alphabet_families.json.gz data/alphabet_families_xtok.json.gz dat
 tar -xzf data/batches.tar.gz
 ```
 
+## Status
+
+An independent adversarial audit (2026-09-03) found that the manuscript as
+written does not yet establish its two theorems.  No counterexample was found;
+the gaps are in the written argument, chiefly: a configuration that occurs is
+missing from the Appendix A case split, the Appendix B state invariant is
+self-contradictory, the coefficient bound is not shown to survive carrier
+elimination, and the cited completion theorem does not directly supply the
+negation-paired triples the dense step needs.  The catalogue and the machine
+verification below stand; the theorem status is **open, under repair**.
+
 ## The one command that summarises the state
 
 ```bash
@@ -49,6 +60,9 @@ here it prints `ALL CONDITIONS PASS`:
     C5  L11 joints                          no input, nothing required
     C6  menu gate      53 realizable failures, all handled by rule 8d
 
+Run it with `--gate GATE.json`; without a gate it reports C6 as NOT CHECKED and
+exits non-zero, because an unevaluated condition is not a satisfied one.
+
 ## Verification
 
 Certificates are never trusted because of how they were found.  Every family
@@ -56,7 +70,11 @@ in the catalogue is re-verified by `scripts/check_alphabet_families.py`, which
 rebuilds the cell topology from the row specification, recomputes the outputs,
 and re-checks the defining conditions with exact rational arithmetic and at
 random integer points.  It shares no code with the search.  At the state
-recorded here it reports **5716 total, 5716 PASS, 0 FAIL**.
+recorded here it reports **12740 total, 12740 PASS, 0 FAIL**: every family in
+every context's menu, not only the preferred one.  It verifies (E1)-(E5),
+including the requirement that each token's three coefficient vectors span a
+plane; (E6) is a per-context property recorded by the assembler, and 111 of the
+2,784 contexts that occur carry no family with it.
 
 The families built by the two construction identities (`extend_by_insertion.py`
 and `extend_by_neutral_block.py`) are written in the same format the solver

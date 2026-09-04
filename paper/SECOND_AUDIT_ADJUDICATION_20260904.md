@@ -221,4 +221,14 @@ it either.
 1. ~~The residual-$\{1\}$ two-input row.~~  Closed by Lemma~\ref{lem:reset};
    the scheduler and the catalogue have still to be taught the joint.
 2. The 173 contexts of the integrality gap.
-3. That a branch vertex at which the decomposition succeeds always exists.
+3. ~~That a branch vertex at which the decomposition succeeds always exists.~~
+   Withdrawn on 2026-09-04.  The obligation was an artefact of our own bug.
+   `schedule()` rooted the core at the caller's parent-array vertex zero
+   whatever its degree, and every uncovered owner we have ever seen came from
+   a root of degree two, which the decomposition does not allow: the
+   configuration is $(h,\{1\},1,\mathrm{none})$ at the root, and a branch vertex
+   has a third core child and cannot be in it.  On 2,000 random trees of orders
+   11 to 51, rooting at a degree-two vertex left an owner uncovered for **196**
+   of them and rooting at a branch vertex left one uncovered for **none**, at
+   any branch vertex.  Lemma C was never in danger; the manuscript's hypothesis
+   was simply not being honoured by the program.

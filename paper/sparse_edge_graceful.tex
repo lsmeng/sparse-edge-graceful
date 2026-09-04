@@ -472,15 +472,15 @@ every tree with at most nine vertices ($4{,}782{,}969$ labelled trees) and of
 $169{,}000$ uniform random labelled trees, $20{,}000$ at each odd order
 $n\in\{11,13,15,17,19,21,31,51\}$ and $3{,}000$ at each of
 $n\in\{101,201,401\}$.  No owner of any of them is left without a context and
-no context outside the list is produced.  Which branch vertex the core is
-rooted at is a free choice of the decomposition, and it is one that matters:
-a root can be left with a residual that its arms and ports cannot cover and
-with no active child to spend on it.  Our scheduler therefore tries the branch
-vertices in turn and keeps the first for which every owner receives a context.
-On $2{,}000$ random trees of orders $11$ to $51$ the first branch vertex failed
-for $189$ of them and every one of the $189$ was covered at another branch
-vertex; we have not proved that a good branch vertex always exists, and we
-record that as the one place where our regression outruns our proof.
+no context outside the list is produced.  That the root is a branch vertex is used, and not
+only for convenience.  A vertex of degree two taken as the root can be left
+with a residual that its arms and its one port cannot cover and with no active
+child to spend on it, which is the configuration
+$(h,\{1\},1,\mathrm{none})$ at the root; a branch vertex has a third core child
+and cannot be in that position.  On $2{,}000$ random trees of orders $11$ to
+$51$, rooting at a vertex of degree two left an owner without a context for
+$196$ of them, and rooting at a branch vertex left one for none of them, at any
+branch vertex.
 In addition, the decision at a vertex depends only on its head-chain
 length, its arm lengths, its number of ports and the types of its active
 children.  We therefore enumerated all $\NumStates$ abstract local states with up to
@@ -939,8 +939,10 @@ Our scheduler implements the rules of Appendix~\ref{app:contexts} and returns,
 for a rooted tree, the list of owners with their contexts.  It is the
 regression for Lemma~\ref{lem:contexts} and was run on all labelled trees with
 at most nine vertices and on $169{,}000$ random trees of odd orders between
-$11$ and $401$.  It also chooses the branch vertex at which the core is
-rooted, as described after Lemma~\ref{lem:contexts}.  Our constructor
+$11$ and $401$.  It roots the core at a branch vertex, as
+Lemma~\ref{lem:contexts} requires; an earlier version of it took the root from
+its caller without checking the degree, which is what produced the only
+uncovered owners we have seen.  Our constructor
 implements Lemma~\ref{lem:realization} on top of the scheduler and the
 catalogue, produces an integer labelling, reduces it modulo $n$, and checks
 the bijection of vertex sums directly.  Each run writes a certificate listing

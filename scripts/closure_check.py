@@ -38,6 +38,15 @@ from run_alphabet_batch import key  # noqa: E402
 DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
 RIGID = {"h0_2_p0_act"}          # residue-two rigid ray, a constructor template
 FA_CHILD = "h2_1_p0_act2"        # the only forced-antipode free child
+# The one-step gate is a sufficient condition for a (child, parent) pair, not
+# a necessary one: a pair it rejects is still admissible when the child is
+# joined into the parent, because the two label sets are then solved together
+# and no identity between them can survive.  Rule 8d is the systematic
+# instance of this, with the forced-antipode child above.  JOINT records the
+# one further pair the enumeration at three active children produced.  Its
+# parent is a root, so the enlarged cell has no parent of its own and the
+# joining stops there.
+JOINT = {("h0_1-2_p0_bot", "root_2_p0_act"): "root_2_p0_J12"}
 
 
 def token_names(f):
@@ -65,11 +74,13 @@ def load(name, default=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--gate", default=None)
+    ap.add_argument("--emittable", default="alphabet_contexts_emittable.json",
+                    help="the emittable context set, a file name under data/")
     ap.add_argument("--pairs", default=os.path.join(DATA, "emittable_pairs.json"),
                     help="realizable (child, parent) owner pairs from the enumeration")
     ap.add_argument("--out", default=os.path.join(DATA, "closure_report.md"))
     a = ap.parse_args()
-    emit = load("alphabet_contexts_emittable.json", [])
+    emit = load(a.emittable, [])
     E = {key(c): c for c in emit}
     cat = load("alphabet_families.json")
     xtok = load("alphabet_families_xtok.json")
@@ -153,11 +164,17 @@ def main():
                        "recorded by the enumeration")
         else:
             real = [(c, p) for c, p in fp if c in E and p in E]
-        nonfa = [(c, p) for c, p in real if c != FA_CHILD]
+        fa = [(c, p) for c, p in real if c == FA_CHILD]
+        joined = [(c, p) for c, p in real
+                  if c != FA_CHILD and JOINT.get((c, p)) in cat]
+        nonfa = [(c, p) for c, p in real
+                 if c != FA_CHILD and JOINT.get((c, p)) not in cat]
         ok = ok and not nonfa
         out.append(f"* C6 menu gate: {len(fp)} failing ordered pairs, {len(real)} with both contexts "
-                   f"emittable, {len(real) - len(nonfa)} of those have the child {FA_CHILD} "
-                   f"(handled by rule 8d), {len(nonfa)} remain  [{'PASS' if not nonfa else 'OPEN'}]")
+                   f"emittable, {len(fa)} of those have the child {FA_CHILD} "
+                   f"(handled by rule 8d), {len(joined)} handled by joining "
+                   f"({', '.join(sorted(JOINT[q] for q in joined)) or 'none'}), "
+                   f"{len(nonfa)} remain  [{'PASS' if not nonfa else 'OPEN'}]")
         for c, p in sorted(nonfa)[:40]:
             out.append(f"    - child {c} under parent {p}")
         json.dump(nonfa, open(os.path.join(DATA, "gate_failing_nonfa.json"), "w"))

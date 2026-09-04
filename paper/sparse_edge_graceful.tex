@@ -474,12 +474,28 @@ In addition, the decision at a vertex depends only on its head-chain
 length, its arm lengths, its number of ports and the types of its active
 children.  We therefore enumerated all $\NumStates$ abstract local states with up to
 three arms of lengths at most eight (and larger arm sets of short arms), up to
-three ports, up to two active children of each of the possible types and
+three ports, up to four active children of each of the possible types and
 head chains of length at most six.  Each state was realised by a concrete tree
 fragment, and we recorded the context emitted at the vertex.  The
 \NumEmittable{} distinct contexts obtained are all in the list, and they are
 exactly the contexts for which families are required in
 Section~\ref{sec:cells}, whereas the remaining entries of the list are slack.
+
+The cap on the number of active children is the one hypothesis of this
+enumeration that the decomposition does not force, since an owner of a large
+tree may carry arbitrarily many active children, and a tree on at most nine
+vertices carries none with three.  We therefore ran the enumeration separately
+at the caps two, three and four.  Raising the cap from two to three adds six
+contexts, all of them roots with a single arm, and $416$ realizable ordered
+pairs, whereas raising it from three to four adds nothing at all: the
+$3{,}818{,}400$ states enumerated at the cap four emit exactly the same
+contexts and exactly the same ordered pairs as the $1{,}204{,}800$ states at
+the cap three.  Thus the emitted set is stationary between three and four,
+which is what the analysis of Appendix~\ref{app:contexts} predicts, since the
+root rule and the two-input rule reduce any number of active children to one
+or two before a context is emitted.  We note that a stationary pair of caps is
+evidence for, and not a proof of, stationarity at every cap; the proof is the
+case analysis itself.
 
 \begin{lemma}[charge]\label{lem:charge}
 Let $q\le D$ be the number of subdivided core edges.  The number of owners is
@@ -763,9 +779,23 @@ reports the context pairs for which no combination avoids such a coincidence.
 Over the catalogue it reports \NumGateFail{} ordered pairs.  However, most
 ordered pairs of contexts cannot occur in a tree at all, and restricted to the
 \NumPairs{} ordered pairs that the enumeration of Lemma~\ref{lem:contexts}
-records it reports \NumGateFailRealizable{}, every one of which has the
-forced-antipode child of Section~\ref{sec:cells} as its child and is therefore
-absorbed by the rule of that section and not by the gate.  A second
+records it reports \NumGateFailRealizable{}.  All but one of these have the
+forced-antipode child of Section~\ref{sec:cells} as their child and are
+therefore absorbed by the rule of that section and not by the gate.  The
+exception appeared only when the enumeration was run at three active children,
+and it is the pair whose parent is the root context with a lone arm of
+residue two and one active child, and whose child is the bottom cell with arms
+of lengths one and two.  Here the parent's forced ratios are $-1$, $-\tfrac12$
+and $\tfrac12$ in every family of its menu, and the child carries the antipode
+of its own head in every family of its menu, so the two collide at every head
+multiplier the search produces.  However, the gate is a sufficient condition
+and not a necessary one: we join the child into the parent and solve the two
+label sets together as a single cell of width ten, for which the catalogue
+carries a family, and an identity between labels of one cell cannot arise.  We
+note that the joining stops there, since the parent is the root and the child
+is a bottom cell, so the enlarged cell has neither a parent of its own nor an
+active child, and this is the same device as the joint of the absorption
+rule.  A second
 program checks the conditions that the absorption rule needs, namely that
 every context that occurs has a family, that every context with a free active
 child has an input-in-token family or a joint that is not forced-antipode,
@@ -783,7 +813,7 @@ the state of the verification is visible at any time.  All of them hold: every
 one of the \NumEmittable{} contexts that occur has a family, all
 \NumFreeChildContexts{} free-child contexts absorb a forced-antipode child,
 the folded letter and all $40$ two-input contexts do the same, and the gate
-leaves nothing outside the absorption rule.
+leaves nothing outside the absorption rule and the single join above.
 
 \paragraph{The scheduler and the constructor.}
 Our scheduler implements the rules of Appendix~\ref{app:contexts} and returns,

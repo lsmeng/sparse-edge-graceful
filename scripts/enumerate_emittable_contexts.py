@@ -186,6 +186,12 @@ def main():
     ap.add_argument("--max-head", type=int, default=6)
     ap.add_argument("--out", default=os.path.join(DATA, "alphabet_contexts_emittable.json"))
     ap.add_argument("--report", default=os.path.join(DATA, "emittable_report.md"))
+    ap.add_argument("--shard", type=int, default=0,
+                    help="process only plan entries with index %% shards == shard")
+    ap.add_argument("--shards", type=int, default=1)
+    ap.add_argument("--raw", default=None,
+                    help="write this shard's raw keys/pairs/crashes as JSON and stop "
+                         "before the catalogue comparison (for parallel runs)")
     ap.add_argument("--extra", action="store_true",
                     help="also enumerate large arm multisets (size 4-6 over lengths 1..4) with <=1 child")
     a = ap.parse_args()
@@ -225,6 +231,8 @@ def main():
                         for q in range(0, 3):
                             for kids in multisets(CHILD_TYPES, 1):
                                 plan.append((is_root, h, arms, (), q, kids))
+    if a.shards > 1:
+        plan = [st for i, st in enumerate(plan) if i % a.shards == a.shard]
     print(len(plan), "abstract states", flush=True)
     crashes = []
     for st in plan:
@@ -247,6 +255,19 @@ def main():
             passthrough[pt] += 1
         if states % 20000 == 0:
             print(states, "states;", len(emitted), "distinct keys", flush=True)
+    if a.raw:
+        json.dump({"states": states,
+                   "emitted": dict(emitted),
+                   "all_keys": dict(all_keys),
+                   "passthrough": dict(passthrough),
+                   "where": {k: list(v) for k, v in where.items()},
+                   "pairs": sorted(list(x) for x in pairs),
+                   "crashes": [[list(st), msg] for st, msg in crashes]},
+                  open(a.raw, "w"))
+        print(f"shard {a.shard}/{a.shards}: {states} states, {len(emitted)} keys, "
+              f"{len(crashes)} crashes -> {a.raw}", flush=True)
+        return 0
+
     E = set(emitted) | {k for k in all_keys if k}
     # compare with the generated alphabet and the catalogue
     from run_alphabet_batch import key as ctx_key

@@ -1365,7 +1365,9 @@ our regression exercises.
 \emph{Token, token pending.}  Choose a matching of the three coordinates and
 solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two
 unknowns, nonsingular because the token map has rank two on the carrier, and the
-solution expresses $K(F)$ as affine functions of $\Lambda$.  Writing the two
+solution expresses $K(F)$ as affine functions of $\Lambda$.  The equation is
+symmetric and may instead be solved for $\Lambda$, which
+Remark~\ref{rem:integrality} uses.  Writing the two
 equations as $MK=N\Lambda+c$ with $M$ the carrier block of the token map of
 $v$ and $N$ that of $T_A$ on $\Lambda$, the solution is
 $K=\mathrm{adj}(M)(N\Lambda+c)/\det M$.  Two things have to be said about it,
@@ -1431,14 +1433,24 @@ parameters cannot clear the determinant, because a single non-carrier column
 generates a subgroup of $(\Z/\det)^2$ of rank one.  The fourth has width
 twenty and is beyond enumeration.
 
-So the gap is now four contexts wide and its shape is understood: for those
-four the eliminated pair is the head and the input, and the lattice of the head
-is divided by three or six.  What is missing is a bound on the number of such
+One more freedom halves what is left.  The pairing equation $T_v=-T_A$ is
+symmetric in its two cells: it is two independent equations in the two carrier
+pairs, and we may solve it for the carrier of the pending cell $A$ as readily
+as for that of the resolving cell $v$, since (E4) makes the coefficient matrix
+of $T_A$ on its own carrier nonsingular too.  Solving for $A$'s carrier
+expresses $\Lambda$ in terms of $K(F_v)$, which is then chosen numerically, and
+the division is by $\det$ of $A$'s carrier block instead.  We therefore take
+whichever of the two sides is safe.  Of the $1{,}724$ contexts that occur and
+can carry a token, and so can be either the pending cell or the resolving one,
+exactly the four above are unsafe, and a resolution is now in difficulty only
+when \emph{both} of its cells are among those four.
+
+What is still missing for that case is a bound on the number of such
 eliminations along a root path that pass a value to one another, or a joint for
 these four of the kind Lemma~\ref{lem:reset} supplies for the two-input row.
 Until one of the two is given, the explicit constant $A$ below is not
-established for trees that use one of the four, although our constructor
-produces integer labellings on every tree we have run it on.
+established for a tree in which two of the four meet in this way, although our
+constructor produces integer labellings on every tree we have run it on.
 \end{remark}  All labels of $A$, of its child
 and parent, and of $v$ become numeric, $T_A$ and $T_v$ are designated
 antipodes of each other, and nothing is pending.

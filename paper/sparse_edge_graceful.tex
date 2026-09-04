@@ -129,14 +129,14 @@ Assume the abelian improvement recorded in
 namely that their zero-sum matching theorems hold in $\Z_n$ with a linear
 number of deleted residues.  Then there are absolute constants $C$ and $n_0$
 such that every tree $T$ of odd order $n\ge n_0$ with $D$ vertices of degree
-two is edge-graceful whenever $n>C(D+1)$; equivalently, for every $k\ge0$,
+two is edge-graceful whenever $n>C(D+1)$.  In particular, for every $k\ge0$,
 every odd-order tree with at most $k$ vertices of degree two and more than
-$2Ck$ vertices is edge-graceful.
+$C(k+1)$ vertices is edge-graceful, since $D\le k$.
 \end{theorem}
 
 The qualitative statement, that a bounded number of degree-two vertices is no
-obstruction once the tree is large, therefore does not depend on the remark
-of that remark at all; the remark is what turns the polylogarithmic threshold
+obstruction once the tree is large, therefore does not depend on that remark
+at all; the remark is what turns the polylogarithmic threshold
 into a linear one.  In Section~\ref{sec:linearroute} we reduce the linear
 threshold, with an explicit constant and without any use of
 \cite{MuyesserPokrovskiy2025}, to a conjecture on permutations of an interval
@@ -672,8 +672,11 @@ After Lemma~\ref{lem:realization} the unused labels form the set
 $X=\Z_n\setminus(\{0\}\cup S)$, which is closed under negation up to the
 pending triple $T$.  The negatives $-T$ are placed in an odd ordinary block of
 size at least three, which exists by parity whenever a token is pending and no
-block has size one.  It remains to partition $X$ into zero-sum blocks of the
-prescribed sizes, all at least two, with $|Z_n\setminus X|\le 2A(D+1)+1$.
+block has size one; write $r$ for that block's prescribed size and put
+$X'=X\setminus(-T)$.  Since $r$ is odd and at least three, the remainder $r-3$
+is zero or at least two, and the block is dropped from the list when it is
+zero.  It remains to partition $X'$ into zero-sum blocks of the resulting
+sizes, all at least two, with $|\Z_n\setminus X'|\le 2A(D+1)+4$.
 
 \begin{lemma}[linear dense completion]\label{lem:dense}
 There are absolute constants $\eta>0$ and $n_1$ such that for every odd
@@ -734,27 +737,40 @@ pairs with $|Z|=2|J|-2m_2=N$ and $\sum Z=0$.
 Reduce the multiset $\{r_w:r_w\ge3\}$ to a multiset $M'\subseteq\{3,4,5\}$ as
 in the first paragraph of the proof of
 \cite[Lemma~6.25]{MuyesserPokrovskiy2025}, recombining at the end, and split
-$M'=M^{Q}\sqcup M^{R}$ by halving the multiplicity of each of $3,4,5$.  Let
-$\varepsilon=(p/2)^{10^{10}}/(6\log(n)^{10^{24}})$, which lies in the range
-permitted by \cite[Lemma~6.23]{MuyesserPokrovskiy2025} once $n$ is large.  Both
+$M'=M^{Q}\sqcup M^{R}$ by giving $M^{Q}$ the floor and $M^{R}$ the ceiling of
+half the multiplicity of each of $3,4,5$.  The multiplicities need not be even,
+so the two parts need not have equal sums; however they differ in multiplicity
+by at most one in each of the three sizes, hence
+$\bigl|\sum M^{Q}-\sum M^{R}\bigr|\le12$, and a bounded discrepancy is
+absorbed by the slack reserved below.
+
+Write $\delta=(p/2)^{10^{10}}/\log(n)^{10^{24}}$ for the perturbation radius
+that \cite[Lemma~6.25]{MuyesserPokrovskiy2025} allows at density $p/2$, and
+let $\varepsilon=\delta/24$, which lies in the range permitted by
+\cite[Lemma~6.23]{MuyesserPokrovskiy2025} once $n$ is large.  Both
 $Q\setminus Z$ and $R\setminus Z$ are contained in $\{0\}\cup(\Z_n\setminus X)$
 and hence have size at most $|\Z_n\setminus X|$, and
-$\bigl|\sum M^{Q}-pn/2\bigr|\le|\Z_n\setminus X|+O(\sqrt n\log n)$; so if
-$|\Z_n\setminus X|\le\varepsilon n/2$ then
-\cite[Lemma~6.23]{MuyesserPokrovskiy2025}, applied with $R=Q$, $Z$ as above,
-$m=\sum M^{Q}$ and $g=0$, returns $Q'\subseteq Z$ with $|Q'|=\sum M^{Q}$,
-$\sum Q'=0$ and $|Q'\triangle Q|\le6\varepsilon n$.  Put $R'=Z\setminus Q'$;
+$\bigl|\sum M^{Q}-pn/2\bigr|\le|\Z_n\setminus X|+O(\sqrt n\log n)$.  Assume
+$|\Z_n\setminus X|\le\delta n/8$, which is the hypothesis of the lemma with
+$\eta=\delta/8$.  Then \cite[Lemma~6.23]{MuyesserPokrovskiy2025}, applied with
+$R=Q$, $Z$ as above, $m=\sum M^{Q}$ and $g=0$, returns $Q'\subseteq Z$ with
+$|Q'|=\sum M^{Q}$, $\sum Q'=0$ and
+$|Q'\triangle Q|\le6\varepsilon n=\delta n/4$.  Put $R'=Z\setminus Q'$;
 then $|R'|=\sum M^{R}$, and $\sum R'=\sum Z-\sum Q'=0$, and
-$|R'\triangle R|\le6\varepsilon n+|\Z_n\setminus X|+|J^{*}|$.  Therefore
-\cite[Lemma~6.25]{MuyesserPokrovskiy2025} applies to $Q'$ with the reference
-set $Q$ and the multiset $M^{Q}$, and to $R'$ with $R$ and $M^{R}$, and returns
-zero-sum partitions of $Q'$ and of $R'$ of the prescribed sizes.  Together with
+$$|R'\triangle R|\le6\varepsilon n+|\Z_n\setminus X|+|J^{*}|
+  \le\tfrac{\delta n}{4}+\tfrac{\delta n}{8}+O(\sqrt n\log n)\le\delta n$$
+once $n$ is large, and likewise $|Q'\triangle Q|\le\delta n/4\le\delta n$.
+Thus both perturbations stay strictly inside the allowance, which is the point
+of taking $\varepsilon$ a twenty-fourth of $\delta$ rather than a sixth.
+Therefore \cite[Lemma~6.25]{MuyesserPokrovskiy2025} applies to $Q'$ with the
+reference set $Q$ and the multiset $M^{Q}$, and to $R'$ with $R$ and $M^{R}$,
+and returns zero-sum partitions of $Q'$ and of $R'$ of the prescribed sizes.  Together with
 the $m_2$ reserved inverse pairs these fill every block, since
 $Z\sqcup(\text{reserved pairs})=X$.  When $m_2=0$ one has
 $p=1$, $Y_J$ is all of $J$ and $J^{*}$ is empty, and the argument degenerates
 to a direct application of \cite[Lemma~6.25]{MuyesserPokrovskiy2025} to $X$.
 Thus $X$ has the required partition
-whenever $|\Z_n\setminus X|\le\varepsilon n/2$, and $\varepsilon$ depends only
+whenever $|\Z_n\setminus X|\le\delta n/8$, and $\delta$ depends only
 on $p\ge1/100$ and on $n$ through the logarithm.
 \end{proof}
 
@@ -1131,7 +1147,12 @@ exercised by at least one fragment.
 
 \subsection*{Families and the choice rule}
 
-Every family carries the properties (E1)--(E6) of Section~\ref{sec:cells}.
+Every family carries the properties (E1)--(E5) of Section~\ref{sec:cells},
+which our checker verifies.  Property (E6) holds for a family of every context
+that occurs except the \NumNotEsixContexts{} of Section~\ref{sec:cells}, and
+for those the gate of Section~\ref{sec:verification} checks the finitely many
+adjacent pairs individually; the choice rule below is what turns this into the
+statement the realization uses.
 For a token family let $K(F)$ denote its carrier, a set of at most two
 parameters on which the three token forms already span a plane.  Property
 (E4) asserts that some such pair exists but does not name it, so the carrier
@@ -1194,10 +1215,19 @@ parameters numerically) or when the child is the pending cell with its head in
 $\Lambda$.
 
 \emph{No token.}  Choose the head and the internal parameters numerically,
-one coordinate at a time, in $M\Z\cap[-B,B]$.  Every label is affine in the
-coordinate being chosen with nonzero slope (E3), so each admissibility
-requirement and each reservation excludes at most one value per label, and the
-reservation is $\{q y: q\in\Phi(F_{\mathrm{parent}})\}$.  The bound
+one coordinate at a time, in $M\Z\cap[-B,B]$, in a fixed order of the
+parameters.  Property (E3) says that each label form is nonzero and that no two
+of them are equal, so each label form, and each difference of two label forms,
+has a well-defined \emph{last} nonzero coordinate in that order.  We charge
+every admissibility requirement and every reservation to the step at which the
+last nonzero coordinate of the form concerned is chosen; at that step the form
+is affine in the coordinate being chosen with nonzero slope, whereas at every
+later step it is already numeric.  Each requirement therefore excludes at most
+one value, at exactly one step, and the reservation is
+$\{q y: q\in\Phi(F_{\mathrm{parent}})\}$.  We note that (E3) alone would not
+justify this coordinate by coordinate, since a label may well have zero
+coefficient in several parameters; it is the charging to the last nonzero
+coordinate that makes the count valid.  The bound
 $B=M\bigl(2W(|\Placed|+|\mathrm{Reserved}|+1)+W^2+1\bigr)$ therefore suffices.  If the
 input is symbolic, the labels depending on it are symbolic forms, non-constant
 by (E3) and the choice rule, and every comparison with a numeric label or
@@ -1225,11 +1255,10 @@ equations as $MK=N\Lambda+c$ with $M$ the carrier block of the token map of
 $v$ and $N$ that of $T_A$ on $\Lambda$, the solution is
 $K=\mathrm{adj}(M)(N\Lambda+c)/\det M$.  Two things have to be said about it,
 neither of which is automatic.  First, dividing by $\det M$ can leave the
-lattice, so at this step we choose $\Lambda\in(dM\Z)^{|\Lambda|}$ with
-$d=|\det M|$ rather than in $(M\Z)^{|\Lambda|}$; then $N\Lambda+c$ is divisible
-by $d$ and $K$ is again integral and in $M\Z$.  Since $d\le\NumDetMax$, the
-refined lattice is contained in $M'\Z$ with $M'=M\cdot\NumDetMax=\NumLatticeMEff$,
-and the only cost is that the box grows by the factor $d$.  Second, a label
+lattice, and we do not at present have a complete argument that it does not;
+this is the one step of our construction that we have to record as unfinished,
+and we do so in Remark~\ref{rem:integrality} below rather than assert it.
+Second, a label
 $\ell$ of $v$ with carrier row $r_\ell$ becomes
 $\ell=-(r_\ell\,\mathrm{adj}(M))N\Lambda/d+\mathrm{const}$, so its coefficients
 in $\Lambda$ are bounded by $2\cdot\NumAdjMax\cdot\NumCoefBound=\NumCoefBoundEff$
@@ -1239,12 +1268,55 @@ $\Lambda$, which needs $r_\ell\,\mathrm{adj}(M)N\ne 0$ rather than merely
 resolving family and a pending coefficient matrix that the catalogue allows
 and over all matchings of the token coordinates; no label of any family
 becomes constant.  Choose the remaining parameters of $v$ numerically, record
-the new conditions, and choose $\Lambda$ in that lattice avoiding all
-conditions in $\Phi$.  Each condition is a proper affine subspace, so a lattice
-point exists in a box of side $M'(|\Phi|+1)$.  We note that the enlargement
-does not compound: at the end of this step nothing is pending, so the next
-pending token starts again from catalogue coefficients bounded by
-$\NumCoefBound$, and the factor is paid once and not once per owner.  All labels of $A$, of its child
+the new conditions, and choose $\Lambda$ in the lattice of
+Remark~\ref{rem:integrality} avoiding all conditions in $\Phi$.  Each condition
+is a proper affine subspace, so a lattice point exists in a box of side
+$M'(|\Phi|+1)$.  The coefficient enlargement does not compound: at the end of
+this step nothing is pending, so the next pending token starts again from
+catalogue coefficients bounded by $\NumCoefBound$, and the factor is paid once
+and not once per owner.
+
+\begin{remark}[the integrality of the eliminated carrier]\label{rem:integrality}
+Solving $M K=N\Lambda+c$ gives $K=\mathrm{adj}(M)(N\Lambda+c)/\det M$, and for
+the labels of $v$ to be integers this quotient has to be integral.  Choosing
+$\Lambda$ in a lattice divisible by $\det M$ does \emph{not} achieve this,
+because the constant $c$ collects the numeric parameters of $v$ and of $A$ that
+were already fixed and is untouched by the choice of $\Lambda$; the family of
+context $\mathtt{h2\_2\text{-}6\_p2\_act}$ has a token whose minimising carrier
+has $\det M=-5$ and admits numeric choices for which
+$\mathrm{adj}(M)c=(384,336)$, and neither coordinate is divisible by five.
+Nor does a common lattice follow from a bound on the determinants, since a
+bound is not a divisibility, and 33 of the determinants that our choice rule
+selects do not divide $\NumDetMax$.  We can say the following.
+The carrier is ours to choose, and when it can be chosen unimodular there is
+nothing to divide and the difficulty does not arise.  Over our catalogue
+$5{,}491$ of the $7{,}963$ tokens admit a unimodular carrier, and at the level
+of contexts, which is where the choice is actually made, $2{,}616$ of the
+$\NumEsixDenom$ contexts that occur have a family all of whose tokens admit
+one.  Adding ``prefer a family with unimodular carriers'' to the choice rule
+therefore removes the division entirely except at $173$ contexts, for which the
+smallest determinant that can be achieved is at most $36$ and lies in
+$\{2,3,4,6,8,9,24,36\}$, a set with least common multiple $72$.  What is still
+missing is the treatment of those $173$.  Two routes are available and neither
+is complete here.  One is a single global lattice $D\Z$ with $D$ a common
+multiple of every determinant that can occur, which makes each individual
+quotient integral but leaves $K$ in a coarser lattice than the next elimination
+needs; since the value a cell passes to its parent is its head, and the head is
+an independent parameter by (E5), this degradation cannot propagate except
+through a carrier that contains the head or through the rigid rows, so what
+would be needed is a bound on the length of such a chain.  The other is to
+solve, at each resolution, an affine congruence for the numeric parameters of
+$v$, which are chosen at that moment and after $\det M$ is known.  That route
+does not close on its own: the reachable subgroup is generated by
+$\{M\,\mathrm{adj}(M)v_p\bmod\det M\}$ over the non-carrier columns $v_p$, and
+we find that for $2{,}472$ tokens it is a proper subgroup at every admissible
+carrier, so the congruence is not always solvable.  Until the $173$ contexts
+are dealt with, the explicit constant $A$ below is not established, and neither
+is the integrality of the labels our construction produces in general, although
+our constructor does produce integer labellings on every tree we have run it
+on.  We are grateful to the referee who supplied
+the counterexample above.
+\end{remark}  All labels of $A$, of its child
 and parent, and of $v$ become numeric, $T_A$ and $T_v$ are designated
 antipodes of each other, and nothing is pending.
 

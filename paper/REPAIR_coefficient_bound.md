@@ -39,10 +39,10 @@ family, a carrier minimising `|det|`.
 `scripts/carrier_determinants.py` computes this over the whole catalogue.
 
 ```text
-tokens examined                                   7962
+tokens examined                                   7963
 tokens with no admissible carrier                    0
 minimum |det| over admissible carriers, histogram:
-    |det| = 1    5490      |det| = 9     145
+    |det| = 1    5491      |det| = 9     145
     |det| = 2    1074      |det| = 12      9
     |det| = 3     853      |det| = 16      9
     |det| = 4     211      |det| = 18      6
@@ -57,6 +57,8 @@ minimum |det| over admissible carriers, histogram:
 maximum |r . adj(M)| over all labels at the best carrier:   216
 ```
 
+(Counts as of 2026-09-03, after the root join was added to the catalogue.)
+
 So a unimodular carrier is available for 69% of the tokens but **not** for all;
 the largest minimum determinant in the catalogue is
 
@@ -66,21 +68,95 @@ Dmax = 144 ,      G = max |r . adj(M)| = 216 .
 
 Both are finite and computed from the catalogue, which is what the repair needs.
 
-### (i) Integrality
+### (i) Integrality -- WITHDRAWN, the argument below is false
 
-At the resolution step choose `Λ ∈ (d M Z)^{|Λ|}` where `d = |det M_F|` is the
-determinant of the chosen carrier, rather than `Λ ∈ (M Z)^{|Λ|}`.  Then
-`rhs(Λ)` is divisible by `d`, hence `K = adj(M) rhs / d` is integral and lies in
-`M Z` as before.  Since `d <= Dmax = 144`, the refined lattice is contained in
-`M' Z` with
+> **This subsection is wrong and was withdrawn on 2026-09-03**, after the
+> second independent adversarial audit produced an explicit counterexample.
+> It is kept here, struck through in words, because the manuscript was written
+> from it and the record should show what was believed.
+
+The argument was: at the resolution step choose `Λ ∈ (d M Z)^{|Λ|}` where
+`d = |det M_F|`, rather than `Λ ∈ (M Z)^{|Λ|}`; then `rhs(Λ)` is divisible by
+`d`, hence `K = adj(M) rhs / d` is integral, and since `d <= Dmax = 144` the
+refined lattice is contained in `M' Z` with `M' = 24 * 144 = 3456`.
+
+**Why it is false.**  The right-hand side is `N Λ + c`, not `N Λ`.  The
+constant `c` collects the already-chosen numeric parameters of the resolving
+cell and of the pending cell, and choosing `Λ` in a finer lattice does nothing
+to `c`.  The audit's witness: context `h2_2-6_p2_act`, menu 3, token 1, over
+parameters `[y, x, t1, u1]` at denominator 1, has token vectors
 
 ```text
-M' = M * Dmax = 24 * 144 = 3456 .
+a = [-3,  3,  1,  2]
+b = [ 1, -3, -3,  1]
+c = [ 2,  0,  2, -3]
 ```
 
-The only cost is that the box in which `Λ` is chosen grows by the factor `d`,
-because a lattice point avoiding `|Φ|` proper affine conditions still exists in
-a box of side `M'(|Φ|+1)`.
+whose six candidate carriers have determinants 6, 8, -5, -6, 9, 7, so the
+minimising carrier is `(y, u1)` with `det M = -5`.  The non-carrier columns are
+`(3,-3)` for `x` and `(1,-3)` for `t1`, so the permitted numeric choice
+`x = t1 = 24` gives `c = (96, -144)` and `adj(M) c = (384, 336)`, neither
+coordinate divisible by 5.  We reproduced this exactly.
+
+The sentence "`d <= Dmax` therefore the lattice is `M * Dmax * Z`" is also
+invalid on its own terms: a bound on integers is not a divisibility.  33 of the
+selected determinants do not divide 144 (`5` twenty times, `7` four times, `27`
+five times, `30`, `45`, and `81` twice), and 3456 is divisible by neither 5 nor
+7.  Choosing a unimodular alternative instead is not available globally: 485
+token contexts have no unimodular carrier anywhere in their menu.
+
+Two further defects the audit found in the same subsection:
+
+* **Denominators.**  Catalogue forms are integer vectors over a family
+  denominator.  Clearing the denominators of a resolving family `L_v` and a
+  pending family `L_A` multiplies the two sides by `lcm(L_v, L_A)/L_v` and
+  `lcm(L_v, L_A)/L_A`, so the system is `M~ K = N~ Λ + c~` with
+  `M~ = (L/L_v) M`, and `det M~ = (L/L_v)^2 det M`, not `det M`.  Neither
+  `carrier_determinants.py` nor the bound `K' = 2 G KMAX` accounts for this
+  ratio, which is at most 12 and at least 1.
+* **Compounding.**  Even with a lattice that works for one elimination, the
+  resolved carrier values are passed upward as numeric inputs and re-enter a
+  later elimination, and `K = adj(M~) rhs / det M~` lies in a coarser lattice
+  than `rhs` does.  Section (iii) below argued that the enlargement is paid
+  once because nothing is pending at the end of the step; that is true of the
+  *coefficient* bound but not of the *lattice* invariant, which is what
+  integrality needs.
+
+### (i') What a correct argument has to supply
+
+The natural repair is a single global lattice.  Let `D` be a common multiple of
+every `|det M~|` that can occur.  The determinants the minimising rule selects
+are
+
+```text
+1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 16, 18, 24, 27, 30, 36, 45, 72, 81, 144
+```
+
+with least common multiple `45,360 = 2^4 * 3^4 * 5 * 7`, and the denominator
+ratio contributes a further factor dividing `144`, so `D = 144 * 45,360 =
+6,531,840` is a common multiple, and it is a multiple of `M = 24`.  If every
+numeric parameter and every live parameter lay in `D Z`, then `rhs` would lie
+in `D Z` and `K = adj(M~) rhs / det M~` would be integral.
+
+**However this is not by itself enough**, and we do not claim it is.  It makes
+`K` integral but leaves `K` in `(D / det) Z`, which is coarser than `D Z`, so
+the invariant needed for the *next* elimination is not reproduced, and the
+degradation recurs along a chain of eliminations that share values.  Closing
+this needs one of:
+
+1. a proof that the chain of eliminations sharing a value has bounded length,
+   after which a fixed power `D^k` suffices; or
+2. solving, at each resolution, an affine congruence for the resolving cell's
+   own numeric parameters (which are chosen at that moment, after `det M~` is
+   known) so that `rhs` is divisible by `det M~ * D`; this is a finite
+   solvability question over the catalogue, one instance per (pending family,
+   resolving family, matching) triple, and is what should be certified by
+   machine; or
+3. the exact Smith or Hermite normal form transition audit the audit
+   recommends, which subsumes both.
+
+Until one of these is supplied, **Appendix B does not establish integrality,
+and the printed value of `A` is not proved.**  The manuscript states this.
 
 ### (ii) Coefficient control
 

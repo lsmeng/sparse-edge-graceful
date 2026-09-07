@@ -106,7 +106,16 @@ plays which role.  Top level:
       "owners": [{"vertex": v, "context_key": str}, ...],   # v's WITH a key
       "rows": {v: <family row>, ...},              # every CORE vertex, owner or not
       "uncovered": [...], "l1_pair_events": [...], # same as the CLI report
+      # ADDITION 2026-09-06 (Fable), Lemma lem:reset of the manuscript:
+      "reset_joints": [{"upper": v, "lower": v, "input_upper": v,
+                        "inputs_lower": [v, v]}, ...],
     }
+
+`reset_joints` is an OPTIONAL extra field (see `reset_chains`/`reset_joints`
+below): the two-level joints into which a maximal chain of residual-{1}
+direct-edge two-input rows (context key `h0_1_p0_act2`, whose only family
+has the forced head -x1-x2) is cut, FROM THE BOTTOM, by Lemma lem:reset.  It
+is derived from `rows` alone; no other field and no owner decision changes.
 
 `is_path` True means the whole tree is a path (Lemma A); everything else is
 empty/None.  `owners` lists only vertices that emit their OWN context key
@@ -1495,6 +1504,121 @@ class RunStats:
         }
 
 
+# ==========================================================================
+# ADDITION 2026-09-06 (Fable), Lemma lem:reset ("the two-input reset") of
+# paper/sparse_edge_graceful.tex.  READ-ONLY post-pass over the rows that
+# schedule() has already built: it adds ONE new optional output field,
+# "reset_joints", and changes nothing else.  No existing field, no owner
+# decision and no context key is touched, so `--all N` regressions are
+# bit-identical (the CLI path never builds rows at all).
+#
+# A RESET ROW is a residual-{1} direct-edge two-input owner: head chain
+# length 0, one residual arm of residue 1, no recruited ports, two kept
+# active children -- exactly the context key below.  Its unique family has
+# the forced head -x1-x2 (data/batches/alphabet_rigid.jsonl), so a CHAIN of
+# such rows, each one the continuing active child of the one above, carries
+# a symbolic head upward for as many levels as the chain is long.
+# Lemma lem:reset joins two consecutive rows of a chain into a single cell
+# of nine labels whose head IS a free parameter, so a chain is cut into
+# joints of two levels FROM THE BOTTOM, an odd chain leaving a single row
+# (still rigid) at its top.
+# ==========================================================================
+
+#: context key of a residual-{1} direct-edge two-input row (Lemma lem:reset)
+RESET_ROW_KEY = "h0_1_p0_act2"
+
+_ACT2_KEPT_ROLES = ("kept_act2_1", "kept_act2_2")
+
+
+def _rows_by_vertex(rows) -> Dict[int, dict]:
+    """``schedule()["rows"]`` (or its values) keyed by integer vertex id."""
+    items = rows.values() if isinstance(rows, dict) else rows
+    return {int(r["vertex"]): r for r in items}
+
+
+def _act2_kept_children(row: dict) -> List[int]:
+    """The two kept active children of an act2 row, in scheduler order."""
+    return [int(ae["child"]) for ae in (row.get("active_edges") or [])
+            if ae.get("role") in _ACT2_KEPT_ROLES]
+
+
+def reset_chains(rows) -> List[List[int]]:
+    """Maximal chains of residual-{1} direct-edge two-input rows, top first.
+
+    ``rows`` is ``schedule()["rows"]``.  A reset row's continuing child is
+    the kept active child that is itself a reset row; when both kept
+    children are reset rows the deeper subtree continues the chain (ties by
+    vertex id) and the other one starts a chain of its own, so the chains
+    partition the reset rows and every chain is a genuine downward path.
+    """
+    by_v = _rows_by_vertex(rows)
+    reset = {v: r for v, r in by_v.items()
+             if r.get("is_owner") and not r.get("passthrough")
+             and r.get("context_key") == RESET_ROW_KEY}
+    kids = {v: [c for c in _act2_kept_children(r) if c in reset]
+            for v, r in reset.items()}
+    parent: Dict[int, int] = {}
+    for v, cc in kids.items():
+        for c in cc:
+            parent[c] = v
+    depth: Dict[int, int] = {}
+    for top in sorted(v for v in reset if v not in parent):
+        stack = [(top, False)]
+        while stack:
+            v, done = stack.pop()
+            if done:
+                depth[v] = 1 + max([depth[c] for c in kids[v]] or [0])
+                continue
+            stack.append((v, True))
+            for c in kids[v]:
+                stack.append((c, False))
+    cont: Dict[int, Optional[int]] = {}
+    for v, cc in kids.items():
+        cont[v] = max(cc, key=lambda c: (depth.get(c, 0), -c)) if cc else None
+    chains: List[List[int]] = []
+    for v in sorted(reset):
+        up = parent.get(v)
+        if up is not None and cont.get(up) == v:
+            continue                      # not the top of a maximal chain
+        chain = [v]
+        nxt = cont.get(v)
+        while nxt is not None:
+            chain.append(nxt)
+            nxt = cont.get(nxt)
+        chains.append(chain)
+    return chains
+
+
+def reset_joints(rows) -> List[dict]:
+    """The two-level joints of Lemma lem:reset, cut from the bottom.
+
+    One entry per pair, ``{"upper", "lower", "input_upper", "inputs_lower"}``:
+    ``upper``/``lower`` are the two consecutive reset rows, ``input_upper``
+    is the upper row's pinned second child (its kept active child that is
+    not ``lower``) and ``inputs_lower`` are the lower row's two kept active
+    children.  Those three heads plus the two heads and the two arms' two
+    labels each are the nine labels of the joint cell.
+    """
+    by_v = _rows_by_vertex(rows)
+    out: List[dict] = []
+    for chain in reset_chains(rows):
+        i = len(chain) - 1
+        while i >= 1:
+            upper, lower = chain[i - 1], chain[i]
+            kept_up = _act2_kept_children(by_v[upper])
+            kept_lo = _act2_kept_children(by_v[lower])
+            others = [c for c in kept_up if c != lower]
+            if len(kept_up) == 2 and len(kept_lo) == 2 and len(others) == 1:
+                out.append({"upper": upper, "lower": lower,
+                            "input_upper": others[0],
+                            "inputs_lower": list(kept_lo)})
+            i -= 2
+    return out
+
+
+# ======================= end of the lem:reset addition ====================
+
+
 def schedule(parent_array: Sequence[int], root: Optional[int] = None) -> dict:
     """Machine-readable per-vertex schedule for the constructor.  See the
     module docstring ("schedule() output schema") for the full field-by-
@@ -1553,6 +1677,9 @@ def schedule(parent_array: Sequence[int], root: Optional[int] = None) -> dict:
         "uncovered": sched.uncovered,
         "l1_pair_events": sched.l1_pair_events,
         "l1_nonfree_child_events": sched.l1_nonfree_child_events,
+        # ADDITION 2026-09-06 (Fable), Lemma lem:reset -- optional, read-only,
+        # computed from `rows` after the fact; every other field is unchanged.
+        "reset_joints": reset_joints(sched.rows),
     }
 
 

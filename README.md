@@ -21,8 +21,16 @@ of Müyesser and Pokrovskiy's matching theorem the threshold becomes linear, *n 
     scripts/      the search, the independent checker, the scheduler, the
                   abstract enumeration, the gate, the closure check, the two
                   construction identities, and the constructor
+    scripts/sink_route/
+                  the sink route: the five-point absorber gate over one family
+                  per context and over every menu entry, its independent
+                  verifier, the packing statistics, the units and rigid-row
+                  scans, and the constructor with its regression drivers
     data/         the context list, the certificate catalogue and its variant
                   tables, the raw solver batches, and the neutral blocks
+    data/sink_route/
+                  the gate certificates, the packing statistics, the two-level
+                  joints, and every regression certificate
     REPRODUCE.md  how to rerun every step
 
 The large artifacts are compressed.  Unpack them before running anything:
@@ -34,14 +42,35 @@ tar -xzf data/batches.tar.gz
 
 ## Status
 
-An independent adversarial audit (2026-09-03) found that the manuscript as
-written does not yet establish its two theorems.  No counterexample was found;
-the gaps are in the written argument, chiefly: a configuration that occurs is
-missing from the Appendix A case split, the Appendix B state invariant is
-self-contradictory, the coefficient bound is not shown to survive carrier
-elimination, and the cited completion theorem does not directly supply the
-negation-paired triples the dense step needs.  The catalogue and the machine
-verification below stand; the theorem status is **open, under repair**.
+**The manuscript is not submitted and is under repair.**  Do not cite it as a
+finished proof.
+
+Four adversarial audits have been run against it.  The first three (September
+2026) were adjudicated and repaired; their reports and the adjudications are in
+`paper/`.  They led to the present architecture, the *sink route*: the
+negatives of every free unit are placed at a sink in the ordinary part of the
+tree, rather than cancelled in pairs along the root path, which is what the
+linear threshold needs.
+
+A fourth review (6 September 2026) found three further gaps that were fatal as
+written, all of them now repaired in the text:
+
+* the zero-sum triples that cancel an odd number of active-child heads were not
+  in the sink ledger;
+* the dense-completion step called Lemma 6.23 of Müyesser and Pokrovskiy with a
+  deletion radius that did not satisfy the lemma's own hypothesis;
+* the packing capacity counted triples only, so a quad had no direct sink.
+
+`paper/REVIEW4_REPAIRS_20260906.md` records what each repair was and what it
+cost in constants.  A fifth review of those repairs is in progress; until it
+reports, treat the linear threshold as claimed but not independently checked.
+
+What does stand, independently of the write-up, is the machine verification:
+the catalogue passes its independent checker, the closure conditions all pass,
+the absorber gate passes over every menu entry of every context (9,637,425
+ordered pairs, reproduced by a second implementation sharing no code with the
+first), and every constructor certificate is re-verified by a module that is
+not the constructor.
 
 ## The one command that summarises the state
 

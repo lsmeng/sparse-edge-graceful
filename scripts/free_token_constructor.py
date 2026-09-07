@@ -3919,6 +3919,7 @@ class FaithfulRealiser:
                                   f"cancelled child {u} has no head", vertex=v)
                 total = total + hv
             self._visit_retry(group[-1], -total, False)
+            self.after_cancel_group(node, gi, group)
         depth = 1 if skip_cell else self.fold_depth(node)
         for i, c in enumerate(node.kept):
             cnode = self.plan.nodes[c]
@@ -3933,6 +3934,15 @@ class FaithfulRealiser:
         self.realise_units(node)
         if node.is_owner and not skip_cell:
             self.realise_cell(node, forced_head)
+
+    def after_cancel_group(self, node: NodePlan, gi: int, group) -> None:
+        """Hook run once a cancelled group's heads are all numeric.
+
+        A group of two is a mirror pair and is closed under negation; a group
+        of three is a free zero-sum triple, whose negatives the sink route has
+        to place.  The base realiser does nothing here.
+        """
+        return None
 
     def fold_depth(self, node: NodePlan) -> int:
         rec = self.choice.get(node.vertex)

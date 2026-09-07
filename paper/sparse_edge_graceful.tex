@@ -15,7 +15,7 @@
 \urlstyle{same}
 \emergencystretch=1.2em
 
-\newif\iftodo\todotrue
+\newif\iftodo\todofalse
 \newcommand{\todo}[1]{\iftodo{\color{red!80!black}\sffamily\bfseries [TODO: #1]}\fi}
 
 \theoremstyle{plain}
@@ -39,7 +39,7 @@
   \small Department of Earth, Planetary, and Space Sciences,\\[-2pt]
   \small University of California, Los Angeles, CA 90095, USA\\[-2pt]
   \small \texttt{lsmeng@g.ucla.edu}}
-\date{Draft of 5 September 2026}
+\date{6 September 2026}
 
 \input{numbers}
 
@@ -60,10 +60,10 @@ tree of odd order with at most $k$ vertices of degree two is edge-graceful.
 The proof combines a finite table of local labelling identities, found by an
 exact constraint search and re-verified by an independent checker, with a
 bottom-up scheduling argument and with the zero-sum matching theorem of
-M\"uyesser and Pokrovskiy.  Under the abelian improvement of that theorem
-which its authors record in their concluding Section~7, the threshold becomes
-linear,
-$n>C(D+1)$.  The constants are not effective.  We also reduce the linear
+M\"uyesser and Pokrovskiy.  With the linear deletion bound for cyclic groups
+that its authors state in their concluding section as a consequence of their
+proof, the threshold becomes linear, $n>C(D+1)$.  The constants are not
+effective.  We also reduce the linear
 threshold to an elementary statement about permutations of an interval, which
 we prove in several cases and verify exactly up to order $30$, and which would
 make the constant explicit.
@@ -115,29 +115,28 @@ The only external input is a zero-sum matching theorem in $\Z_n$ that
 tolerates a set of deleted residues, and it is the size of that set, not the
 matching itself, that determines the threshold.  The printed statements of
 M\"uyesser and Pokrovskiy~\cite{MuyesserPokrovskiy2025} tolerate
-$n/(\log n)^{A}$ deletions and give Theorem~\ref{thm:main}.  However, their
-Section~7, under \emph{Bounds in the main theorem}, records that for abelian
-groups the logarithms may be removed,
-since the only source of a logarithm in their proof is a bound on the length
-of a commutator product and that product is empty in an abelian group; the
-authors state this improvement and use it themselves, although it is not a
-printed theorem.  Under that reading our argument gives a linear threshold.
+$n/(\log n)^{A}$ deletions and give Theorem~\ref{thm:main}.  For cyclic
+groups, however, the authors state in their concluding Section~7 that a linear
+number of deletions can be tolerated: the only source of a logarithm in their
+proof is a bound on the length of a commutator product, which is empty in an
+abelian group, and they record the consequence $g(n)=\Omega(n)$ for $\Z_n$
+in their Problem~7.4.  With that bound our argument gives a linear threshold.
 
 \begin{theorem}\label{thm:linear}
-Assume the abelian improvement recorded in
-\cite[Section~7, \emph{Bounds in the main theorem}]{MuyesserPokrovskiy2025},
-namely that their zero-sum matching theorems hold in $\Z_n$ with a linear
-number of deleted residues.  Then there are absolute constants $C$ and $n_0$
-such that every tree $T$ of odd order $n\ge n_0$ with $D$ vertices of degree
-two is edge-graceful whenever $n>C(D+1)$.  In particular, for every $k\ge0$,
-every odd-order tree with at most $k$ vertices of degree two and more than
-$C(k+1)$ vertices is edge-graceful, since $D\le k$.
+There are absolute constants $C$ and $n_0$ such that every tree $T$ of odd
+order $n\ge n_0$ with $D$ vertices of degree two is edge-graceful whenever
+$n>C(D+1)$.  In particular, for every $k\ge0$, every odd-order tree with at
+most $k$ vertices of degree two and more than $C(k+1)$ vertices is
+edge-graceful, since $D\le k$.
 \end{theorem}
 
-The qualitative statement, that a bounded number of degree-two vertices is no
-obstruction once the tree is large, therefore does not depend on that remark
-at all; the remark is what turns the polylogarithmic threshold
-into a linear one.  In Section~\ref{sec:linearroute} we reduce the linear
+The proof of Theorem~\ref{thm:linear} uses the zero-sum matching lemmas of
+\cite{MuyesserPokrovskiy2025} in the linear form for cyclic groups that the
+authors state in their Section~7; that form is not a numbered theorem there,
+and Remark~\ref{rem:mplinear} records exactly what is used and why it follows
+from their proof.  The qualitative statement, that a bounded number of
+degree-two vertices is no obstruction once the tree is large, does not depend
+on it at all.  In Section~\ref{sec:linearroute} we reduce the linear
 threshold, with an explicit constant and without any use of
 \cite{MuyesserPokrovskiy2025}, to a conjecture on permutations of an interval
 that we prove in several cases and verify exactly up to order $30$.
@@ -272,7 +271,11 @@ arm of its parent.
 At a vertex with $k\ge 2$ active children (children which are owners) the
 heads are free parameters of the children's cells, so they are prescribed to
 sum to zero (a mirror pair for $k=2$, a free zero-sum triple for $k=3$, pairs
-and at most one triple otherwise), and none remains.  A single remaining active
+and at most one triple otherwise), and none remains.  A mirror pair is closed
+under negation, but a cancelling triple is not, and its negatives are placed at
+a sink in the ordinary part of the tree exactly as the negatives of a token
+are; Appendix~\ref{app:realization} counts these triples together with the
+tokens.  A single remaining active
 child with head $x$ is absorbed by a stationary vertex with $q$ ports by a
 helper port labelled $-x$ ($q=1$ or $q\ge 3$) or by two ports labelled $a$ and
 $-x-a$ ($q=2$).  Two exceptional child types cannot be absorbed in this way,
@@ -523,13 +526,13 @@ Every owner is incident with a subdivided core edge, and such an edge has two
 endpoints.  A subdivided edge of length $\ell$ carries $\ell+1$ labels, at
 most $D+q$ in total.  Recruited ports contribute at most three per owner,
 absorptions at most two per owner, and the final bridge triple three.  An owner
-reserves one value for each ratio in $\Phi(F)$ of the family it is given, and
-the choice rule takes a family of the menu with fewest such ratios, so the
-number reserved is at most $\NumPhiMax$ per owner and at most
-$2\NumPhiMax q$ in total.  The bound $\NumPhiMax$ is the largest, over the
-contexts that occur, of the smallest number of forced ratios in that context's
-menu, and it is computed from the catalogue; individual families carry as many
-as ten.
+reserves one value for each ratio in $\Phi(F)$ of the family it is given, so
+the number reserved is at most $\NumPhiMax$ per owner and at most
+$2\NumPhiMax q$ in total, where $\NumPhiMax$ is the largest number of forced
+ratios of any family in the catalogue (a choice rule that preferred families
+with few ratios would lower it to $\NumPhiMin$, the largest over the contexts
+of the smallest number in the menu, but our constructor does not use such a
+rule and we do not rely on one).
 \end{proof}
 
 \section{Local families}\label{sec:cells}
@@ -661,40 +664,45 @@ not depend on the search at all.
 \begin{lemma}[realization]\label{lem:realization}
 Let $M$ be the least common multiple of the catalogue denominators and of
 $24$.  There is an absolute constant $A$ such that, for every decomposed core
-with a family assigned to every owner as in Section~\ref{sec:cells}, parameter
-values in $M\Z\cap[-A(D+1),A(D+1)]$ can be chosen bottom-up so that all special
-labels are distinct and nonzero and the special support is closed under
+with a family assigned to every owner as in Section~\ref{sec:cells} and
+$n\ge 10^6(D+1)$, parameter values in $M\Z\cap[-A(D+1),A(D+1)]$ can be
+chosen bottom-up, and the negatives of the tokens can be placed at stationary
+vertices of the ordinary part of the tree, so that all special labels are
+distinct and nonzero, $|S|\le 30D+3$, and the special support is closed under
 negation up to at most one zero-sum triple whose negatives are unused.
 \end{lemma}
 
-Our proof maintains the set of placed labels, the values reserved for the
-parent's forced companions, and at most two pending tokens whose carrier
-parameters are kept symbolic.  A token cell with nothing pending keeps its
-carrier symbolic and every other parameter numeric.  A token cell with
-a pending token, on the other hand, solves the two pairing equations for its
-carrier as affine functions of the live parameters and then fixes them in a box
-avoiding the recorded forbidden conditions, and all other cells choose their
-parameters one coordinate at a time.  Because the only symbolic labels belong to the pending
-cells, their active children and their parents, at most $O(1)$ forms are
-alive and the number of forbidden conditions stays $O(|S|)$, and thus
-Lemma~\ref{lem:charge} gives boxes of side $O(D+1)$.  The full argument is given in
-Appendix~\ref{app:realization}, together with the explicit value
-$A=\AConst$.  This value follows from the catalogue constants (width at
-most $\NumMaxWidth$, at most $\NumParams$ parameters, coefficients at most
-$\NumCoefBound$ over denominators dividing $12$, determinants at most
-$\NumDetMax$ over the carriers we choose) and Lemma~\ref{lem:charge}.  Solving
-the pairing equations divides by the determinant of the carrier, which
-enlarges the lattice to $\NumLatticeMEff\Z$ and the coefficients to
-$\NumCoefBoundEff$ once, and it is these enlarged constants that $A$ is built
-from.  We have made no attempt to optimise it.
+Our proof chooses every parameter of every cell numerically, one coordinate
+at a time, in post-order.  The tokens, the zero-sum triples that (E2) leaves
+after the mirror pairs, are not cancelled against one another: the negatives
+of each token are placed instead at a \emph{sink} in the ordinary part of the
+tree, either directly in a zero-sum block of size three or at least five, or,
+two tokens at a time, in a five-vertex \emph{absorber} built from stationary
+vertices with two children (Lemma~\ref{lem:absorber}).  The hypothesis
+$n\ge 10^6(D+1)$ is what guarantees enough sinks
+(Lemma~\ref{lem:packing}), and a finite check over the catalogue shows that
+the four extra labels of an absorber never coincide identically with a label
+of either of its two source cells (Lemma~\ref{lem:compat}).  Thus no symbolic
+parameter is ever live, apart from the forced-antipode children and the
+two-input rows that have their own treatment, the number of forbidden
+conditions at every choice is $O(|S|)$, and Lemma~\ref{lem:charge} gives boxes
+of side $O(D+1)$.  The full argument is given in Appendix~\ref{app:realization},
+together with the explicit value $A=\AConst$, which follows from the catalogue
+constants (width at most $\NumMaxWidth$, at most $\NumParams$ parameters,
+coefficients at most $\NumCoefBound$ over denominators dividing $12$) and
+Lemma~\ref{lem:charge}; nothing is ever divided, so no lattice or coefficient
+enlargement enters.  We have made no attempt to optimise it.  An earlier
+version cancelled the tokens in pairs along the root path; why this cannot
+give a linear threshold is recorded in Remark~\ref{rem:whysinks}.
 
 \section{Dense completion and the proofs of Theorems~\ref{thm:main} and~\ref{thm:linear}}\label{sec:dense}
 
 After Lemma~\ref{lem:realization} the unused labels form the set
-$X=\Z_n\setminus(\{0\}\cup S)$, which is closed under negation up to the
-pending triple $T$.  The negatives $-T$ are placed in an odd ordinary block of
-size at least three, which exists by parity whenever a token is pending and no
-block has size one; write $r$ for that block's prescribed size and put
+$X=\Z_n\setminus(\{0\}\cup S)$, which is closed under negation up to at most
+one leftover triple $T$ (the case of an odd number of tokens).  The negatives
+$-T$ are placed in an odd ordinary block of size at least three, which exists
+by parity whenever such a triple is left over and no block has size one; write
+$r$ for that block's prescribed size and put
 $X'=X\setminus(-T)$.  Since $r$ is odd and at least three, the remainder $r-3$
 is zero or at least two, and the block is dropped from the list when it is
 zero.  It remains to partition $X'$ into zero-sum blocks of the resulting
@@ -773,17 +781,25 @@ let $\varepsilon=\delta/24$, which lies in the range permitted by
 $Q\setminus Z$ and $R\setminus Z$ are contained in $\{0\}\cup(\Z_n\setminus X)$
 and hence have size at most $|\Z_n\setminus X|$, and
 $\bigl|\sum M^{Q}-pn/2\bigr|\le|\Z_n\setminus X|+O(\sqrt n\log n)$.  Assume
-$|\Z_n\setminus X|\le\delta n/8$, which is the hypothesis of the lemma with
-$\eta=\delta/8$.  Then \cite[Lemma~6.23]{MuyesserPokrovskiy2025}, applied with
+$|\Z_n\setminus X|\le\delta n/48$, which is the hypothesis of the lemma with
+$\eta=\delta/48$.  The two hypotheses of
+\cite[Lemma~6.23]{MuyesserPokrovskiy2025} are then met and not merely its
+conclusion is used: $|Q\setminus Z|\le|\Z_n\setminus X|\le\varepsilon n/2$,
+and $\bigl|\sum M^{Q}-pn/2\bigr|\le\varepsilon n/2+O(\sqrt n\log n)
+\le\varepsilon n$ once $n$ is large.  Then
+\cite[Lemma~6.23]{MuyesserPokrovskiy2025}, applied with
 $R=Q$, $Z$ as above, $m=\sum M^{Q}$ and $g=0$, returns $Q'\subseteq Z$ with
 $|Q'|=\sum M^{Q}$, $\sum Q'=0$ and
 $|Q'\triangle Q|\le6\varepsilon n=\delta n/4$.  Put $R'=Z\setminus Q'$;
 then $|R'|=\sum M^{R}$, and $\sum R'=\sum Z-\sum Q'=0$, and
 $$|R'\triangle R|\le6\varepsilon n+|\Z_n\setminus X|+|J^{*}|
-  \le\tfrac{\delta n}{4}+\tfrac{\delta n}{8}+O(\sqrt n\log n)\le\delta n$$
+  \le\tfrac{\delta n}{4}+\tfrac{\delta n}{48}+O(\sqrt n\log n)\le\delta n$$
 once $n$ is large, and likewise $|Q'\triangle Q|\le\delta n/4\le\delta n$.
 Thus both perturbations stay strictly inside the allowance, which is the point
-of taking $\varepsilon$ a twenty-fourth of $\delta$ rather than a sixth.
+of taking $\varepsilon$ a twenty-fourth of $\delta$ rather than a sixth, while
+the deletion radius $\eta=\delta/48$ is what keeps the two \emph{input}
+hypotheses inside $\varepsilon n$; the two budgets are separate and an earlier
+version of this proof conflated them.
 Therefore \cite[Lemma~6.25]{MuyesserPokrovskiy2025} applies to $Q'$ with the
 reference set $Q$ and the multiset $M^{Q}$, and to $R'$ with $R$ and $M^{R}$,
 and returns zero-sum partitions of $Q'$ and of $R'$ of the prescribed sizes.  Together with
@@ -792,10 +808,11 @@ $Z\sqcup(\text{reserved pairs})=X$.  When $m_2=0$ one has
 $p=1$, $Y_J$ is all of $J$ and $J^{*}$ is empty, and the argument degenerates
 to a direct application of \cite[Lemma~6.25]{MuyesserPokrovskiy2025} to $X$.
 Thus $X$ has the required partition
-whenever $|\Z_n\setminus X|\le\delta n/8$, and $\delta$ depends only
+whenever $|\Z_n\setminus X|\le\delta n/48$, and $\delta$ depends only
 on $p\ge1/100$ and on $n$ through the logarithm.
 \end{proof}
 
+\begin{remark}[the two deletion bounds of \cite{MuyesserPokrovskiy2025}]\label{rem:mplinear}
 Two readings of \cite{MuyesserPokrovskiy2025} enter through the parameter
 $\varepsilon$ of the last proof, and they give the two thresholds of
 Section~\ref{sec:intro}.  The printed perturbation radius of their
@@ -813,17 +830,22 @@ than divide by $\log1$.  Their Lemmas~6.23 and~6.25 are deduced from
 Theorems~4.4--4.6 with no further logarithmic loss, the auxiliary error terms
 being of order $\sqrt n\log n$, so at every fixed reservoir density this
 reading leaves a positive constant perturbation radius and gives
-Lemma~\ref{lem:dense} as stated, which is the hypothesis of
-Theorem~\ref{thm:linear}.  This improvement is described by the authors as
-requiring essentially no modification of their proof, although neither it nor
-its consequence for their Section~6.3 is a printed theorem.  The constant
-$\eta$ is in either case inherited from their argument and is not effective.
+Lemma~\ref{lem:dense} as stated, which is what Theorem~\ref{thm:linear} uses.
+The authors describe this improvement as requiring essentially no
+modification of their proof and state its consequence for cyclic groups,
+$g(n)=\Omega(n)$, in their Problem~7.4; neither is a numbered theorem in
+their paper, and we have asked the authors to confirm the linear form of
+Lemmas~6.23 and~6.25.  The constant $\eta$ is in either case inherited from
+their argument and is not effective.
+\end{remark}
 
 \begin{proof}[Proof of Theorems~\ref{thm:main} and~\ref{thm:linear}]
 Root $T$ at a branch vertex, decompose by Section~\ref{sec:decomp}, assign
 families by Section~\ref{sec:cells}, realize by Lemma~\ref{lem:realization}
-with $|S|\le 12D+3$ and magnitudes at most $A(D+1)$, and place the pending
-triple.  Under the hypothesis of Theorem~\ref{thm:linear}, Lemma~\ref{lem:dense}
+with $|S|\le 30D+3$ and magnitudes at most $A(D+1)$ (the hypothesis
+$n\ge 10^6(D+1)$ of that lemma is implied by $n>C(D+1)$ once
+$C\ge 10^6$), and place the leftover triple if there is one.  With the linear
+deletion bound of Remark~\ref{rem:mplinear}, Lemma~\ref{lem:dense}
 completes the labelling as soon as $2A(D+1)+1\le\eta n$; every stationary
 vertex then has a zero-sum block, every special vertex has the prescribed sum,
 and Lemma~\ref{lem:sigma} gives the bijection, so $C\ge 3A/\eta$ and
@@ -899,6 +921,11 @@ agree once the shared edge is identified then the two labels are equal as
 forms and no choice of parameters separates them.  Our gate enumerates every
 ordered pair of contexts, tries every pair of families from the two menus, and
 reports the context pairs for which no combination avoids such a coincidence.
+Since the sink route places the negative of every unit label elsewhere in the
+tree, the gate also checks the negative of each unit label of either cell
+against the labels of the other (this is what Lemma~\ref{lem:compat} needs
+for the cells that violate the second clause of (E6)); the addition changes
+the count by one pair, which is not realizable.
 Over the catalogue it reports \NumGateFail{} ordered pairs.  However, most
 ordered pairs of contexts cannot occur in a tree at all, and restricted to the
 \NumPairs{} ordered pairs that the enumeration of Lemma~\ref{lem:contexts}
@@ -955,25 +982,110 @@ labelling, so that a labelling can be re-verified without the constructor.
 The constructor has two modes.  In its default mode it follows the
 decomposition but completes the ordinary blocks by a direct search, and in
 the sparse regime ($n\in\{51,101,201\}$ with $D\approx n/25$) it succeeded
-on $116$ of $120$ random trees.  In its \emph{proof-faithful} mode it
-follows Lemma~\ref{lem:realization} step by step (numeric coordinates, live
-carriers, deferred pairing, the reservation of forced companions) and
-reports every departure from the lemma as a named gap.  On the same $120$
-trees it succeeded on $98$.  Of the twenty-two remaining runs, fourteen report
-a modular collision between two special labels, or a pending triple whose
-negatives are already used modulo $n$, seven report a failure of the
-completion step, and one reports that no odd block was available for the
-singleton bridge.  We note that these runs use the dense completion only
-through a direct matching of the leftover labels, since at these orders the
-asymptotic Lemma~\ref{lem:dense} does not apply, and their purpose is to
-confirm the bookkeeping of Lemma~\ref{lem:realization} and not the theorem
-itself.  A modular collision between two special labels is exactly the event
-that the hypothesis $n>C(D+1)$ excludes, and at $n=201$ with $D\approx 8$ the
-hypothesis is very far from holding.  The runs also give the bookkeeping
-quantities of Appendix~\ref{app:realization} directly: at most two parameters
-were ever live at once, at most sixteen labels were symbolic, at most two
-tokens were pending, and the largest label magnitude was $692$, about
-$76(D+1)$ at these orders, against the bound $A=\AConst$ that we prove.
+on $116$ of $120$ random trees.  Its \emph{proof-faithful} mode follows the
+earlier version of Lemma~\ref{lem:realization}, in which tokens were cancelled
+in pairs along the root path (numeric coordinates, live carriers, deferred
+pairing, the reservation of forced companions), and reports every departure
+from that lemma as a named gap.  On the same $120$ trees it succeeded on $98$.
+Of the twenty-two remaining runs, fourteen report a modular collision between
+two special labels, or a pending triple whose negatives are already used
+modulo $n$, seven report a failure of the completion step, and one reports
+that no odd block was available for the singleton bridge.  On a comb attached
+to a dense part, however, the same mode records the gap ``a third token became
+pending'' at every second core vertex of the comb, with head labels doubling
+along it, which is the failure of the pairing route recorded in
+Remark~\ref{rem:whysinks}.  A third mode (\file{sink\_route/sink\_constructor.py})
+implements Appendix~\ref{app:realization} as it now stands: it reserves the
+sinks before any label is chosen, chooses every parameter numerically, fills
+the sinks and completes the ordinary blocks.  It labels the comb attached to a
+root with $12k$ stationary children for $k\in\{5,9,15\}$, the comb attached to
+a complete binary tree of depth $7$, $8$ and $9$ for the same three values of
+$k$ (using $39$ absorbers and $9$ direct sinks in all), and fifteen random
+sparse trees of orders $101$, $201$ and $401$, with no lemma gap on any of
+these $27$ trees; the largest label magnitude is below $7(D+1)$ and
+$|S|<4.5(D+1)$, against the bounds $A(D+1)$ and $30D+3$ that we prove (with
+units in place of tokens the same trees give the same outcomes, four of the
+sparse trees now sending a quad to a block of size four, and the quad gadget,
+the sink for the second token of a forced-antipode family and the exclusion
+of a parent family above a residue-two ray were each exercised on a small tree
+built for the purpose).  Whether a tree has a cancelling triple at all depends
+on the root: none of the trees above has one at the root the constructor
+chooses first, so the triples are exercised separately.  On the sparse tree of
+order $201$ rooted at the vertex which does produce one, the three heads
+$360$, $-4320$, $3960$ sum to zero, their negatives are placed together in one
+ordinary block, and the labelling verifies
+(\file{sink\_route/regression\_cancel\_triple/}).  On the
+$293$ free trees of orders $7$, $9$ and $11$ it succeeds on $243$; of the fifty
+$293$ free trees of orders $7$, $9$ and $11$ it succeeds on $243$; of the fifty
+failures, $33$ are modular collisions, nine report that the tree has no sink at
+all (no block of size three or at least five and no path of five stationary
+vertices with two children), which is the hypothesis of
+Lemma~\ref{lem:realization} failing, as it must at these orders, and eight fail
+in a cell or in the completion.  Every successful certificate was re-verified
+independently of the constructor.  The same mode realizes the two-level joints
+of Lemma~\ref{lem:reset} (\file{sink\_route/reset\_joint\_constructor.py}): on
+the comb of Appendix~\ref{app:realization} whose every core vertex has two
+active children and one arm of length one, attached to a bushy root with
+$n\approx 12.5(D+1)$, chains of $4$ to $8$ rows are cut into $2$, $2$, $3$,
+$3$ and $4$ joints and every tree is labelled with the largest magnitude below
+$6(D+1)$, whereas without the joints the same trees either fail or reach
+$21(D+1)$; the scheduler's owner lists on all trees of order at most nine are
+unchanged by the addition.  We note that all these runs use the dense
+completion only through a direct construction of the leftover blocks (from the
+antipodal pairs, which the sink route makes available, with the CP-SAT search
+as a fallback), since at these orders the asymptotic Lemma~\ref{lem:dense}
+does not apply, and their purpose is to confirm the bookkeeping of the cells
+and of the sinks and not the theorem itself.  A modular collision between two
+special labels is exactly the event that the hypothesis $n>C(D+1)$ excludes,
+and at $n=201$ with $D\approx 8$ the hypothesis is very far from holding.
+
+\paragraph{The absorber gate and the sinks.}
+Lemma~\ref{lem:compat} needs, for every pair of cells that can share a
+parameter, a role order of the two tokens for which none of the four absorber
+forms coincides identically with a label of either cell, with the negative of
+one, with another absorber form or with zero.  Our program
+\file{sink\_route/absorber\_gate.py} checks this over the joint parameter space
+of the two families, the child's head identified with the parent's input, for
+every ordered pair of a catalogue family with one input and a token ($625$
+families) and a catalogue family with a head and a token ($2{,}113$ families),
+one family per context, namely the one the scheduler prefers there:
+of the $1{,}320{,}625$ pairs none has fewer than eight collision-free orders
+among the thirty-six, and $1{,}077{,}257$ have all thirty-six.  The same check
+over the $4{,}242{,}904$ pairs with a two-input parent (the child attached at
+either input, either token of the parent), the $574{,}907$ pairs in which at
+least one side uses its second token, and the $401$ families carrying two
+tokens (both tokens of one cell as the two sources) finds no pair without a
+collision-free order either, the minima being six, eight and three orders
+respectively (\file{sink\_route/absorber\_gate\_ext.py}).  The same test was
+then run over \emph{every} entry of every menu rather than one family per
+context (\file{sink\_route/full\_menu\_absorber\_gate.py}): $2{,}175$ parent
+families against $4{,}431$ child families, $9{,}637{,}425$ ordered pairs, again
+no pair without a collision-free order, the minimum being six.  A second
+implementation, which carries the labels as exact rationals over an explicit
+joint coordinate list and shares no code with the first, reproduces that run
+pair for pair, including the whole histogram of collision-free orders
+(\file{sink\_route/verify\_full\_menu\_gate.py}); the certificate records the
+catalogue's SHA-256 digest.  Thus the pairing of
+Lemma~\ref{lem:compat} may be arbitrary.  The units themselves were scanned
+over the $6{,}975$ token-bearing families of all menus: $528$ contain an
+antipodal pair among their token labels, of which $394$ leave a quad and
+$134$ leave nothing to place, and every family with $-x$ in a token also has
+$x$ in a token, so the case the units were introduced for never arises in
+any other form.
+For the residue-two ray, exactly one single-input family
+(\texttt{h4\_6-6\_p0\_act}, first of its menu) has a label $\pm x/3$ or
+$\pm 2x/3$ and its context has another family without, and one two-input
+joint family (\texttt{h3\_1-3-3-3\_p0\_A2}) has such a label on one of its
+two inputs, to which the constructor never assigns a ray; no context is left
+without an admissible family.  The counting of Lemma~\ref{lem:packing} was also
+run on real schedules (\file{sink\_route/packing\_statistics.py}): on random
+sparse trees with $D\approx n/25$ the direct capacity alone exceeds the number
+of owners by a factor of at least twelve, on a comb of $k$ core vertices
+attached to a root with $12k$ stationary children the root's block absorbs
+everything, and on a comb attached to a complete binary tree of depth $d$,
+where no block has size three or more, the greedy packing finds $2^{d-4}$
+disjoint absorbers, enough for every $k\le 15$ from $d=7$ on.  These runs are
+evidence for the constants, not part of the proof.
 
 \section{Discussion}\label{sec:discussion}
 
@@ -1018,11 +1130,13 @@ small trees, it is evidence for, not a proof of, Lemma~\ref{lem:contexts}.
 The proof is the case analysis of Appendix~\ref{app:contexts}, and the
 scheduler is our way of keeping that analysis honest.
 
-\paragraph{Use of AI.}
-Anthropic's Claude, OpenAI's ChatGPT and Google's Gemini were used as coding
-and analysis assistants throughout this project.  They implemented and executed
-the processing, reasoning, and statistical code, prepared documentation,
-surveyed literature, and assisted in preparing manuscript text.
+\section{AI-assisted research statement}\label{sec:ai}
+
+Anthropic's Claude, OpenAI's ChatGPT, Google's Gemini and Moonshot AI's Kimi
+were used as coding and analysis assistants throughout this project.  They
+implemented and executed the processing, reasoning, and statistical code,
+prepared documentation, surveyed literature, and assisted in preparing
+manuscript text.  The author assumes responsibility for all content.
 
 \section{Data and code availability}\label{sec:data}
 
@@ -1033,7 +1147,11 @@ independent checker (\file{check\_alphabet\_families.py}), the scheduler
 (\file{check\_lookahead\_gate.py}), the closure check
 (\file{closure\_check.py}), the literal test of (E4) and (E6)
 (\file{audit\_e4\_e6.py}, \file{e6\_coverage.py}), the non-constancy check of
-the carrier elimination (\file{carrier\_nonconstancy.py}), the constructor, the context
+the absorber gate and the sink statistics (\file{sink\_route/absorber\_gate.py},
+\file{sink\_route/full\_menu\_absorber\_gate.py} with its
+independent verifier,
+\file{sink\_route/packing\_statistics.py}), the constructors (including
+\file{sink\_route/sink\_constructor.py} with its regression driver), the context
 list, the certificate catalogue (\file{alphabet\_families.json}) with its
 variant tables, and the certificates of the runs reported in
 Section~\ref{sec:verification} are available at
@@ -1096,10 +1214,10 @@ arm of residue $r$ and $q$ ports, the recruited port count of Step~5 has no
 feasible value exactly when $q=0$ and $r\in\{2,4\}$, or $q=1$ and
 $r\in\{1,3,5\}$; for $q\ge2$ there is always one.  At the root there is one
 further case, the opposite-parity residual $\{1,2\}$ with no ports.  We note
-that the earlier draft of this step named only the portless residuals $\{1\}$
-and $\{2\}$ and only $k=2$; that was too narrow, and a referee exhibited a
-tree of order $19$ on which our scheduler keeps two active children at a
-residual of residue four.  With a subdivided parent
+that an earlier version of this step named only the portless residuals $\{1\}$
+and $\{2\}$ and only $k=2$; that was too narrow, as a tree of order $19$ on
+which our scheduler keeps two active children at a residual of residue four
+shows.  With a subdivided parent
 edge such cells have ordinary families, e.g.\
 $(y,-y-x_1-x_2;\,-x_1-x_2,\,y+x_1+x_2;\,x_1,x_2)$ for $h=1$ and $R=\{1\}$ with
 token $\{x_1,x_2,-x_1-x_2\}$, some of them with two tokens.  With a direct
@@ -1201,80 +1319,378 @@ exercised by at least one fragment.
 
 \section{Proof of the realization lemma}\label{app:realization}
 
-\subsection*{Families and the choice rule}
+\subsection*{Families, sinks and the choice rule}
 
 Every family carries the properties (E1)--(E5) of Section~\ref{sec:cells},
 which our checker verifies.  Property (E6) holds for a family of every context
 that occurs except the \NumNotEsixContexts{} of Section~\ref{sec:cells}, and
 for those the gate of Section~\ref{sec:verification} checks the finitely many
-adjacent pairs individually; the choice rule below is what turns this into the
-statement the realization uses.
-For a token family let $K(F)$ denote its carrier, a set of at most two
-parameters on which the three token forms already span a plane.  Property
-(E4) asserts that some such pair exists but does not name it, so the carrier
-is ours to choose, and the choice matters for the constants below.  On a fixed
-pair of columns the three $2\times 2$ minors of the token coincide up to sign,
-because the three forms sum to zero, so each candidate carrier has one
-well-defined $|\det|$.  We prefer, in this order, a carrier with
-$|\det|=1$, then one that does not contain the head, then one of least
-$|\det|$.  The first preference is what Remark~\ref{rem:integrality} turns on,
-since a unimodular carrier needs no division at all; the second matters because
-the head is the value a cell passes to its parent.  Over the
-catalogue this minimum is $1$ for $69\%$ of the tokens and never exceeds
-$\NumDetMax$, and the largest value of $|r_\ell\,\mathrm{adj}(M)|$ over all
-labels at the chosen carrier, where $M$ is the $2\times 2$ carrier block and
-$r_\ell$ the carrier row of a label $\ell$, is $\NumAdjMax$.  A family is
-\emph{input-carried} when $K(F)$ contains an input.  For every owner we fix a
-family before any label is chosen, preferring families with (E6).  When the
-context of a parent has no family with (E6), the finitely many pairs (parent
-family, child family) are checked for identical forms directly.  With this
-choice no non-input label of a parent is identically equal, as a form in the
-shared head, to a label of its child: the parent's only input-only label is
-the antipode of its input, and the child has no label equal to the antipode
-of its own head.
+adjacent pairs individually.  For every owner we fix a family before any label
+is chosen, preferring families with (E6).  With this choice no non-input label
+of a parent is identically equal, as a form in the shared head, to a label of
+its child: the parent's only input-only label is the antipode of its input, and
+the child has no label equal to the antipode of its own head.
+
+The tokens of a family are what (E2) leaves after the mirror pairs, but a
+token may contain the input $x$ while the other token of the same family
+contains its antipode $-x$ (which (E6) allows), or two tokens may otherwise
+contain a label and its negative; such labels are already mirrored inside the
+cell (the input $x$ is the head edge of the active child, $-x$ a label of the
+cell) and must not be negated again.  We therefore work with \emph{units}:
+take the multiset of the token labels of a family, remove every antipodal
+pair of forms among them, and call each zero-sum triple that remains, or the
+zero-sum set of four labels that remains when one pair straddled the two
+tokens, a unit; what remains has size $6$ (two triples), $4$ (a \emph{quad}),
+$3$ (a triple), $2$ or $0$ (nothing to place).  The first token of a
+forced-antipode family, which contains the antipode of the head, keeps the
+treatment below; every other unit is \emph{free}.  The zero-sum triples that
+Section~\ref{sec:decomp} uses to cancel an odd number of active heads at a
+vertex are free units as well.  They are not closed under negation, so their
+negatives need sinks of their own; each of them consumes three active
+children, all of which are owners, and triples at different vertices consume
+disjoint sets of owners, which is what bounds their number in
+Lemma~\ref{lem:packing}.  Free units are never
+cancelled against one another along the root path.  Instead the negatives of
+each free unit are placed in the ordinary part of the tree, at a \emph{sink},
+and this is what closes the special support under negation.  There are two
+kinds of sink.  A stationary vertex whose ordinary block has size $r$ takes
+negated units directly as long as the remainder of $r$ after the units it
+holds is zero or at least two, as Section~\ref{sec:dense} requires (a single
+triple needs $r=3$ or $r\ge 5$, a single quad $r=4$ or $r\ge 6$); the units
+are zero-sum, so the block remains zero-sum.  Otherwise units go to
+\emph{gadgets} built from stationary vertices with two children: pairs of
+triples to the \emph{absorbers} of Lemma~\ref{lem:absorber}, quads to the
+four-vertex gadget of Lemma~\ref{lem:quad}.
+Every cell chooses all of its parameters numerically, in post-order, so that
+no symbolic parameter is ever live except in the two situations that already
+had their own treatment, the forced-antipode children and the two-input rows.
+This is a change of architecture with respect to an earlier version of this
+appendix, in which tokens were cancelled in pairs along the root path by
+solving $T_v=-T_A$ for the carrier of the resolving cell.  That step divided by
+the determinant of a carrier block, and a chain of cells of the context
+$\mathtt{h0\_3\_p0\_act}$ (a comb whose core vertices carry one arm each) has
+a one-dimensional space of solutions, so that the labels either collide or
+grow geometrically along the chain; Remark~\ref{rem:whysinks} records this.
+
+\begin{lemma}[five-point absorber]\label{lem:absorber}
+Let $v_0,v_1,v_2,v_3,v_4$ be vertices with $v_i$ the parent of $v_{i+1}$, none
+of them an owner, a helper or a vertex of an arm, head chain or unit, such
+that each $v_i$ with $i\le 3$ has a further child $w_i$ that is stationary,
+$v_4$ has two such children $w_4,w_4'$, and the remaining children of every
+$v_i$ number zero or at least two.  Let $T=(a,b,-a-b)$ and $U=(c,d,-c-d)$ be
+integer zero-sum triples.  Give the edges the labels
+\[
+\begin{array}{lll}
+e(v_0v_1)=a+b+d, & e(v_0w_0)=-a-b-d, \\
+e(v_1v_2)=a,     & e(v_1w_1)=-c-d,   \\
+e(v_2v_3)=b,     & e(v_2w_2)=d,      \\
+e(v_3v_4)=2a+b-c,& e(v_3w_3)=c-2a-b, \\
+e(v_4w_4)=c,     & e(v_4w_4')=-a-b,
+\end{array}
+\]
+and give the remaining children of every $v_i$ a zero-sum block.  Then $v_0$
+and $v_3$ are stationary, $v_1,v_2,v_4$ are non-stationary with
+$s(v_1)=2a+b-c$, $s(v_2)=a+b+d$ and $s(v_4)=a$, which are the labels of the
+parent edges of $v_4,v_1,v_2$, so that the identity of Lemma~\ref{lem:sigma}
+holds on the five vertices with the parent edge of $v_0$ untouched; the ten
+labels placed are $T\sqcup U\sqcup\{\pm(a+b+d)\}\sqcup\{\pm(2a+b-c)\}$; and as
+linear forms in $(a,b,c,d)$ the ten labels are pairwise distinct and nonzero,
+the only antipodal pairs among them being the two just named.  Distinctness of
+the ten \emph{values} is then a finite list of proper conditions on
+$(a,b,c,d)$, which the choice rule of Appendix~\ref{app:realization} adds to
+$\Phi$ like any other; the lemma asserts it of the forms, not of every
+numerical $T$ and $U$.
+\end{lemma}
+
+\begin{proof}
+The sums are $s(v_0)=y+(a+b+d)-(a+b+d)=y$ for the parent label $y$ of $v_0$,
+$s(v_1)=(a+b+d)+a-c-d=2a+b-c$, $s(v_2)=a+b+d$,
+$s(v_3)=b+(2a+b-c)+(c-2a-b)=b$ and $s(v_4)=(2a+b-c)+c-a-b=a$.  A zero-sum
+block at $v_i$ does not change $s(v_i)$, and a stationary child $w$ has
+$s(w)=e(v_iw)$, so a hanging label is produced by its own lower endpoint
+exactly as the label of a stationary child edge is.  The list of labels is
+read off, and the distinctness of the ten forms and of their antipodal pairs
+is a finite check, which we also ran by script.
+\end{proof}
+
+If two owners carry free tokens $-T$ and $-U$, the absorber places $T$ and $U$
+and closes the special support under negation at the cost of two inverse
+pairs, and it imposes no equation on either owner: the four coordinates
+$a,b,c,d$ are whatever the two cells chose.  The three vertices $v_1,v_2,v_4$
+join $W$.  On a vertical path of stationary vertices with two children each a
+single token cannot be absorbed, since such a path places an even number of
+labels, and three such vertices do not suffice for two tokens with independent
+coordinates, because the three sums would have to permute the three path
+labels and the parent label, which forces either an antipodal pair inside
+$T\sqcup U$ or a dependence of the parent label on the tokens.  Four vertices
+do not suffice either.  With path labels $g_1,g_2,g_3$ below the parent label
+$y$ and hanging labels $p_0,p_1,p_2,p_3,p_3'$, the sum at the top vertex must be
+$y$ (any other value would make $y$ depend on the tokens or place $-y$), so the
+one inverse pair is $\{g_1,p_0\}$ and the six remaining labels are
+$T\sqcup U$; the sums at the next two vertices cannot equal their own path
+labels (that would force an antipodal pair inside $T\sqcup U$), so they are
+$g_3$ and $g_1$ in this order, which gives $g_1+g_2+p_1=g_3$ and
+$g_2+g_3+p_2=g_1$, hence $2g_2=-(p_1+p_2)$, and twice a label of $T\sqcup U$ is
+never the sum of two others when the coordinates are independent.  Thus five
+vertices is the minimum for two tokens on a binary path.
+
+\begin{lemma}[quad gadget]\label{lem:quad}
+Let $v_0,v_1,v_2,v_3$ be vertices with $v_i$ the parent of $v_{i+1}$,
+eligible as in Lemma~\ref{lem:absorber}, each $v_i$ with $i\le 2$ having a
+further stationary child $w_i$ and $v_3$ two such children $w_3,w_3'$.  Let
+$Q=(q_1,q_2,q_3,q_4)$ be an integer zero-sum quadruple and $f$ an integer.
+Give the edges the labels
+\[
+\begin{array}{lll}
+e(v_0v_1)=f-q_1-q_2, & e(v_0w_0)=-(f-q_1-q_2), \\
+e(v_1v_2)=q_1,       & e(v_1w_1)=q_2,          \\
+e(v_2v_3)=f,         & e(v_2w_2)=-f,           \\
+e(v_3w_3)=q_3,       & e(v_3w_3')=q_4.
+\end{array}
+\]
+Then $v_0$ is stationary, $v_1,v_2,v_3$ are non-stationary with sums
+$f$, $q_1$ and $f-q_1-q_2$, the labels of the parent edges of $v_3,v_2,v_1$
+respectively, so that the identity of Lemma~\ref{lem:sigma} holds on the four
+vertices with the parent edge of $v_0$ untouched; the eight labels placed are
+$Q\sqcup\{\pm f\}\sqcup\{\pm(f-q_1-q_2)\}$, and they are pairwise distinct and
+nonzero as forms in $(q_1,q_2,q_3,f)$.
+\end{lemma}
+
+\begin{proof}
+$s(v_1)=(f-q_1-q_2)+q_1+q_2=f$, $s(v_2)=q_1+f-f=q_1$ and
+$s(v_3)=f+q_3+q_4=f-q_1-q_2$; the rest is as in Lemma~\ref{lem:absorber}.
+\end{proof}
+
+The parameter $f$ is ours, chosen when the gadget is filled, so the
+conditions that its four labels $\pm f$, $\pm(f-q_1-q_2)$ avoid every placed
+value are proper affine conditions in $f$, and a quad gadget occupies the top
+four vertices of any five-vertex path of the kind Lemma~\ref{lem:packing}
+provides.
+
+\begin{remark}[a quad splits into two triples]\label{rem:quadsplit}
+The negatives $Q=(q_1,q_2,q_3,q_4)$ of a free quad need not go to a gadget or
+to a block that can hold four labels.  They can be placed as the two triples
+$\{q_1,q_2,-q_1-q_2\}$ and $\{q_3,q_4,-q_3-q_4\}$ at two ordinary triple
+sinks.  Both sets are zero-sum, so both blocks stay zero-sum, and because $Q$
+is zero-sum the two labels introduced are $-q_1-q_2$ and its negative, an
+inverse pair; the special support therefore stays closed under negation and
+the ledger gains nothing that needs a sink of its own.  Each new label is a
+sum of two coordinates of $Q$, so the magnitude bound at the end of this
+appendix covers it, and each carries one further genericity condition, of the
+same kind as the conditions on $f$ above.  We therefore count every quad as
+\emph{two} triples in Lemma~\ref{lem:packing}.  This is what makes
+$\mathrm{cap}$, which counts triples, the right capacity for an arbitrary
+mixture of triples and quads: a block of size three or five has capacity one
+but cannot hold a quad at all, so a capacity counted in units rather than in
+triples would not do.
+\end{remark}
+
+\begin{lemma}[sinks exist]\label{lem:packing}
+Let $t$ be the number of free units, a quad counted as two triples
+(Remark~\ref{rem:quadsplit}).  If $n\ge 10^6(D+1)$ then the
+direct capacities of the ordinary blocks, $\sum_u\mathrm{cap}(r_u)$ with
+$\mathrm{cap}(r)=\max\{k: r-3k\in\{0\}\cup[2,\infty)\}$, together with the
+number of pairwise vertex-disjoint vertical paths of five stationary vertices
+whose ordinary blocks have size two or four, is at least $t$.  (A path takes two triples, or one quad, which counts
+for two; a block of size $r$ takes a quad in place of two triples whenever
+$r-4\in\{0\}\cup[2,\infty)$, and otherwise the quad is split as in
+Remark~\ref{rem:quadsplit}.  Counting a quad as two triples on either route
+is therefore conservative.)
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:charge} there are at most $2q\le 2D$ owners, each with at
+most two units of its own, and a unit counts for at most two triples, so the
+units of the families contribute at most $8D$.  A cancelling triple of
+Section~\ref{sec:decomp} consumes three owners, and triples at different
+vertices consume disjoint sets of them, so there are at most $2D/3$ of those.
+Hence $t\le 8D+2D/3\le 9D$; helpers are at most one per owner.  The skeleton, by which we
+mean the vertices of $W$, the arms with their leaves, the units, the head
+chains, the owners, the helpers, the helper ports (at most two per helper)
+and the recruited ports (at most three per owner), has at most $16D+1$
+vertices.  Suppose the direct capacities sum to less than
+$t$.  Then fewer than $t$ blocks have positive capacity, and a block of
+capacity $k\ge 1$ has size at most $3k+4$ (otherwise $k+1$ would be
+admissible), so these blocks have fewer than $7t\le 63D$ children in total.
+Every vertex outside the skeleton is a child in exactly one ordinary block,
+and blocks of size one do not exist, so all but $7t$ of the $n-16D-1$
+non-skeleton vertices are children in blocks of size two or four.  Call a
+vertex \emph{usable} if it is neither an owner, nor a helper, nor on an arm,
+head chain or unit, and its block has size two or four; let $U$ be the set of
+usable vertices and $m=|U|$.  The parent of a child in a block of size two or
+four is usable or in the skeleton, and has at most four such children, so
+$n-16D-1-63D\le 4(m+16D+1)$, i.e.\ $m\ge n/8$ once $n\ge 286D+10$.
+
+Consider the forest $F$ induced on $U$.  A vertex of $U$ has at most four
+children in $U$, and the roots of $F$ are children of skeleton vertices or of
+blocks with positive capacity, so $F$ has at most $4(16D+1)+63D=127D+4$
+components.  Give
+each vertex of $F$ its height, leaves of $F$ having height $0$.  A vertex of
+height at most $4$ lies either in a component of height at most $4$, which
+has at most $1+4+16+64+256=341$ vertices, or below a child of height at most
+$4$ of a vertex of height at least $5$, and every vertex of height at least
+$5$ has at most four such children, each with at most $341$ vertices below
+it.  Writing $H$ for the number of vertices of height at least $5$, we get
+$m\le 1365H+341(127D+4)$, hence $H\ge m/2730$ once $m\ge 86614D+2728$, which
+holds when $n\ge 7.0\cdot 10^5(D+1)$.  For a vertex $u$ of height $h\ge 5$ with
+$h\equiv 0\pmod 5$ follow the path from $u$ downward through children of
+maximal height; it visits heights $h,h-1,\dots,h-4\ge 1$, five usable
+vertices; the first four have a child on the path and therefore, since their
+blocks have size two or four, a further child on which a gadget label can
+hang, and the last has height at least one, so its block of size two or four
+consists of children off the path, two of which take the last two labels.  A
+hanging child may itself be the top vertex of another gadget; it is then
+stationary all the same, which is all that is required of it.  Two such paths are disjoint, because
+from incomparable vertices they lie in disjoint subtrees, and from comparable
+vertices $u$ above $u'$ the heights satisfy $h(u)\ge h(u')+5$, so the height
+ranges do not meet.  Thus there are at least $H/5\ge m/13650\ge n/109200$
+disjoint paths, which is at least $t\le 9D$ once $n\ge 982800D$.  The three
+thresholds are implied by $n\ge 10^6(D+1)$.
+\end{proof}
+
+The constant is crude, and it is irrelevant beside $A$ below.  In our
+experiments the direct capacity alone covers the tokens on random sparse trees
+with $n\ge 20(D+1)$, e.g.\ by a factor of at least twelve at $D\approx n/25$,
+and on a comb attached to a complete binary tree of depth $d$, where only
+absorbers can help, the greedy packing finds $2^{d-4}$ disjoint paths.  Blocks at owners (their unrecruited ports) and at helpers (their
+further ports) count toward the direct capacity as well.  A usable vertex with
+a block of size four gives its two further children an inverse pair, which
+does not change its sum.
+
+\begin{lemma}[compatibility]\label{lem:compat}
+Send every free quad to a quad sink and pair the free triples arbitrarily,
+with at most one left over; a dependent pair of triples (two units of one
+cell, or of a cell and its active child) is given a role order for which none
+of the four absorber forms $\pm(a+b+d)$, $\pm(2a+b-c)$ is identically equal,
+over the joint parameters of the two cells, to a label of either cell, to the
+negative of one, to another absorber form or to zero.  Such an order exists
+for every pair of catalogue families.  Then, when the owners are processed in
+post-order with all parameters numeric, every condition that has to be
+avoided, including the distinctness of the negated units placed at the sinks
+from every other label, is a proper affine condition in the coordinate to
+which it is charged, and Lemma~\ref{lem:charge} applies.
+\end{lemma}
+
+\begin{proof}
+The labels of a family are homogeneous linear forms, pairwise distinct and
+nonzero by (E3).  We first dispose of the negated units themselves.  Let $u$
+be a label of a free unit of the cell $v$ and consider the value $-u$ placed
+at the sink.  It is not identically a label of $v$: the units were formed by
+removing every antipodal pair among the token labels, and a label outside the
+tokens is a mirror-pair member, whose negative is its partner and not $-u$.
+It is not identically a label of the active child of $v$, whose labels are
+forms in that child's parameters: the only parameter shared is the child's
+head $x$, and when both cells satisfy (E6) the child has no non-head label
+that is a multiple of $x$, while $u=-x$ would mean that $x$ and $-x$ both
+occur among the tokens of $v$ and were removed.  It is not identically a
+label of the parent of $v$, which shares only the head $y$ of $v$: under (E6)
+the parent's labels depending on $y$ alone are $\pm y$, and $u=-y$ occurs
+only in the first token of a forced-antipode family, which is not free.  For
+the finitely many pairs in which a cell violates the second clause of (E6)
+(a unit label that is a multiple of the input by a factor other than $\pm1$,
+of which the catalogue has $30$ in $28$ contexts, with factors $\pm2$, $\pm3$,
+$\tfrac12$, $\tfrac32$; or a label that is such a multiple of the head, of
+which there are $478$ in $166$ contexts) the identity is checked directly, as
+part of the gate of Section~\ref{sec:verification}, and the choice rule keeps
+the colliding combinations apart.  Every other label of the tree is numeric
+when the sink is filled, so the remaining requirements on $-u$ are proper
+conditions on the parameters of $v$.  The four labels of a quad gadget are affine in the fresh parameter $f$
+with slope $\pm 1$, so their conditions are proper in $f$.  Consider now an
+absorber whose first source is already numeric
+and whose second source is the present cell with token $(c,d,-c-d)$.  Each
+absorber form is a numeric constant plus one of $d,-c,-d,c$ (or, with the
+roles exchanged, plus $a+b$, $2a+b$ and their negatives), so it has a nonzero
+coefficient in some parameter of the present cell.  Its collision with a
+placed numeric label is therefore a proper condition.  Its collision with a
+label $\ell$ of the present cell reads $d-\ell=\mathrm{const}$, which is proper
+unless $d=\ell$ identically, and (E3) excludes that; collisions among the four
+absorber forms and the two tokens read $c\pm d=\mathrm{const}$, $c=\mathrm{const}$
+or $d=\mathrm{const}$, again proper because $c,d,-c-d$ are distinct nonzero
+labels.  If the two sources are independent this is all.  If they are
+dependent, the difference of two forms is a form over the joint parameters; it
+is proper for the cell processed second if it involves one of that cell's
+parameters, it is a proper condition on the cell processed first if it
+involves only that cell's parameters (and the pairing is known before any
+label is chosen, so the condition is recorded in time), and only an identical
+zero would be fatal.  The finite check over every pair of a family with one
+input and a first token and a family with a head and a first token, over every
+entry of every menu, $9{,}637{,}425$ ordered pairs in all, finds a
+collision-free role order for each of them, in fact at least six of the
+thirty-six; the same check for two-input parents,
+second tokens and the two tokens of one cell is described in
+Section~\ref{sec:verification}.
+\end{proof}
+
+Without the finite check one would pair independent tokens only, which is
+possible for $t\ge 10$ because the dependency graph has maximum degree four
+and its complement then has minimum degree at least $t/2$; the check makes
+this unnecessary.
+
+\begin{remark}[why the tokens are not cancelled along the root path]\label{rem:whysinks}
+An earlier version of this appendix cancelled a free token against the first
+token on the path to the root by solving $T_v=-T_A$ for the carrier of the
+resolving cell.  Three things go wrong with this, and we record them because
+each was found only after the argument had been written out.  First, when
+the pending cell is the active child of the resolving cell, the child's head
+is the parent's input and appears on both sides of the equation, so the
+displayed solution is not a definition; the correct statement is two
+equations in three unknowns, whose relevant minors are mixed ones and not the
+determinant of a carrier block.  Second, the division by that determinant was
+measured over the coordinates $(y,x)$ with the family's denominator kept
+apart; measured on the lattice of parameter values at which the family's
+labels are integers, the token of $\mathtt{h0\_3\_p0\_act}$ is a bijection
+onto the integer zero-sum triples and nothing is divided, whereas the tokens
+of $\mathtt{h1\_2\_p0\_act}$ and $\mathtt{h4\_1\text{-}3\text{-}3\text{-}3\_p0\_act}$
+have image index two and three.  Third, and decisively, the four contexts
+whose tokens depend on the head and the input alone have one free parameter
+per cell, so a chain of $m$ of them, which our scheduler produces on a comb
+with one arm of length three at every core vertex, has a one-dimensional space
+of solutions once the tokens are paired, whatever the pairing: the heads
+either collide or grow by a factor of at least $5/2$ per pair, and our
+proof-faithful constructor records the failure on such a comb attached to a
+dense part.  A two-level joint of two such cells does have a tokenless family
+with a free head (we verified this for all nine ordered pairs among the three
+small contexts), which would cut the chains as Lemma~\ref{lem:reset} cuts the
+two-input chains.  However, sending the tokens to sinks removes the pairing
+altogether, and with it the division, the chains and the live sets, so we use
+the sinks.
+\end{remark}
 
 \subsection*{State}
 
-Owners are processed in post-order.  The state consists of the set $\Placed$
+Owners are processed in post-order.  Before any label is chosen the free
+tokens are paired and every token or pair is assigned a sink by
+Lemma~\ref{lem:packing}, and every dependent pair is given a collision-free
+role order by Lemma~\ref{lem:compat}.  The state consists of the set $\Placed$
 of numeric special labels, the set of \emph{reserved} values (antipodes of
-heads that a parent will place later), and the set $\mathrm{Open}\subseteq\Placed$
+heads that a parent will place later), the set $\mathrm{Open}\subseteq\Placed$
 of placed labels whose antipode is not yet placed and is designated (the head
-of an active child, the three labels of a pending token).  It also carries at
-most two
-\emph{pending tokens} $T_A$, which then belong to one and the same cell $A$,
-together with a \emph{live set} $\Lambda$ of at
-most four symbolic parameters (the carriers of the pending cell $A$, and the
-head of $A$'s active child when a carrier contains the input), and the
-\emph{symbolic labels} (labels that are affine forms in $\Lambda$: they belong
-to $A$, to $A$'s active child and to $A$'s parent, hence at most $3W$ of them,
-where $W$ is the largest family width; by Lemma~\ref{lem:reset} a cell here
-may be a two-level joint, which is what keeps the count at three cells when a
-chain of two-input rows is live).  Finally it carries the set $\Phi$ of
-recorded forbidden conditions, each a proper affine condition on $\Lambda$.
+of an active child, the three labels of a free token whose sink is not yet
+filled), and the set $\Phi$ of recorded forbidden conditions.  The only
+symbolic labels are those of a forced-antipode child before its parent is
+processed, of a two-input row of residual $\{1\}$ before its reset, and the
+four labels of an absorber whose second source is the present cell; each is
+an affine form in the parameters of at most two adjacent cells.
 
 A numeric value $v$ is \emph{admissible} for a label if $v\ne 0$, $v$ is not
 placed or reserved, and $-v$ is not placed or reserved, unless $-v$ is open and
 $v$ is its designated antipode (the forced $-x$ of an absorbing family, a
-helper, or a coordinate of $-T$ when a token is cancelled).
+helper, or a coordinate of a negated token when a sink is filled).
 
 The invariant is: (a) numeric labels are pairwise distinct and nonzero, and no
-two are antipodal except designated pairs; (b) at most two tokens are pending,
-and both belong to the same cell, so the symbolic labels are still confined to
-that cell, its active child and its parent;
-(c) every symbolic label is a non-constant affine form in $\Lambda$, and no two
-symbolic labels are identical or antipodal as forms; (d) $\Phi$ contains every
-condition under which a symbolic label would collide with a placed value or
-with another symbolic label; (e) $|\Placed|+|\mathrm{Reserved}|\le|S|+\#\text{cells}$
-and $|\Phi|\le 3W(2|\Placed|+3W)$.
+two are antipodal except designated pairs; (b) every symbolic label is a
+non-constant affine form in the parameters of the present cell or of its
+active child, and no two symbolic labels are identical or antipodal as forms;
+(c) $\Phi$ contains every condition under which a symbolic label would collide
+with a placed value or with another symbolic label; (d)
+$|\Placed|+|\mathrm{Reserved}|\le|S|+\#\text{cells}$ and $|\Phi|\le 3W(2|\Placed|+3W)$.
 
 \subsection*{Processing an owner}
 
 Let $v$ be the next owner with family $F$.  Its input is the head label of the
-remaining active child, numeric unless that child kept its head symbolic,
-which happens exactly when $F$ is input-carried (the active child of an
-input-carried owner always keeps its head symbolic and chooses its other
-parameters numerically) or when the child is the pending cell with its head in
-$\Lambda$.
+remaining active child, which is numeric, since every cell chooses its head
+numerically; the one exception is a child of the two-input residual-$\{1\}$
+type, treated below.
 
 \emph{No token.}  Choose the head and the internal parameters numerically,
 one coordinate at a time, in $M\Z\cap[-B,B]$, in a fixed order of the
@@ -1290,46 +1706,53 @@ $\{q y: q\in\Phi(F_{\mathrm{parent}})\}$.  We note that (E3) alone would not
 justify this coordinate by coordinate, since a label may well have zero
 coefficient in several parameters; it is the charging to the last nonzero
 coordinate that makes the count valid.  The bound
-$B=M\bigl(2W(|\Placed|+|\mathrm{Reserved}|+1)+W^2+1\bigr)$ therefore suffices.  If the
-input is symbolic, the labels depending on it are symbolic forms, non-constant
-by (E3) and the choice rule, and every comparison with a numeric label or
-another symbolic form is recorded in $\Phi$.
+$B=M\bigl(2W(|\Placed|+|\mathrm{Reserved}|+1)+W^2+1\bigr)$ therefore suffices.
 
-\emph{Token, nothing pending.}  Keep the carrier symbolic, $\Lambda:=K(F)$
-(together with the child's head when the carrier contains the input), choose
-all other parameters numerically as above, and declare the token pending.  If
-the head is in $\Lambda$ the parent of $v$ receives a symbolic input.  Its own
-head is numeric by (E5), so no further propagation occurs, and this is what
-confines the symbolic labels to three cells.  The rows we call rigid need a
-word here, because their heads are written in Appendix~\ref{app:contexts} as
-fixed forms in their inputs.  For the residue-two ray this is a matter of
-presentation only, and (E5) does hold.  Solving $P'=O$ for that topology gives
-a two-dimensional space, not the single row of Appendix~\ref{app:contexts}:
-with parameters $s$ and $t$ the labels are
-$$(-s-2t;\;-t,\;-s-t,\;s;\;2t),$$
-so the input is $x=2t$ and the head is $-s-x$ with $s$ still free once $x$ is
-pinned, the row of Appendix~\ref{app:contexts} being the case $s=x/2$.  We note
-that this family is not in our catalogue because its zero-sum triple contains
-the head and the input and so does not meet the signature of
-Section~\ref{sec:cells}; our constructor carries it separately.  Of the two
-direct-edge two-input rows only the first is a genuine exception.  For the row
-with residual $\{2\}$ the space of $P'=O$ families again has a direction along
-which the head moves with both inputs held fixed, so (E5) holds there too.  For
-the row with residual $\{1\}$ it does not: an exhaustive enumeration of the
-bijections between the five labels and the five outputs of that topology leaves
-exactly one nondegenerate family, and its head is $-x_1-x_2$.  That row has no
-token, so it neither resolves a pending token nor stops at one, and a chain of
-such rows carries a symbolic head upward for as many levels as the chain is
-long.  Our scheduler does produce arbitrarily long such chains, on a comb whose
-every core vertex has two active children and one arm of length one, so the
-length is $\Theta(D)$ in the worst case and not $O(1)$.
+\emph{Free token.}  Choose all parameters numerically exactly as in the
+previous case, with two additions to the forbidden set.  If the token's sink
+is an absorber whose other source is already placed, the four absorber forms
+of Lemma~\ref{lem:absorber}, with the other token's coordinates numeric and
+this token's coordinates as forms in the present parameters, are added to
+$\Phi$, together with their negatives; by Lemma~\ref{lem:compat} each is a
+proper affine condition, and there are at most eight of them.  If the two
+sources are dependent and the present cell is the one processed first, the
+conditions of Lemma~\ref{lem:compat} that involve only the present cell's
+parameters are added as well.  When the last source of a sink is placed, the
+sink is filled: a direct sink receives the negated triple as three prescribed
+members of its block, and an absorber receives its ten labels, of which the
+six of $T\sqcup U$ are the designated antipodes of the two tokens and the four
+others are fresh; all become placed.  The three labels of a token are open
+from the moment they are placed until the sink is filled.
 
-Two things limit where this can begin.  A head becomes symbolic only at an
-owner whose carrier contains its input, and the carrier is ours to choose:
-$2{,}642$ of the $\NumEsixDenom$ contexts that occur have a family all of whose
-tokens admit a carrier avoiding both the head and the inputs, so the
-propagation can start only at the remaining $147$.  What bounds it is
-Lemma~\ref{lem:reset}.
+\emph{Two-input rows.}  Treated identically with both inputs.  The rows we
+call rigid need a word here, because their heads are written in
+Appendix~\ref{app:contexts} as fixed forms in their inputs, and so are their
+other labels.  Our constructor carries them as templates outside the
+catalogue: the residue-two ray as $(-3t;\,-t,\,-2t,\,t;\,2t)$ with input
+$x=2t$ and head $-3x/2$, and the direct-edge two-input rows with residual
+$\{1\}$ and $\{2\}$ as $(-x_1-x_2;\,-x_2,\,-x_1;\,x_1,x_2)$ and as the
+$\tfrac12$-form of Appendix~\ref{app:contexts}.  (Solving $P'=O$ for the
+residue-two topology does give a two-dimensional space containing the
+template, but its second direction does not meet the signature of
+Section~\ref{sec:cells}, so we do not use it, and the template's head is not a
+free parameter.)  A rigid row has no free unit, and all of its labels are
+determined by its inputs; every requirement on such a label is charged to the
+step at which the last of those inputs is chosen, exactly as the
+coordinate-by-coordinate rule charges a label to its last coordinate, and the
+labels of a rigid row are reserved from that step on.  One more thing has to
+be checked for the residue-two ray, whose non-head labels are
+$x/3,2x/3,-x/3,-2x/3$ in terms of the head $x$ that its parent receives as
+input: a parent family with a label that is one of these multiples of its
+input would collide identically.  The choice rule therefore excludes such
+families above a residue-two ray; Section~\ref{sec:verification} reports the
+count of families and contexts concerned.  For the row with residual $\{1\}$
+an exhaustive enumeration of the bijections between the five labels and the
+five outputs of that topology leaves exactly one nondegenerate family, and
+its head is $-x_1-x_2$.  That row has no token, so a chain of such rows
+carries a symbolic head upward for as many levels as the chain is long.  Our scheduler does produce arbitrarily long such
+chains, on a comb whose every core vertex has two active children and one arm
+of length one, so the length is $\Theta(D)$ in the worst case and not $O(1)$.
+What bounds it is Lemma~\ref{lem:reset}.
 
 \begin{lemma}[the two-input reset]\label{lem:reset}
 Two consecutive residual-$\{1\}$ direct-edge two-input rows, joined into a
@@ -1350,178 +1773,85 @@ $$(g_0,g_1)=(14,-16),\quad
 $$s_0=3,\quad (x_1,x_2)=(-3,19),$$
 whose solution space has dimension five and whose head-free direction is $g_0$
 itself, so $g_0$ may be moved on its own.  We verified $P=O$ and the
-distinctness of the nine labels at that point directly.
+distinctness of the nine labels at that point directly.  (This family is the
+one with the fewest moving labels once the inputs are pinned; the constructor
+uses a different one of the twelve, see below.)
 \end{proof}
 
 A chain of such rows is therefore cut into joints of two levels, each of which
 has a free head, and a chain of odd length leaves one single row at its top
 whose parent is not one of these rows.  The symbolic labels are confined to at
-most three cells and one further row, where a cell may now be a joint of width
+most two cells and one further row, where a cell may now be a joint of width
 nine, so the bound is a constant and the boxes and the magnitudes are again
-linear in $D+1$.  We note that our scheduler does not yet emit these joints, so
-this lemma is at present a statement about the decomposition and not something
-our regression exercises.
+linear in $D+1$.  Of the $12$ head-free families, seven have the further
+property that all six labels placed by the joint still move once its three
+inputs are pinned, and our constructor uses one of these; for the single row
+that an odd chain leaves at its top, whose labels are determined by its inputs,
+the requirements are charged to the step at which the last of those inputs is
+chosen, exactly as in the coordinate-by-coordinate rule above.  Our scheduler
+reports these joints (field \texttt{reset\_joints}) and the constructor of
+Section~\ref{sec:verification} realizes them as single cells.
 
-\emph{Token, token pending.}  Choose a matching of the three coordinates and
-solve $T_v=-T_A$ for the carrier $K(F)$: two independent equations in two
-unknowns, nonsingular because the token map has rank two on the carrier, and the
-solution expresses $K(F)$ as affine functions of $\Lambda$.  The equation is
-symmetric and may instead be solved for $\Lambda$, which
-Remark~\ref{rem:integrality} uses.  Writing the two
-equations as $MK=N\Lambda+c$ with $M$ the carrier block of the token map of
-$v$ and $N$ that of $T_A$ on $\Lambda$, the solution is
-$K=\mathrm{adj}(M)(N\Lambda+c)/\det M$.  Two things have to be said about it,
-neither of which is automatic.  First, dividing by $\det M$ can leave the
-lattice, and we do not at present have a complete argument that it does not;
-this is the one step of our construction that we have to record as unfinished,
-and we do so in Remark~\ref{rem:integrality} below rather than assert it.
-Second, a label
-$\ell$ of $v$ with carrier row $r_\ell$ becomes
-$\ell=-(r_\ell\,\mathrm{adj}(M))N\Lambda/d+\mathrm{const}$, so its coefficients
-in $\Lambda$ are bounded by $2\cdot\NumAdjMax\cdot\NumCoefBound=\NumCoefBoundEff$
-and not by $\NumCoefBound$; and it is a \emph{non-constant} affine form in
-$\Lambda$, which needs $r_\ell\,\mathrm{adj}(M)N\ne 0$ rather than merely
-(E3).  We verified this last condition directly, over every ordered pair of a
-resolving family and a pending coefficient matrix that the catalogue allows
-and over all matchings of the token coordinates; no label of any family
-becomes constant.  Choose the remaining parameters of $v$ numerically, record
-the new conditions, and choose $\Lambda$ in the lattice of
-Remark~\ref{rem:integrality} avoiding all conditions in $\Phi$.  Each condition
-is a proper affine subspace, so a lattice point exists in a box of side
-$M'(|\Phi|+1)$.  The coefficient enlargement does not compound: at the end of
-this step nothing is pending, so the next pending token starts again from
-catalogue coefficients bounded by $\NumCoefBound$, and the factor is paid once
-and not once per owner.
+\emph{Stationary vertices.}  A helper places $-x$, a two-port absorption
+places a fresh numeric $a$ and $-x-a$, and neutral units are instantiated with
+fresh numeric parameters.  A stationary vertex that is a sink is filled as
+described under \emph{Free token}, and its remaining children, if any, are
+left to the completion as a zero-sum block of size at least two.
 
-\begin{remark}[the integrality of the eliminated carrier]\label{rem:integrality}
-Solving $M K=N\Lambda+c$ gives $K=\mathrm{adj}(M)(N\Lambda+c)/\det M$, and for
-the labels of $v$ to be integers this quotient has to be integral.  Choosing
-$\Lambda$ in a lattice divisible by $\det M$ does \emph{not} achieve this,
-because the constant $c$ collects the numeric parameters of $v$ and of $A$ that
-were already fixed and is untouched by the choice of $\Lambda$; the family of
-context $\mathtt{h2\_2\text{-}6\_p2\_act}$ has a token whose minimising carrier
-has $\det M=-5$ and admits numeric choices for which
-$\mathrm{adj}(M)c=(384,336)$, and neither coordinate is divisible by five.
-Nor does a common lattice follow from a bound on the determinants, since a
-bound is not a divisibility, and 33 of the determinants that our choice rule
-selects do not divide $\NumDetMax$.  We can say the following.
-The carrier is ours to choose, and two choices remove the difficulty for
-different reasons.  A \emph{unimodular} carrier leaves nothing to divide.  A
-carrier avoiding the head leaves the head an independent parameter, so the
-value the cell passes to its parent is one we choose freely and no coarser
-lattice travels upward.  Call a family \emph{safe} when each of its tokens
-admits one or the other.  Two further observations cut the problem down.
-First, only a cell that resolves a pending token performs the division, and
-such a cell has the pending cell in its subtree, hence has an active child; a
-bottom cell has only arms and ports below it and can never divide.  Second, the
-catalogue may be enlarged: we searched for safe families for the contexts that
-lacked one and found six, each with a unimodular carrier.
-
-After that, $2{,}770$ of the $\NumEsixDenom$ contexts that occur have a safe
-family, and exactly four contexts can divide and have none, namely
-$\mathtt{h0\_3\_p0\_act}$, $\mathtt{h0\_5\_p0\_act}$,
-$\mathtt{h1\_2\_p0\_act}$ and $\mathtt{h4\_1\text{-}3\text{-}3\text{-}3\_p0\_act}$.
-For the first three this is not a limitation of our search.  Their widths are
-six, eight and six, so every bijection between labels and outputs can be
-enumerated, and we did: solving $P'=O$ for each gives $3$, $73$ and $3$
-families whose labels are distinct and nonzero, and after writing each over the
-basis in which the head is $y$ and the input is $x$, not one of them has a safe
-token.  In all three the token spans a plane on the pair $(y,x)$ alone, with
-$|\det|$ equal to $3$, $3$ and $6$.  A token cannot be avoided either, since
-the parity of their non-head label count forces one, and their own numeric
-parameters cannot clear the determinant, because a single non-carrier column
-generates a subgroup of $(\Z/\det)^2$ of rank one.  The fourth has width
-twenty and is beyond enumeration.
-
-One more freedom halves what is left.  The pairing equation $T_v=-T_A$ is
-symmetric in its two cells: it is two independent equations in the two carrier
-pairs, and we may solve it for the carrier of the pending cell $A$ as readily
-as for that of the resolving cell $v$, since (E4) makes the coefficient matrix
-of $T_A$ on its own carrier nonsingular too.  Solving for $A$'s carrier
-expresses $\Lambda$ in terms of $K(F_v)$, which is then chosen numerically, and
-the division is by $\det$ of $A$'s carrier block instead.  We therefore take
-whichever of the two sides is safe.  Of the $1{,}724$ contexts that occur and
-can carry a token, and so can be either the pending cell or the resolving one,
-exactly the four above are unsafe, and a resolution is now in difficulty only
-when \emph{both} of its cells are among those four.
-
-What is still missing for that case is a bound on the number of such
-eliminations along a root path that pass a value to one another, or a joint for
-these four of the kind Lemma~\ref{lem:reset} supplies for the two-input row.
-Until one of the two is given, the explicit constant $A$ below is not
-established for a tree in which two of the four meet in this way, although our
-constructor produces integer labellings on every tree we have run it on.
-\end{remark}  All labels of $A$, of its child
-and parent, and of $v$ become numeric, $T_A$ and $T_v$ are designated
-antipodes of each other, and nothing is pending.
-
-\emph{Parent of the pending cell without a token.}  As in the first case with
-a symbolic input.  Two-input rows are treated identically with both inputs.
-
-\emph{Stationary vertices.}  A helper places $-x$ (numeric, or the symbolic
-form $-x$), a two-port absorption places a fresh numeric $a$ and $-x-a$, and
-neutral units are instantiated with fresh numeric parameters.
-
-\emph{Two-token cells.}  A cell with two tokens pairs its first token with
-the pending token, if any, exactly as above, and its second token becomes
-pending.  If nothing is pending both tokens become pending with their carriers
-live.  At most two tokens are therefore ever pending, they always belong to a
-single cell, and the live set has at most four carrier parameters.  The bound
-$3W$ on the number of symbolic labels, and with it the bound on $|\Phi|$, is
-unaffected, since it counts the cells that carry symbolic labels and not the
-parameters.
+\emph{Two-token cells.}  The units of the cell (two triples, or one quad when
+the tokens share an antipodal pair) are sent to sinks like any other; they are
+dependent on each other and on the units of the parent and of the active
+children, which Lemma~\ref{lem:compat} allows.
 
 \emph{Forced-antipode children.}  The token $\{-x,a,x-a\}$ of a
-forced-antipode child stays pending with its carrier live until the parent is
-processed.  The parent's port block or input-in-token family supplies the
-token $\{x,b,-x-b\}$, and the single equation $a=-b$ is solved for the child's
-carrier (its token map has rank two on the carrier, so the equation is
-non-degenerate).  A second token of an input-in-token family is an ordinary
-free token and is treated as above.
+forced-antipode child contains the antipode of the child's own head edge $x$,
+whose negative is that edge itself, so it cannot be sent to a sink.  It stays
+symbolic with its carrier live until the parent is processed.  The parent's
+port block or input-in-token family supplies the token $\{x,b,-x-b\}$, and the
+single equation $a=-b$ is solved for the child's carrier (its token map has
+rank two on the carrier, so the equation is non-degenerate, and it involves no
+division since $b$ is a single label).  The second token of a forced-antipode
+family, when there is one (the families of the one forced-antipode context
+that occurs all carry two, the second being $\{x_1,x_2,-x_1-x_2\}$ on the two
+inputs), is a free unit and goes to a sink, as is a second token of an
+input-in-token family of the parent.
 
-\emph{Root.}  The root family contains the zero label.  If one token is still
-pending, choose $\Lambda$ avoiding $\Phi$ as above and hand the negatives of
-the triple to an odd ordinary block of size at least three.  Such a block
-exists because the special support then has odd size, so the ordinary block
-sizes have odd sum, and no block has size one.  If two tokens $T,T'$ are
-pending, impose $T'=-T$: two independent equations in four live parameters,
-solvable because both token maps have rank two on their carriers and their
-constant parts are zero-sum, and the special support is then closed under
-negation.
+\emph{Root.}  The root family contains the zero label; its free tokens go to
+sinks like any other.  If the number of free tokens is odd, one token is left
+over by Lemma~\ref{lem:compat}; its negatives are handed to an odd ordinary
+block of size at least three, which exists because the special support then
+has odd size, so the ordinary block sizes have odd sum, and no block has size
+one.
 
 \subsection*{Verification of the invariant and of the bounds}
 
-(a) follows from admissibility; (b) from the two token cases; (c) from (E3)
-and the choice rule, since a symbolic label is one of at most $3W$ labels of
-three adjacent cells, each a non-constant form in the live coordinates, and
-two of them are identical or antipodal as forms only if a parent input-only
-label coincides with a child head-only label, which the choice rule excludes;
-(d) by construction; (e) because every owner adds at most $W$ placed labels
-and at most $|\Phi(F)|\le\NumPhiMax$ reservations, the bound
-$\NumPhiMax$ being computed from the catalogue as in
-Lemma~\ref{lem:charge}.  Every box has side
+(a) follows from admissibility; (b) from (E3) and the choice rule for the
+forced-antipode and two-input cases and from Lemma~\ref{lem:compat} for the
+absorber forms; (c) by construction; (d) because every owner adds at most $W$
+placed labels and at most $|\Phi(F)|\le\NumPhiMax$ reservations, the bound
+$\NumPhiMax$ being computed from the catalogue as in Lemma~\ref{lem:charge},
+every absorber adds four placed labels and a direct sink none, and every
+absorber adds at most eight conditions to $\Phi$.  Every box has side
 $O(|\Placed|+|\mathrm{Reserved}|+|\Phi|)=O(|S|)$, every label is a
 bounded-coefficient combination of at most seven parameters, and
-$|S|\le 12D+3$ by Lemma~\ref{lem:charge}, and all magnitudes are therefore at
-most $A(D+1)$ for an absolute $A$.  Explicitly, with $W=\NumMaxWidth$,
-$M=\NumLatticeM$ and
-$|\Placed|+|\mathrm{Reserved}|\le(12+2+2\NumPhiMax)(D+1)=\NumPlacedCoef(D+1)$
-by Lemma~\ref{lem:charge}, the coordinate boxes have side at
-most $M\bigl(2W(\NumPlacedCoef(D+1)+1)+W^2+1\bigr)=\NumCoordLin(D+1)+\NumCoordCon$.  The
-pairing boxes use the refined lattice $M'=\NumLatticeMEff$ of the elimination
-step and have side at most
-$M'\bigl(3W(2\NumPlacedCoef(D+1)+3W)+1\bigr)=\NumPairLin(D+1)+\NumPairCon$.  A
-label is a sum of at most $\NumParams$ terms whose coefficients are at most
-$\NumCoefBound$ before an elimination and at most $\NumCoefBoundEff$ after
-one (over a denominator that only decreases the magnitude), so
-every label has magnitude at most
-$\NumParams\cdot\NumCoefBoundEff\cdot\bigl(\NumPairLin(D+1)+\NumPairCon\bigr)
-\le \AConst(D+1)$.  This constant is four orders of magnitude
-larger than the one a naive reading of the carrier elimination would give, and
-only the threshold, and not the statement of either theorem, depends on
-it.  At the end every special label other than the
-pending triple has its antipode placed, so the special support is closed under
-negation up to that triple.  \qed
+$|S|\le 12D+3+2t\le 30D+3$ by Lemma~\ref{lem:charge} and $t\le 9D$, so all
+magnitudes are at most $A(D+1)$ for an absolute $A$.  Explicitly, with
+$W=\NumMaxWidth$ and $M=\NumLatticeM$, and with
+$|\Placed|+|\mathrm{Reserved}|$ together with the absorber conditions at most
+$(30+2+2\NumPhiMax+8)(D+1)=\NumPlacedCoefSink(D+1)$, the coordinate boxes have
+side at most
+$M\bigl(2W(\NumPlacedCoefSink(D+1)+1)+W^2+1\bigr)=\NumSinkBoxLin(D+1)+\NumSinkBoxCon$.
+A label of a cell is a sum of at most $\NumParams$ terms with coefficients at
+most $\NumCoefBound$ over a denominator that only decreases the magnitude, so
+it has magnitude at most
+$\NumParams\cdot\NumCoefBound\cdot(\NumSinkBoxLin(D+1)+\NumSinkBoxCon)
+=\NumSinkLabLin(D+1)+\NumSinkLabCon$, and an absorber label is a sum of at most
+four token coordinates, so every special label has magnitude at most
+$4(\NumSinkLabLin+\NumSinkLabCon)(D+1)\le\AConst(D+1)$.  This is
+the constant $A$ of Lemma~\ref{lem:realization}; no lattice or coefficient
+enlargement occurs, since nothing is ever divided.  At the end every special
+label other than a possible single leftover triple has its antipode placed,
+so the special support is closed under negation up to that triple.  \qed
 
 
 \bibliographystyle{plainnat}

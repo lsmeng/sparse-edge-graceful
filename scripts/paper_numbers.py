@@ -155,26 +155,50 @@ def main():
     MEFF = M * DMAX
     KEFF = 2 * GMAX * KMAX
     # |Phi(F)|, the number of values an owner reserves for its parent's forced
-    # companions.  The manuscript used to assert 3; the true bound is the
-    # largest, over the contexts that occur, of the smallest number of forced
-    # ratios available in that context's menu, since the choice rule may take
-    # the best family of the menu.
-    PHI = 0
+    # companions.  The manuscript used to assert 3.  PHI_MIN -- the largest,
+    # over the contexts that occur, of the *smallest* number of forced ratios
+    # available in that context's menu -- was used as the bound under the
+    # assumption that the choice rule takes the best (fewest-forced-ratio)
+    # family of the menu.  An audit of the constructor found that this is not
+    # so: e.g. context h4_6-6_p0_act has menu entries with 8 and with 1 forced
+    # ratios, and the constructor's first-ranked choice is the 8 one, not the
+    # minimizing one.  The true bound must therefore be PHI_MAX, the largest
+    # number of forced ratios in *any* menu entry of *any* context, since the
+    # choice rule is not known to minimize this count.  PHI_MIN is kept only
+    # as a quantity the manuscript may still mention.
+    PHI_MIN = 0
+    PHI_MAX = 0
     for k in wf_all:
         e = cat.get(k)
         if not e:
             continue
         ns = [len(f.get("forced_ratios") or []) for f in menu(k)]
         if ns:
-            PHI = max(PHI, min(ns))
+            PHI_MIN = max(PHI_MIN, min(ns))
+            PHI_MAX = max(PHI_MAX, max(ns))
     # |Placed| + |Reserved| <= |S| + cells + reservations
     #                       <= (12D+3) + 2q + 2q*PHI  <= (12 + 2 + 2*PHI)(D+1)
-    PLC = 12 + 2 + 2 * PHI
+    PLC = 12 + 2 + 2 * PHI_MIN
     coord_lin, coord_con = 2 * W * PLC * M, M * (2 * W + W * W + 1)
     pair_lin, pair_con = 3 * W * 2 * PLC * MEFF, MEFF * (9 * W * W + 1)
-    amax = npar * KEFF * (pair_lin + pair_con)          # D + 1 >= 1
-    Aexp = len(str(amax)) - 1
-    Alead = -(-amax // 10 ** Aexp)                      # round up
+    # Realization lemma, revised: tokens are no longer cancelled by an
+    # elimination step, so there is no carrier-elimination enlargement of the
+    # lattice or the coefficient bound (M and KMAX are used directly, not
+    # MEFF/KEFF).  |Placed|+|Reserved| now also accounts for the sink's own
+    # bookkeeping, giving a placed-coefficient bound of 30 + 2 + 2*PHI_MAX + 8
+    # (PHI_MAX, not PHI_MIN, since the constructor's family choice does not
+    # minimise the number of forced ratios -- see above).
+    PLC_SINK = 30 + 2 + 2 * PHI_MAX + 8
+    sink_box_lin = M * (2 * W * PLC_SINK)
+    sink_box_con = M * (2 * W + W * W + 1)
+    sink_lab_lin = npar * KMAX * sink_box_lin
+    sink_lab_con = npar * KMAX * sink_box_con
+    amax = 4 * (sink_lab_lin + sink_lab_con)
+    Aexp = len(str(amax)) - 1                 # amax in [10^Aexp, 10^(Aexp+1))
+    two_sig = -(-amax // 10 ** (Aexp - 1))    # round up to 2 sig figs, as 10..99
+    if two_sig >= 100:                        # rounding overflowed a power of ten
+        two_sig, Aexp = two_sig // 10, Aexp + 1
+    Alead = f"{two_sig // 10}.{two_sig % 10}"
 
     fa_parents = [k for k in E if k.endswith("_act")]
     fa_cov = sum(1 for k in fa_parents if k in xtok or (k[:-4] + "_A2") in cat)
@@ -224,8 +248,14 @@ def main():
         "NumLatticeM": M,
         "NumParams": npar,
         "NumCoefBound": KMAX,
-        "NumPhiMax": PHI,
+        "NumPhiMax": PHI_MAX,
+        "NumPhiMin": PHI_MIN,
         "NumPlacedCoef": PLC,
+        "NumPlacedCoefSink": PLC_SINK,
+        "NumSinkBoxLin": sink_box_lin,
+        "NumSinkBoxCon": sink_box_con,
+        "NumSinkLabLin": sink_lab_lin,
+        "NumSinkLabCon": sink_lab_con,
         "NumDetMax": DMAX,
         "NumAdjMax": GMAX,
         "NumCoefBoundEff": KEFF,

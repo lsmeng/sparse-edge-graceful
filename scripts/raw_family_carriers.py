@@ -76,7 +76,7 @@ def nullspace(rows, n):
     return out
 
 
-def analyse(specs, limit_report=3):
+def analyse(specs, limit_report=3, shard=0, shards=1):
     """Every P=O family of the cell, tested for a safe carrier.
 
     The carrier determinant is not invariant under a change of parameter basis,
@@ -97,7 +97,9 @@ def analyse(specs, limit_report=3):
     nonhead = [i for i in range(n) if i != head]
     fams = safe = rebased = 0
     best, record = [], None
-    for perm in itertools.permutations(range(n)):
+    for _pi, perm in enumerate(itertools.permutations(range(n))):
+        if shards > 1 and _pi % shards != shard:
+            continue
         rows = [[A[k][c] - (Q(1) if c == perm[k] else Q(0)) for c in range(n)]
                 for k in range(n)]
         B = nullspace(rows, n)

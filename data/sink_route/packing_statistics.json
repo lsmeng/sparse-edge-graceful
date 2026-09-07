@@ -1,0 +1,273 @@
+{
+  "rows": [
+    {
+      "name": "combbush_k5",
+      "n": 209,
+      "D": 16,
+      "t": 4,
+      "direct": 19,
+      "chains": 0,
+      "capacity_total": 19,
+      "holds": true,
+      "ratio": 4.75,
+      "n_over_Dp1": 12.294117647058824
+    },
+    {
+      "name": "combbush_k9",
+      "n": 373,
+      "D": 28,
+      "t": 8,
+      "direct": 35,
+      "chains": 0,
+      "capacity_total": 35,
+      "holds": true,
+      "ratio": 4.375,
+      "n_over_Dp1": 12.862068965517242
+    },
+    {
+      "name": "combbush_k15",
+      "n": 619,
+      "D": 46,
+      "t": 14,
+      "direct": 59,
+      "chains": 0,
+      "capacity_total": 59,
+      "holds": true,
+      "ratio": 4.214285714285714,
+      "n_over_Dp1": 13.170212765957446
+    },
+    {
+      "name": "combbin_d7_k5",
+      "n": 537,
+      "D": 16,
+      "t": 4,
+      "direct": 0,
+      "chains": 8,
+      "capacity_total": 16,
+      "holds": true,
+      "ratio": 4.0,
+      "n_over_Dp1": 31.58823529411765
+    },
+    {
+      "name": "combbin_d7_k9",
+      "n": 557,
+      "D": 28,
+      "t": 8,
+      "direct": 0,
+      "chains": 8,
+      "capacity_total": 16,
+      "holds": true,
+      "ratio": 2.0,
+      "n_over_Dp1": 19.20689655172414
+    },
+    {
+      "name": "combbin_d7_k15",
+      "n": 587,
+      "D": 46,
+      "t": 14,
+      "direct": 0,
+      "chains": 8,
+      "capacity_total": 16,
+      "holds": true,
+      "ratio": 1.1428571428571428,
+      "n_over_Dp1": 12.48936170212766
+    },
+    {
+      "name": "combbin_d8_k5",
+      "n": 1049,
+      "D": 16,
+      "t": 4,
+      "direct": 0,
+      "chains": 16,
+      "capacity_total": 32,
+      "holds": true,
+      "ratio": 8.0,
+      "n_over_Dp1": 61.705882352941174
+    },
+    {
+      "name": "combbin_d8_k9",
+      "n": 1069,
+      "D": 28,
+      "t": 8,
+      "direct": 0,
+      "chains": 16,
+      "capacity_total": 32,
+      "holds": true,
+      "ratio": 4.0,
+      "n_over_Dp1": 36.86206896551724
+    },
+    {
+      "name": "combbin_d8_k15",
+      "n": 1099,
+      "D": 46,
+      "t": 14,
+      "direct": 0,
+      "chains": 16,
+      "capacity_total": 32,
+      "holds": true,
+      "ratio": 2.2857142857142856,
+      "n_over_Dp1": 23.382978723404257
+    },
+    {
+      "name": "combbin_d9_k5",
+      "n": 2073,
+      "D": 16,
+      "t": 4,
+      "direct": 0,
+      "chains": 32,
+      "capacity_total": 64,
+      "holds": true,
+      "ratio": 16.0,
+      "n_over_Dp1": 121.94117647058823
+    },
+    {
+      "name": "combbin_d9_k9",
+      "n": 2093,
+      "D": 28,
+      "t": 8,
+      "direct": 0,
+      "chains": 32,
+      "capacity_total": 64,
+      "holds": true,
+      "ratio": 8.0,
+      "n_over_Dp1": 72.17241379310344
+    },
+    {
+      "name": "combbin_d9_k15",
+      "n": 2123,
+      "D": 46,
+      "t": 14,
+      "direct": 0,
+      "chains": 32,
+      "capacity_total": 64,
+      "holds": true,
+      "ratio": 4.571428571428571,
+      "n_over_Dp1": 45.170212765957444
+    },
+    {
+      "name": "sparse_n101_d25_0",
+      "n": 101,
+      "D": 4,
+      "t": 2,
+      "direct": 27,
+      "chains": 0,
+      "capacity_total": 27,
+      "holds": true,
+      "ratio": 13.5,
+      "n_over_Dp1": 20.2
+    },
+    {
+      "name": "sparse_n101_d25_1",
+      "n": 101,
+      "D": 2,
+      "t": 1,
+      "direct": 29,
+      "chains": 0,
+      "capacity_total": 29,
+      "holds": true,
+      "ratio": 29.0,
+      "n_over_Dp1": 33.666666666666664
+    },
+    {
+      "name": "sparse_n101_d25_2",
+      "n": 101,
+      "D": 3,
+      "t": 1,
+      "direct": 26,
+      "chains": 0,
+      "capacity_total": 26,
+      "holds": true,
+      "ratio": 26.0,
+      "n_over_Dp1": 25.25
+    },
+    {
+      "name": "sparse_n201_d25_0",
+      "n": 201,
+      "D": 8,
+      "t": 4,
+      "direct": 49,
+      "chains": 0,
+      "capacity_total": 49,
+      "holds": true,
+      "ratio": 12.25,
+      "n_over_Dp1": 22.333333333333332
+    },
+    {
+      "name": "sparse_n201_d25_1",
+      "n": 201,
+      "D": 8,
+      "t": 4,
+      "direct": 50,
+      "chains": 0,
+      "capacity_total": 50,
+      "holds": true,
+      "ratio": 12.5,
+      "n_over_Dp1": 22.333333333333332
+    },
+    {
+      "name": "sparse_n201_d25_2",
+      "n": 201,
+      "D": 8,
+      "t": 2,
+      "direct": 52,
+      "chains": 0,
+      "capacity_total": 52,
+      "holds": true,
+      "ratio": 26.0,
+      "n_over_Dp1": 22.333333333333332
+    },
+    {
+      "name": "sparse_n401_d25_0",
+      "n": 401,
+      "D": 16,
+      "t": 8,
+      "direct": 102,
+      "chains": 0,
+      "capacity_total": 102,
+      "holds": true,
+      "ratio": 12.75,
+      "n_over_Dp1": 23.58823529411765
+    },
+    {
+      "name": "sparse_n401_d25_1",
+      "n": 401,
+      "D": 16,
+      "t": 6,
+      "direct": 102,
+      "chains": 0,
+      "capacity_total": 102,
+      "holds": true,
+      "ratio": 17.0,
+      "n_over_Dp1": 23.58823529411765
+    },
+    {
+      "name": "sparse_n401_d25_2",
+      "n": 401,
+      "D": 16,
+      "t": 5,
+      "direct": 107,
+      "chains": 0,
+      "capacity_total": 107,
+      "holds": true,
+      "ratio": 21.4,
+      "n_over_Dp1": 23.58823529411765
+    }
+  ],
+  "summary": {
+    "combbush": {
+      "min_ratio_cap_over_t": 4.214285714285714,
+      "min_n_over_Dp1_where_holds": 12.294117647058824,
+      "all_hold": true
+    },
+    "comb_binary": {
+      "min_ratio_cap_over_t": 1.1428571428571428,
+      "min_n_over_Dp1_where_holds": 12.48936170212766,
+      "all_hold": true
+    },
+    "sparse_trees": {
+      "min_ratio_cap_over_t": 12.25,
+      "min_n_over_Dp1_where_holds": 20.2,
+      "all_hold": true
+    }
+  }
+}

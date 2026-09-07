@@ -1,0 +1,43 @@
+{
+ "n_records": 5717,
+ "n_parent_pool": 625,
+ "n_child_pool": 2113,
+ "n_pairs_examined": 1320625,
+ "histogram_free_orders": {
+  "8": 1,
+  "10": 38,
+  "12": 229,
+  "14": 39,
+  "16": 242,
+  "18": 14,
+  "19": 1,
+  "20": 208,
+  "21": 1,
+  "22": 23,
+  "23": 1,
+  "24": 279,
+  "25": 4,
+  "26": 34,
+  "28": 20193,
+  "29": 1,
+  "30": 336,
+  "31": 1,
+  "32": 219934,
+  "34": 1685,
+  "35": 104,
+  "36": 1077257
+ },
+ "n_zero_free_pairs": 0,
+ "zero_free_pairs_examples": [],
+ "sanity_check_h0_3_p0_act_self": {
+  "free_count": 32,
+  "D": 5,
+  "failing_orders": [
+   "a=r0a0x0(P) b=r0a0x2(P) c=r0a0x0(C) d=r0a0x2(C) :: F1=a+b+d = -label[r0a0x1] of child h0_3_p0_act",
+   "a=r0a0x0(P) b=r0a0x2(P) c=x(C) d=r0a0x2(C) :: F1=a+b+d = -label[r0a0x1] of child h0_3_p0_act",
+   "a=r0a0x2(P) b=r0a0x0(P) c=r0a0x0(C) d=r0a0x2(C) :: F1=a+b+d = -label[r0a0x1] of child h0_3_p0_act",
+   "a=r0a0x2(P) b=r0a0x0(P) c=x(C) d=r0a0x2(C) :: F1=a+b+d = -label[r0a0x1] of child h0_3_p0_act"
+  ]
+ },
+ "wall_time_s": 160.8280382156372
+}
